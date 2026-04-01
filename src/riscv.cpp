@@ -48,7 +48,6 @@ void Riscv::unknownsCause() {
 void Riscv::handleSupervisorTrap(uint64* regs) {
 
     uint64 scause = r_scause();
-    __putc('u');
     if (scause == 0x0000000000000008UL || scause == 0x0000000000000009UL) {
         handleEcall(regs);
     } else if (scause == 0x8000000000000009UL) {

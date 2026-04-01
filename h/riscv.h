@@ -66,6 +66,8 @@
         static void unknownsCause();
 
 
+        static void pushAllRegs();
+        static void popAllRegs();
 
         static void supervisorTrap();
     private:

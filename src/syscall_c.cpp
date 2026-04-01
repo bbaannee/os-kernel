@@ -23,3 +23,21 @@ int mem_free (void* ptr) {
     volatile long a0 = Riscv::readARegister(0);
     return (int) a0;
 }
+
+void* operator new(size_t size) {
+    return mem_alloc(size);
+}
+
+
+void* operator new[](size_t size) {
+    return mem_alloc(size);
+}
+
+
+void operator delete(void* ptr) noexcept {
+    mem_free(ptr);
+}
+
+void operator delete[](void* ptr) noexcept {
+    mem_free(ptr);
+}
