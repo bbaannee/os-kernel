@@ -1,5 +1,6 @@
 #include "../h/syscall_c.h"
 #include  "../h/riscv.h"
+#include "../lib/mem.h"
 void *mem_alloc(size_t size) {
     size_t blocks = (size + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
 
@@ -25,19 +26,19 @@ int mem_free (void* ptr) {
 }
 
 void* operator new(size_t size) {
-    return mem_alloc(size);
+    return __mem_alloc(size);
 }
 
 
 void* operator new[](size_t size) {
-    return mem_alloc(size);
+    return __mem_alloc(size);
 }
 
 
 void operator delete(void* ptr) noexcept {
-    mem_free(ptr);
+    __mem_free(ptr);
 }
 
 void operator delete[](void* ptr) noexcept {
-    mem_free(ptr);
+    __mem_free(ptr);
 }

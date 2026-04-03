@@ -1,3 +1,10 @@
+# 1 "src/switchContext.S"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 31 "<command-line>"
+# 1 "/usr/riscv64-linux-gnu/include/stdc-predef.h" 1 3
+# 32 "<command-line>" 2
+# 1 "src/switchContext.S"
 # void Thread::switchContext(Context *oldContext, Context *newContext)
 # a0 = &old->context, a1 = &new->context
 

@@ -2,57 +2,28 @@
 #include "../lib/console.h"
 #include "../h/syscall_c.h"
 #include  "../h/riscv.h"
-void checkNullptr(void* p) {
-    static int x = 0;
-    if(p == nullptr) {
-        __putc('?');
-        __putc('0' + x);
-    }
-    x++;
-}
-
-void checkStatus(int status) {
-    static int y = 0;
-    if(status) {
-        __putc('0' + y);
-        __putc('?');
-    }
-    y++;
-}
-
+#include "../h/Thread.h"
+#include  "../h/workers.h"
+#include "../h/printer.h"
 int main() {
-    int n = 16;
-    Riscv::w_stvec((uint64)& Riscv::supervisorTrap);
+    Thread* corut[3];
 
-    char** matrix = (char**)::mem_alloc(n*sizeof(char*));
-    checkNullptr(matrix);
-    for(int i = 0; i < n; i++) {
-        matrix[i] = (char *) ::mem_alloc(n * sizeof(char));
-        checkNullptr(matrix[i]);
-    }
+    corut[0] = Thread::createThread(nullptr);
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            matrix[i][j] = 'k';
-        }
-    }
+    Thread::running = corut[0];
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            __putc(matrix[i][j]);
-            __putc(' ');
-        }
-        __putc('\n');
-    }
+    corut[1] = Thread::createThread(workerBodyA);
+    printString("Cort a created");
+    corut[2] = Thread::createThread(workerBodyB);
+    printString("Cort b created");
+    while (!(corut[1]->isFinished() && corut[2] -> isFinished()))Thread::yield();
 
+    for (auto& cort : corut) {delete cort;}
 
-    for(int i = 0; i < n; i++) {
-        int status = ::mem_free(matrix[i]);
-        checkStatus(status);
-    }
-    int status = ::mem_free(matrix);
-    checkStatus(status);
+    printString("Finished");
 
     return 0;
+
+
 }
 
