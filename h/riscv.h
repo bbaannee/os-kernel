@@ -8,7 +8,10 @@
 
     class Riscv {
     public:
-
+	
+	static void popSppSpie();
+	
+	
         static uint64 r_scause();
 
         static void w_scause(uint64 scause);
@@ -26,9 +29,9 @@
         static void w_stval(uint64 stval);
 
         enum BitMaskSip {
-            SIP_SSIE = (1 << 1),
-            SIP_STIE = (1 << 5),
-            SIP_SEIE = (1 << 9),
+            SIP_SSIP = (1 << 1),
+            SIP_STIP = (1 << 5),
+            SIP_SEIP = (1 << 9),
         };
 
         static void ms_sip(uint64 mask);
@@ -57,21 +60,10 @@
 
         static void writeARegister(int reg_number, uint64 value);
 
-        static void handleEcall(uint64* regs);
-
-        static void handleConsole();
-
-        static void handleTimer();
-
-        static void unknownsCause();
-
-
-        static void pushAllRegs();
-        static void popAllRegs();
 
         static void supervisorTrap();
     private:
-        static void handleSupervisorTrap(uint64* regs);
+        static void handleSupervisorTrap();
 
     };
 

@@ -2,76 +2,38 @@
 #include "../h/Thread.h"
 #include "../h/printer.h"
 
-static uint64 fibonacci(uint64 n)
-{
-    if (n == 0 || n == 1) { return n; }
-    if (n % 4 == 0) Thread::yield();
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
 void workerBodyA()
 {
-    uint8 i = 0;
-    for (; i < 3; i++)
+    for (uint64 i = 0; i < 10; i++)
     {
         printString("A: i=");
         printInteger(i);
         printString("\n");
+        for (uint64 j = 0; j < 10000; j++)
+        {
+            for (uint64 k = 0; k < 30000; k++)
+            {
+                // busy wait
+            }
+        }
+     
     }
-
-    printString("A: yield\n");
-    __asm__ ("li t1, 7");
-    Thread::yield();
-
-    uint64 t1 = 0;
-    __asm__ ("mv %0, t1" : "=r"(t1));
-
-    printString("A: t1=");
-    printInteger(t1);
-    printString("\n");
-
-    uint64 result = fibonacci(20);
-    printString("A: fibonacci=");
-    printInteger(result);
-    printString("\n");
-
-    for (; i < 6; i++)
-    {
-        printString("A: i=");
-        printInteger(i);
-        printString("\n");
-    }
-
-    Thread::running->setFinished(true);
-    Thread::yield();
 }
 
 void workerBodyB()
 {
-    uint8 i = 10;
-    for (; i < 13; i++)
+    for (uint64 i = 0; i < 61; i++)
     {
         printString("B: i=");
         printInteger(i);
         printString("\n");
+        for (uint64 j = 0; j < 10000; j++)
+        {
+            for (uint64 k = 0; k < 30000; k++)
+            {
+                // busy wait
+            }
+        }
+      
     }
-
-    printString("B: yield\n");
-    __asm__ ("li t1, 5");
-    Thread::yield();
-
-    uint64 result = fibonacci(23);
-    printString("B: fibonacci=");
-    printInteger(result);
-    printString("\n");
-
-    for (; i < 16; i++)
-    {
-        printString("B: i=");
-        printInteger(i);
-        printString("\n");
-    }
-
-    Thread::running->setFinished(true);
-    Thread::yield();
 }

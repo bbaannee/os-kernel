@@ -6,16 +6,16 @@
 
 Thread* Thread::running = nullptr;
 
+uint64 Thread::timeSliceCounter = 0;
+
+
 Thread* Thread::createThread(Body body) {
-    return new Thread(body);
+    return new Thread(body, TIME_SLICE);
 }
 
 void Thread::yield() {
-    Riscv::pushAllRegs();
-
-    Thread::dispatch();
-
-     Riscv::popAllRegs();
+    
+    __asm__ volatile ("ecall");
 }
 
 void Thread::dispatch() {
@@ -35,3 +35,13 @@ void Thread::dispatch() {
     }
 }
 
+
+void Thread::threadWrapper(){
+
+Riscv::popSppSpie();
+running -> body();
+
+running -> setFinished(true);
+
+Thread::yield();
+}
