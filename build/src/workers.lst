@@ -1,0 +1,494 @@
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 1
+
+
+   1              		.file	"workers.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.section	.rodata.str1.8,"aMS",@progbits,1
+  10              		.align	3
+  11              	.LC0:
+  12 0000 413A2069 		.string	"A: i="
+  12      3D00
+  13 0006 0000     		.align	3
+  14              	.LC1:
+  15 0008 0A00     		.string	"\n"
+  16              		.text
+  17              		.align	2
+  18              		.globl	_Z11workerBodyAv
+  20              	_Z11workerBodyAv:
+  21              	.LFB13:
+  22              		.file 1 "src/workers.cpp"
+   1:src/workers.cpp **** #include "../lib/hw.h"
+   2:src/workers.cpp **** #include "../h/Thread.h"
+   3:src/workers.cpp **** #include "../h/printer.h"
+   4:src/workers.cpp **** 
+   5:src/workers.cpp **** void workerBodyA()
+   6:src/workers.cpp **** {
+  23              		.loc 1 6 1
+  24              		.cfi_startproc
+  25 0000 130101FE 		addi	sp,sp,-32
+  26              		.cfi_def_cfa_offset 32
+  27 0004 233C1100 		sd	ra,24(sp)
+  28 0008 23388100 		sd	s0,16(sp)
+  29 000c 23349100 		sd	s1,8(sp)
+  30              		.cfi_offset 1, -8
+  31              		.cfi_offset 8, -16
+  32              		.cfi_offset 9, -24
+  33 0010 13040102 		addi	s0,sp,32
+  34              		.cfi_def_cfa 8, 0
+   7:src/workers.cpp ****     for (uint64 i = 0; i < 10; i++)
+  35              		.loc 1 7 5
+  36              	.LVL0:
+  37              	.LBB2:
+  38              		.loc 1 7 17 is_stmt 0
+  39 0014 93040000 		li	s1,0
+  40 0018 6F000003 		j	.L7
+  41              	.LVL1:
+  42              	.L9:
+  43              	.LBB3:
+  44              	.LBB4:
+  45              	.LBB5:
+   8:src/workers.cpp ****     {
+   9:src/workers.cpp ****         printString("A: i=");
+  10:src/workers.cpp ****         printInteger(i);
+  11:src/workers.cpp ****         printString("\n");
+  12:src/workers.cpp ****         for (uint64 j = 0; j < 10000; j++)
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 2
+
+
+  13:src/workers.cpp ****         {
+  14:src/workers.cpp ****             for (uint64 k = 0; k < 30000; k++)
+  46              		.loc 1 14 13 is_stmt 1 discriminator 2
+  47 001c 13071700 		addi	a4,a4,1
+  48              	.LVL2:
+  49              	.L5:
+  50              		.loc 1 14 34 discriminator 3
+  51 0020 B7770000 		li	a5,28672
+  52 0024 9387F752 		addi	a5,a5,1327
+  53 0028 E3FAE7FE 		bleu	a4,a5,.L9
+  54              	.LBE5:
+  12:src/workers.cpp ****         {
+  55              		.loc 1 12 9 discriminator 2
+  56 002c 93861600 		addi	a3,a3,1
+  57              	.LVL3:
+  58              	.L6:
+  12:src/workers.cpp ****         {
+  59              		.loc 1 12 30 discriminator 1
+  60 0030 B7270000 		li	a5,8192
+  61 0034 9387F770 		addi	a5,a5,1807
+  62 0038 63E6D700 		bgtu	a3,a5,.L3
+  63              	.LBB6:
+  64              		.loc 1 14 25 is_stmt 0
+  65 003c 13070000 		li	a4,0
+  66 0040 6FF01FFE 		j	.L5
+  67              	.L3:
+  68              	.LBE6:
+  69              	.LBE4:
+  70              	.LBE3:
+   7:src/workers.cpp ****     for (uint64 i = 0; i < 10; i++)
+  71              		.loc 1 7 5 is_stmt 1 discriminator 2
+  72 0044 93841400 		addi	s1,s1,1
+  73              	.LVL4:
+  74              	.L7:
+   7:src/workers.cpp ****     for (uint64 i = 0; i < 10; i++)
+  75              		.loc 1 7 26 discriminator 1
+  76 0048 93079000 		li	a5,9
+  77 004c 63EC9702 		bgtu	s1,a5,.L1
+  78              	.LBB8:
+   9:src/workers.cpp ****         printInteger(i);
+  79              		.loc 1 9 9
+   9:src/workers.cpp ****         printInteger(i);
+  80              		.loc 1 9 20 is_stmt 0
+  81 0050 17050000 		lla	a0,.LC0
+  81      13050500 
+  82 0058 97000000 		call	_Z11printStringPKc
+  82      E7800000 
+  83              	.LVL5:
+  10:src/workers.cpp ****         printString("\n");
+  84              		.loc 1 10 9 is_stmt 1
+  10:src/workers.cpp ****         printString("\n");
+  85              		.loc 1 10 21 is_stmt 0
+  86 0060 13850400 		mv	a0,s1
+  87 0064 97000000 		call	_Z12printIntegerm
+  87      E7800000 
+  88              	.LVL6:
+  11:src/workers.cpp ****         for (uint64 j = 0; j < 10000; j++)
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 3
+
+
+  89              		.loc 1 11 9 is_stmt 1
+  11:src/workers.cpp ****         for (uint64 j = 0; j < 10000; j++)
+  90              		.loc 1 11 20 is_stmt 0
+  91 006c 17050000 		lla	a0,.LC1
+  91      13050500 
+  92 0074 97000000 		call	_Z11printStringPKc
+  92      E7800000 
+  93              	.LVL7:
+  12:src/workers.cpp ****         {
+  94              		.loc 1 12 9 is_stmt 1
+  95              	.LBB7:
+  12:src/workers.cpp ****         {
+  96              		.loc 1 12 21 is_stmt 0
+  97 007c 93060000 		li	a3,0
+  98 0080 6FF01FFB 		j	.L6
+  99              	.LVL8:
+ 100              	.L1:
+ 101              	.LBE7:
+ 102              	.LBE8:
+ 103              	.LBE2:
+  15:src/workers.cpp ****             {
+  16:src/workers.cpp ****                 // busy wait
+  17:src/workers.cpp ****             }
+  18:src/workers.cpp ****         }
+  19:src/workers.cpp ****      
+  20:src/workers.cpp ****     }
+  21:src/workers.cpp **** }
+ 104              		.loc 1 21 1
+ 105 0084 83308101 		ld	ra,24(sp)
+ 106              		.cfi_restore 1
+ 107 0088 03340101 		ld	s0,16(sp)
+ 108              		.cfi_restore 8
+ 109              		.cfi_def_cfa 2, 32
+ 110 008c 83348100 		ld	s1,8(sp)
+ 111              		.cfi_restore 9
+ 112              	.LVL9:
+ 113 0090 13010102 		addi	sp,sp,32
+ 114              		.cfi_def_cfa_offset 0
+ 115 0094 67800000 		jr	ra
+ 116              		.cfi_endproc
+ 117              	.LFE13:
+ 119              		.section	.rodata.str1.8
+ 120 000a 00000000 		.align	3
+ 120      0000
+ 121              	.LC2:
+ 122 0010 423A2069 		.string	"B: i="
+ 122      3D00
+ 123              		.text
+ 124              		.align	2
+ 125              		.globl	_Z11workerBodyBv
+ 127              	_Z11workerBodyBv:
+ 128              	.LFB14:
+  22:src/workers.cpp **** 
+  23:src/workers.cpp **** void workerBodyB()
+  24:src/workers.cpp **** {
+ 129              		.loc 1 24 1 is_stmt 1
+ 130              		.cfi_startproc
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 4
+
+
+ 131 0098 130101FE 		addi	sp,sp,-32
+ 132              		.cfi_def_cfa_offset 32
+ 133 009c 233C1100 		sd	ra,24(sp)
+ 134 00a0 23388100 		sd	s0,16(sp)
+ 135 00a4 23349100 		sd	s1,8(sp)
+ 136              		.cfi_offset 1, -8
+ 137              		.cfi_offset 8, -16
+ 138              		.cfi_offset 9, -24
+ 139 00a8 13040102 		addi	s0,sp,32
+ 140              		.cfi_def_cfa 8, 0
+  25:src/workers.cpp ****     for (uint64 i = 0; i < 61; i++)
+ 141              		.loc 1 25 5
+ 142              	.LVL10:
+ 143              	.LBB9:
+ 144              		.loc 1 25 17 is_stmt 0
+ 145 00ac 93040000 		li	s1,0
+ 146 00b0 6F000003 		j	.L16
+ 147              	.LVL11:
+ 148              	.L18:
+ 149              	.LBB10:
+ 150              	.LBB11:
+ 151              	.LBB12:
+  26:src/workers.cpp ****     {
+  27:src/workers.cpp ****         printString("B: i=");
+  28:src/workers.cpp ****         printInteger(i);
+  29:src/workers.cpp ****         printString("\n");
+  30:src/workers.cpp ****         for (uint64 j = 0; j < 10000; j++)
+  31:src/workers.cpp ****         {
+  32:src/workers.cpp ****             for (uint64 k = 0; k < 30000; k++)
+ 152              		.loc 1 32 13 is_stmt 1 discriminator 2
+ 153 00b4 13071700 		addi	a4,a4,1
+ 154              	.LVL12:
+ 155              	.L14:
+ 156              		.loc 1 32 34 discriminator 3
+ 157 00b8 B7770000 		li	a5,28672
+ 158 00bc 9387F752 		addi	a5,a5,1327
+ 159 00c0 E3FAE7FE 		bleu	a4,a5,.L18
+ 160              	.LBE12:
+  30:src/workers.cpp ****         {
+ 161              		.loc 1 30 9 discriminator 2
+ 162 00c4 93861600 		addi	a3,a3,1
+ 163              	.LVL13:
+ 164              	.L15:
+  30:src/workers.cpp ****         {
+ 165              		.loc 1 30 30 discriminator 1
+ 166 00c8 B7270000 		li	a5,8192
+ 167 00cc 9387F770 		addi	a5,a5,1807
+ 168 00d0 63E6D700 		bgtu	a3,a5,.L12
+ 169              	.LBB13:
+ 170              		.loc 1 32 25 is_stmt 0
+ 171 00d4 13070000 		li	a4,0
+ 172 00d8 6FF01FFE 		j	.L14
+ 173              	.L12:
+ 174              	.LBE13:
+ 175              	.LBE11:
+ 176              	.LBE10:
+  25:src/workers.cpp ****     for (uint64 i = 0; i < 61; i++)
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 5
+
+
+ 177              		.loc 1 25 5 is_stmt 1 discriminator 2
+ 178 00dc 93841400 		addi	s1,s1,1
+ 179              	.LVL14:
+ 180              	.L16:
+  25:src/workers.cpp ****     for (uint64 i = 0; i < 61; i++)
+ 181              		.loc 1 25 26 discriminator 1
+ 182 00e0 9307C003 		li	a5,60
+ 183 00e4 63EC9702 		bgtu	s1,a5,.L10
+ 184              	.LBB15:
+  27:src/workers.cpp ****         printInteger(i);
+ 185              		.loc 1 27 9
+  27:src/workers.cpp ****         printInteger(i);
+ 186              		.loc 1 27 20 is_stmt 0
+ 187 00e8 17050000 		lla	a0,.LC2
+ 187      13050500 
+ 188 00f0 97000000 		call	_Z11printStringPKc
+ 188      E7800000 
+ 189              	.LVL15:
+  28:src/workers.cpp ****         printString("\n");
+ 190              		.loc 1 28 9 is_stmt 1
+  28:src/workers.cpp ****         printString("\n");
+ 191              		.loc 1 28 21 is_stmt 0
+ 192 00f8 13850400 		mv	a0,s1
+ 193 00fc 97000000 		call	_Z12printIntegerm
+ 193      E7800000 
+ 194              	.LVL16:
+  29:src/workers.cpp ****         for (uint64 j = 0; j < 10000; j++)
+ 195              		.loc 1 29 9 is_stmt 1
+  29:src/workers.cpp ****         for (uint64 j = 0; j < 10000; j++)
+ 196              		.loc 1 29 20 is_stmt 0
+ 197 0104 17050000 		lla	a0,.LC1
+ 197      13050500 
+ 198 010c 97000000 		call	_Z11printStringPKc
+ 198      E7800000 
+ 199              	.LVL17:
+  30:src/workers.cpp ****         {
+ 200              		.loc 1 30 9 is_stmt 1
+ 201              	.LBB14:
+  30:src/workers.cpp ****         {
+ 202              		.loc 1 30 21 is_stmt 0
+ 203 0114 93060000 		li	a3,0
+ 204 0118 6FF01FFB 		j	.L15
+ 205              	.LVL18:
+ 206              	.L10:
+ 207              	.LBE14:
+ 208              	.LBE15:
+ 209              	.LBE9:
+  33:src/workers.cpp ****             {
+  34:src/workers.cpp ****                 // busy wait
+  35:src/workers.cpp ****             }
+  36:src/workers.cpp ****         }
+  37:src/workers.cpp ****       
+  38:src/workers.cpp ****     }
+  39:src/workers.cpp **** }
+ 210              		.loc 1 39 1
+ 211 011c 83308101 		ld	ra,24(sp)
+ 212              		.cfi_restore 1
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 6
+
+
+ 213 0120 03340101 		ld	s0,16(sp)
+ 214              		.cfi_restore 8
+ 215              		.cfi_def_cfa 2, 32
+ 216 0124 83348100 		ld	s1,8(sp)
+ 217              		.cfi_restore 9
+ 218              	.LVL19:
+ 219 0128 13010102 		addi	sp,sp,32
+ 220              		.cfi_def_cfa_offset 0
+ 221 012c 67800000 		jr	ra
+ 222              		.cfi_endproc
+ 223              	.LFE14:
+ 225              	.Letext0:
+ 226              		.file 2 "src/../lib/hw.h"
+ 227              		.file 3 "src/../h/printer.h"
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 workers.cpp
+C:\msys64\tmp\cc6epPuH.s:20     .text:0000000000000000 _Z11workerBodyAv
+C:\msys64\tmp\cc6epPuH.s:24     .text:0000000000000000 .L0 
+C:\msys64\tmp\cc6epPuH.s:25     .text:0000000000000000 .L0 
+C:\msys64\tmp\cc6epPuH.s:26     .text:0000000000000004 .L0 
+C:\msys64\tmp\cc6epPuH.s:30     .text:0000000000000010 .L0 
+C:\msys64\tmp\cc6epPuH.s:31     .text:0000000000000010 .L0 
+C:\msys64\tmp\cc6epPuH.s:32     .text:0000000000000010 .L0 
+C:\msys64\tmp\cc6epPuH.s:34     .text:0000000000000014 .L0 
+C:\msys64\tmp\cc6epPuH.s:38     .text:0000000000000014 .L0 
+C:\msys64\tmp\cc6epPuH.s:39     .text:0000000000000014 .L0 
+C:\msys64\tmp\cc6epPuH.s:47     .text:000000000000001c .L0 
+C:\msys64\tmp\cc6epPuH.s:51     .text:0000000000000020 .L0 
+C:\msys64\tmp\cc6epPuH.s:56     .text:000000000000002c .L0 
+C:\msys64\tmp\cc6epPuH.s:60     .text:0000000000000030 .L0 
+C:\msys64\tmp\cc6epPuH.s:65     .text:000000000000003c .L0 
+C:\msys64\tmp\cc6epPuH.s:72     .text:0000000000000044 .L0 
+C:\msys64\tmp\cc6epPuH.s:76     .text:0000000000000048 .L0 
+C:\msys64\tmp\cc6epPuH.s:80     .text:0000000000000050 .L0 
+C:\msys64\tmp\cc6epPuH.s:81     .text:0000000000000050 .L0 
+C:\msys64\tmp\cc6epPuH.s:85     .text:0000000000000060 .L0 
+C:\msys64\tmp\cc6epPuH.s:86     .text:0000000000000060 .L0 
+C:\msys64\tmp\cc6epPuH.s:90     .text:000000000000006c .L0 
+C:\msys64\tmp\cc6epPuH.s:91     .text:000000000000006c .L0 
+C:\msys64\tmp\cc6epPuH.s:96     .text:000000000000007c .L0 
+C:\msys64\tmp\cc6epPuH.s:97     .text:000000000000007c .L0 
+C:\msys64\tmp\cc6epPuH.s:105    .text:0000000000000084 .L0 
+C:\msys64\tmp\cc6epPuH.s:106    .text:0000000000000088 .L0 
+C:\msys64\tmp\cc6epPuH.s:108    .text:000000000000008c .L0 
+C:\msys64\tmp\cc6epPuH.s:109    .text:000000000000008c .L0 
+C:\msys64\tmp\cc6epPuH.s:111    .text:0000000000000090 .L0 
+C:\msys64\tmp\cc6epPuH.s:114    .text:0000000000000094 .L0 
+C:\msys64\tmp\cc6epPuH.s:116    .text:0000000000000098 .L0 
+C:\msys64\tmp\cc6epPuH.s:127    .text:0000000000000098 _Z11workerBodyBv
+C:\msys64\tmp\cc6epPuH.s:130    .text:0000000000000098 .L0 
+C:\msys64\tmp\cc6epPuH.s:131    .text:0000000000000098 .L0 
+C:\msys64\tmp\cc6epPuH.s:132    .text:000000000000009c .L0 
+C:\msys64\tmp\cc6epPuH.s:136    .text:00000000000000a8 .L0 
+C:\msys64\tmp\cc6epPuH.s:137    .text:00000000000000a8 .L0 
+C:\msys64\tmp\cc6epPuH.s:138    .text:00000000000000a8 .L0 
+C:\msys64\tmp\cc6epPuH.s:140    .text:00000000000000ac .L0 
+C:\msys64\tmp\cc6epPuH.s:144    .text:00000000000000ac .L0 
+C:\msys64\tmp\cc6epPuH.s:145    .text:00000000000000ac .L0 
+C:\msys64\tmp\cc6epPuH.s:153    .text:00000000000000b4 .L0 
+C:\msys64\tmp\cc6epPuH.s:157    .text:00000000000000b8 .L0 
+C:\msys64\tmp\cc6epPuH.s:162    .text:00000000000000c4 .L0 
+C:\msys64\tmp\cc6epPuH.s:166    .text:00000000000000c8 .L0 
+C:\msys64\tmp\cc6epPuH.s:171    .text:00000000000000d4 .L0 
+C:\msys64\tmp\cc6epPuH.s:178    .text:00000000000000dc .L0 
+C:\msys64\tmp\cc6epPuH.s:182    .text:00000000000000e0 .L0 
+C:\msys64\tmp\cc6epPuH.s:186    .text:00000000000000e8 .L0 
+C:\msys64\tmp\cc6epPuH.s:187    .text:00000000000000e8 .L0 
+C:\msys64\tmp\cc6epPuH.s:191    .text:00000000000000f8 .L0 
+C:\msys64\tmp\cc6epPuH.s:192    .text:00000000000000f8 .L0 
+C:\msys64\tmp\cc6epPuH.s:196    .text:0000000000000104 .L0 
+C:\msys64\tmp\cc6epPuH.s:197    .text:0000000000000104 .L0 
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 8
+
+
+C:\msys64\tmp\cc6epPuH.s:202    .text:0000000000000114 .L0 
+C:\msys64\tmp\cc6epPuH.s:203    .text:0000000000000114 .L0 
+C:\msys64\tmp\cc6epPuH.s:211    .text:000000000000011c .L0 
+C:\msys64\tmp\cc6epPuH.s:212    .text:0000000000000120 .L0 
+C:\msys64\tmp\cc6epPuH.s:214    .text:0000000000000124 .L0 
+C:\msys64\tmp\cc6epPuH.s:215    .text:0000000000000124 .L0 
+C:\msys64\tmp\cc6epPuH.s:217    .text:0000000000000128 .L0 
+C:\msys64\tmp\cc6epPuH.s:220    .text:000000000000012c .L0 
+C:\msys64\tmp\cc6epPuH.s:222    .text:0000000000000130 .L0 
+C:\msys64\tmp\cc6epPuH.s:228    .text:0000000000000130 .L0 
+C:\msys64\tmp\cc6epPuH.s:11     .rodata.str1.8:0000000000000000 .LC0
+C:\msys64\tmp\cc6epPuH.s:81     .text:0000000000000050 .L0 
+C:\msys64\tmp\cc6epPuH.s:14     .rodata.str1.8:0000000000000008 .LC1
+C:\msys64\tmp\cc6epPuH.s:91     .text:000000000000006c .L0 
+C:\msys64\tmp\cc6epPuH.s:121    .rodata.str1.8:0000000000000010 .LC2
+C:\msys64\tmp\cc6epPuH.s:187    .text:00000000000000e8 .L0 
+C:\msys64\tmp\cc6epPuH.s:197    .text:0000000000000104 .L0 
+C:\msys64\tmp\cc6epPuH.s:74     .text:0000000000000048 .L7
+C:\msys64\tmp\cc6epPuH.s:42     .text:000000000000001c .L9
+C:\msys64\tmp\cc6epPuH.s:67     .text:0000000000000044 .L3
+C:\msys64\tmp\cc6epPuH.s:49     .text:0000000000000020 .L5
+C:\msys64\tmp\cc6epPuH.s:100    .text:0000000000000084 .L1
+C:\msys64\tmp\cc6epPuH.s:58     .text:0000000000000030 .L6
+C:\msys64\tmp\cc6epPuH.s:180    .text:00000000000000e0 .L16
+C:\msys64\tmp\cc6epPuH.s:148    .text:00000000000000b4 .L18
+C:\msys64\tmp\cc6epPuH.s:173    .text:00000000000000dc .L12
+C:\msys64\tmp\cc6epPuH.s:155    .text:00000000000000b8 .L14
+C:\msys64\tmp\cc6epPuH.s:206    .text:000000000000011c .L10
+C:\msys64\tmp\cc6epPuH.s:164    .text:00000000000000c8 .L15
+C:\msys64\tmp\cc6epPuH.s:490    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\cc6epPuH.s:825    .debug_str:0000000000000059 .LASF21
+C:\msys64\tmp\cc6epPuH.s:851    .debug_str:000000000000020e .LASF22
+C:\msys64\tmp\cc6epPuH.s:837    .debug_str:0000000000000173 .LASF23
+C:\msys64\tmp\cc6epPuH.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\cc6epPuH.s:225    .text:0000000000000130 .Letext0
+C:\msys64\tmp\cc6epPuH.s:809    .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\cc6epPuH.s:855    .debug_str:0000000000000231 .LASF0
+C:\msys64\tmp\cc6epPuH.s:849    .debug_str:00000000000001fb .LASF1
+C:\msys64\tmp\cc6epPuH.s:831    .debug_str:000000000000014a .LASF2
+C:\msys64\tmp\cc6epPuH.s:823    .debug_str:0000000000000052 .LASF4
+C:\msys64\tmp\cc6epPuH.s:841    .debug_str:00000000000001b3 .LASF3
+C:\msys64\tmp\cc6epPuH.s:811    .debug_str:0000000000000000 .LASF5
+C:\msys64\tmp\cc6epPuH.s:821    .debug_str:000000000000003f .LASF6
+C:\msys64\tmp\cc6epPuH.s:847    .debug_str:00000000000001e8 .LASF7
+C:\msys64\tmp\cc6epPuH.s:813    .debug_str:0000000000000007 .LASF8
+C:\msys64\tmp\cc6epPuH.s:829    .debug_str:000000000000013e .LASF9
+C:\msys64\tmp\cc6epPuH.s:843    .debug_str:00000000000001c5 .LASF10
+C:\msys64\tmp\cc6epPuH.s:833    .debug_str:0000000000000158 .LASF11
+C:\msys64\tmp\cc6epPuH.s:835    .debug_str:000000000000016e .LASF12
+C:\msys64\tmp\cc6epPuH.s:817    .debug_str:0000000000000022 .LASF13
+C:\msys64\tmp\cc6epPuH.s:819    .debug_str:000000000000002e .LASF15
+C:\msys64\tmp\cc6epPuH.s:128    .text:0000000000000098 .LFB14
+C:\msys64\tmp\cc6epPuH.s:223    .text:0000000000000130 .LFE14
+C:\msys64\tmp\cc6epPuH.s:143    .text:00000000000000ac .LBB9
+C:\msys64\tmp\cc6epPuH.s:209    .text:000000000000011c .LBE9
+C:\msys64\tmp\cc6epPuH.s:708    .debug_loc:0000000000000000 .LLST3
+C:\msys64\tmp\cc6epPuH.s:783    .debug_ranges:0000000000000000 .Ldebug_ranges0
+GAS LISTING C:\msys64\tmp\cc6epPuH.s 			page 9
+
+
+C:\msys64\tmp\cc6epPuH.s:720    .debug_loc:0000000000000037 .LLST4
+C:\msys64\tmp\cc6epPuH.s:732    .debug_loc:000000000000006e .LLST5
+C:\msys64\tmp\cc6epPuH.s:189    .text:00000000000000f8 .LVL15
+C:\msys64\tmp\cc6epPuH.s:194    .text:0000000000000104 .LVL16
+C:\msys64\tmp\cc6epPuH.s:199    .text:0000000000000114 .LVL17
+C:\msys64\tmp\cc6epPuH.s:815    .debug_str:0000000000000016 .LASF14
+C:\msys64\tmp\cc6epPuH.s:839    .debug_str:00000000000001a2 .LASF16
+C:\msys64\tmp\cc6epPuH.s:21     .text:0000000000000000 .LFB13
+C:\msys64\tmp\cc6epPuH.s:117    .text:0000000000000098 .LFE13
+C:\msys64\tmp\cc6epPuH.s:37     .text:0000000000000014 .LBB2
+C:\msys64\tmp\cc6epPuH.s:103    .text:0000000000000084 .LBE2
+C:\msys64\tmp\cc6epPuH.s:739    .debug_loc:0000000000000091 .LLST0
+C:\msys64\tmp\cc6epPuH.s:751    .debug_loc:00000000000000c8 .LLST1
+C:\msys64\tmp\cc6epPuH.s:763    .debug_loc:00000000000000ff .LLST2
+C:\msys64\tmp\cc6epPuH.s:83     .text:0000000000000060 .LVL5
+C:\msys64\tmp\cc6epPuH.s:88     .text:000000000000006c .LVL6
+C:\msys64\tmp\cc6epPuH.s:93     .text:000000000000007c .LVL7
+C:\msys64\tmp\cc6epPuH.s:853    .debug_str:000000000000021e .LASF17
+C:\msys64\tmp\cc6epPuH.s:857    .debug_str:000000000000023e .LASF19
+C:\msys64\tmp\cc6epPuH.s:827    .debug_str:000000000000012c .LASF18
+C:\msys64\tmp\cc6epPuH.s:845    .debug_str:00000000000001db .LASF20
+C:\msys64\tmp\cc6epPuH.s:142    .text:00000000000000ac .LVL10
+C:\msys64\tmp\cc6epPuH.s:147    .text:00000000000000b4 .LVL11
+C:\msys64\tmp\cc6epPuH.s:218    .text:0000000000000128 .LVL19
+C:\msys64\tmp\cc6epPuH.s:179    .text:00000000000000e0 .LVL14
+C:\msys64\tmp\cc6epPuH.s:205    .text:000000000000011c .LVL18
+C:\msys64\tmp\cc6epPuH.s:163    .text:00000000000000c8 .LVL13
+C:\msys64\tmp\cc6epPuH.s:36     .text:0000000000000014 .LVL0
+C:\msys64\tmp\cc6epPuH.s:41     .text:000000000000001c .LVL1
+C:\msys64\tmp\cc6epPuH.s:112    .text:0000000000000090 .LVL9
+C:\msys64\tmp\cc6epPuH.s:73     .text:0000000000000048 .LVL4
+C:\msys64\tmp\cc6epPuH.s:99     .text:0000000000000084 .LVL8
+C:\msys64\tmp\cc6epPuH.s:57     .text:0000000000000030 .LVL3
+C:\msys64\tmp\cc6epPuH.s:229    .debug_info:0000000000000000 .Ldebug_info0
+C:\msys64\tmp\cc6epPuH.s:44     .text:000000000000001c .LBB4
+C:\msys64\tmp\cc6epPuH.s:69     .text:0000000000000044 .LBE4
+C:\msys64\tmp\cc6epPuH.s:95     .text:000000000000007c .LBB7
+C:\msys64\tmp\cc6epPuH.s:101    .text:0000000000000084 .LBE7
+C:\msys64\tmp\cc6epPuH.s:45     .text:000000000000001c .LBB5
+C:\msys64\tmp\cc6epPuH.s:54     .text:000000000000002c .LBE5
+C:\msys64\tmp\cc6epPuH.s:63     .text:000000000000003c .LBB6
+C:\msys64\tmp\cc6epPuH.s:68     .text:0000000000000044 .LBE6
+C:\msys64\tmp\cc6epPuH.s:150    .text:00000000000000b4 .LBB11
+C:\msys64\tmp\cc6epPuH.s:175    .text:00000000000000dc .LBE11
+C:\msys64\tmp\cc6epPuH.s:201    .text:0000000000000114 .LBB14
+C:\msys64\tmp\cc6epPuH.s:207    .text:000000000000011c .LBE14
+C:\msys64\tmp\cc6epPuH.s:151    .text:00000000000000b4 .LBB12
+C:\msys64\tmp\cc6epPuH.s:160    .text:00000000000000c4 .LBE12
+C:\msys64\tmp\cc6epPuH.s:169    .text:00000000000000d4 .LBB13
+C:\msys64\tmp\cc6epPuH.s:174    .text:00000000000000dc .LBE13
+
+UNDEFINED SYMBOLS
+_Z11printStringPKc
+_Z12printIntegerm

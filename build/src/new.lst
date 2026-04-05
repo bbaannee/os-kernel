@@ -1,0 +1,290 @@
+GAS LISTING /tmp/cciyxcJl.s 			page 1
+
+
+   1              		.file	"new.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_Znwm
+   9              	_Znwm:
+  10              	.LFB0:
+  11              		.file 1 "src/new.cpp"
+   1:src/new.cpp   **** #include "../lib/mem.h"
+   2:src/new.cpp   **** 
+   3:src/new.cpp   **** void *operator new (uint64 n){
+  12              		.loc 1 3 30
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FF 		addi	sp,sp,-16
+  16              		.cfi_def_cfa_offset 16
+  17 0004 23341100 		sd	ra,8(sp)
+  18 0008 23308100 		sd	s0,0(sp)
+  19              		.cfi_offset 1, -8
+  20              		.cfi_offset 8, -16
+  21 000c 13040101 		addi	s0,sp,16
+  22              		.cfi_def_cfa 8, 0
+   4:src/new.cpp   **** return __mem_alloc(n);
+  23              		.loc 1 4 1
+  24              		.loc 1 4 19 is_stmt 0
+  25 0010 97000000 		call	__mem_alloc@plt
+  25      E7800000 
+  26              	.LVL1:
+   5:src/new.cpp   **** }
+  27              		.loc 1 5 1
+  28 0018 83308100 		ld	ra,8(sp)
+  29              		.cfi_restore 1
+  30 001c 03340100 		ld	s0,0(sp)
+  31              		.cfi_restore 8
+  32              		.cfi_def_cfa 2, 16
+  33 0020 13010101 		addi	sp,sp,16
+  34              		.cfi_def_cfa_offset 0
+  35 0024 67800000 		jr	ra
+  36              		.cfi_endproc
+  37              	.LFE0:
+  39              		.align	2
+  40              		.globl	_Znam
+  42              	_Znam:
+  43              	.LFB1:
+   6:src/new.cpp   **** 
+   7:src/new.cpp   **** void *operator new[](uint64 n) {
+  44              		.loc 1 7 32 is_stmt 1
+  45              		.cfi_startproc
+  46              	.LVL2:
+  47 0028 130101FF 		addi	sp,sp,-16
+  48              		.cfi_def_cfa_offset 16
+  49 002c 23341100 		sd	ra,8(sp)
+  50 0030 23308100 		sd	s0,0(sp)
+  51              		.cfi_offset 1, -8
+  52              		.cfi_offset 8, -16
+GAS LISTING /tmp/cciyxcJl.s 			page 2
+
+
+  53 0034 13040101 		addi	s0,sp,16
+  54              		.cfi_def_cfa 8, 0
+   8:src/new.cpp   ****     return __mem_alloc(n);
+  55              		.loc 1 8 5
+  56              		.loc 1 8 23 is_stmt 0
+  57 0038 97000000 		call	__mem_alloc@plt
+  57      E7800000 
+  58              	.LVL3:
+   9:src/new.cpp   **** }
+  59              		.loc 1 9 1
+  60 0040 83308100 		ld	ra,8(sp)
+  61              		.cfi_restore 1
+  62 0044 03340100 		ld	s0,0(sp)
+  63              		.cfi_restore 8
+  64              		.cfi_def_cfa 2, 16
+  65 0048 13010101 		addi	sp,sp,16
+  66              		.cfi_def_cfa_offset 0
+  67 004c 67800000 		jr	ra
+  68              		.cfi_endproc
+  69              	.LFE1:
+  71              		.align	2
+  72              		.globl	_ZdlPv
+  74              	_ZdlPv:
+  75              	.LFB2:
+  10:src/new.cpp   **** 
+  11:src/new.cpp   **** void operator delete(void *p) noexcept{
+  76              		.loc 1 11 39 is_stmt 1
+  77              		.cfi_startproc
+  78              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+  79              		.cfi_lsda 0x1b,.LLSDA2
+  80              	.LVL4:
+  81 0050 130101FF 		addi	sp,sp,-16
+  82              		.cfi_def_cfa_offset 16
+  83 0054 23341100 		sd	ra,8(sp)
+  84 0058 23308100 		sd	s0,0(sp)
+  85              		.cfi_offset 1, -8
+  86              		.cfi_offset 8, -16
+  87 005c 13040101 		addi	s0,sp,16
+  88              		.cfi_def_cfa 8, 0
+  12:src/new.cpp   **** __mem_free(p);}
+  89              		.loc 1 12 1
+  90              		.loc 1 12 11 is_stmt 0
+  91 0060 97000000 		call	__mem_free@plt
+  91      E7800000 
+  92              	.LVL5:
+  93              		.loc 1 12 15
+  94 0068 83308100 		ld	ra,8(sp)
+  95              		.cfi_restore 1
+  96 006c 03340100 		ld	s0,0(sp)
+  97              		.cfi_restore 8
+  98              		.cfi_def_cfa 2, 16
+  99 0070 13010101 		addi	sp,sp,16
+ 100              		.cfi_def_cfa_offset 0
+ 101 0074 67800000 		jr	ra
+ 102              		.cfi_endproc
+ 103              	.LFE2:
+ 104              		.globl	__gxx_personality_v0
+GAS LISTING /tmp/cciyxcJl.s 			page 3
+
+
+ 105              		.section	.gcc_except_table,"a",@progbits
+ 106              	.LLSDA2:
+ 107 0000 FF       		.byte	0xff
+ 108 0001 FF       		.byte	0xff
+ 109 0002 03       		.byte	0x3
+ 110 0003 00       		.byte	0
+ 111              		.text
+ 113              		.align	2
+ 114              		.globl	_ZdaPv
+ 116              	_ZdaPv:
+ 117              	.LFB3:
+  13:src/new.cpp   **** 
+  14:src/new.cpp   **** void operator delete[](void *p) noexcept{}...
+ 118              		.loc 1 14 41 is_stmt 1
+ 119              		.cfi_startproc
+ 120              	.LVL6:
+ 121 0078 130101FF 		addi	sp,sp,-16
+ 122              		.cfi_def_cfa_offset 16
+ 123 007c 23348100 		sd	s0,8(sp)
+ 124              		.cfi_offset 8, -8
+ 125 0080 13040101 		addi	s0,sp,16
+ 126              		.cfi_def_cfa 8, 0
+ 127              		.loc 1 14 42 is_stmt 0
+ 128 0084 03348100 		ld	s0,8(sp)
+ 129              		.cfi_restore 8
+ 130              		.cfi_def_cfa 2, 16
+ 131 0088 13010101 		addi	sp,sp,16
+ 132              		.cfi_def_cfa_offset 0
+ 133 008c 67800000 		jr	ra
+ 134              		.cfi_endproc
+ 135              	.LFE3:
+ 137              	.Letext0:
+ 138              		.file 2 "src/../lib/hw.h"
+ 139              		.file 3 "src/../lib/mem.h"
+ 767              		.align	3
+ 770              	DW.ref.__gxx_personality_v0:
+ 771 0000 00000000 		.dword	__gxx_personality_v0
+ 771      00000000 
+ 772              		.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04) 9.4.0"
+ 773              		.section	.note.GNU-stack,"",@progbits
+GAS LISTING /tmp/cciyxcJl.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 new.cpp
+     /tmp/cciyxcJl.s:9      .text:0000000000000000 _Znwm
+     /tmp/cciyxcJl.s:13     .text:0000000000000000 .L0 
+     /tmp/cciyxcJl.s:15     .text:0000000000000000 .L0 
+     /tmp/cciyxcJl.s:16     .text:0000000000000004 .L0 
+     /tmp/cciyxcJl.s:19     .text:000000000000000c .L0 
+     /tmp/cciyxcJl.s:20     .text:000000000000000c .L0 
+     /tmp/cciyxcJl.s:22     .text:0000000000000010 .L0 
+     /tmp/cciyxcJl.s:24     .text:0000000000000010 .L0 
+     /tmp/cciyxcJl.s:25     .text:0000000000000010 .L0 
+     /tmp/cciyxcJl.s:28     .text:0000000000000018 .L0 
+     /tmp/cciyxcJl.s:29     .text:000000000000001c .L0 
+     /tmp/cciyxcJl.s:31     .text:0000000000000020 .L0 
+     /tmp/cciyxcJl.s:32     .text:0000000000000020 .L0 
+     /tmp/cciyxcJl.s:34     .text:0000000000000024 .L0 
+     /tmp/cciyxcJl.s:36     .text:0000000000000028 .L0 
+     /tmp/cciyxcJl.s:42     .text:0000000000000028 _Znam
+     /tmp/cciyxcJl.s:45     .text:0000000000000028 .L0 
+     /tmp/cciyxcJl.s:47     .text:0000000000000028 .L0 
+     /tmp/cciyxcJl.s:48     .text:000000000000002c .L0 
+     /tmp/cciyxcJl.s:51     .text:0000000000000034 .L0 
+     /tmp/cciyxcJl.s:52     .text:0000000000000034 .L0 
+     /tmp/cciyxcJl.s:54     .text:0000000000000038 .L0 
+     /tmp/cciyxcJl.s:56     .text:0000000000000038 .L0 
+     /tmp/cciyxcJl.s:57     .text:0000000000000038 .L0 
+     /tmp/cciyxcJl.s:60     .text:0000000000000040 .L0 
+     /tmp/cciyxcJl.s:61     .text:0000000000000044 .L0 
+     /tmp/cciyxcJl.s:63     .text:0000000000000048 .L0 
+     /tmp/cciyxcJl.s:64     .text:0000000000000048 .L0 
+     /tmp/cciyxcJl.s:66     .text:000000000000004c .L0 
+     /tmp/cciyxcJl.s:68     .text:0000000000000050 .L0 
+     /tmp/cciyxcJl.s:74     .text:0000000000000050 _ZdlPv
+     /tmp/cciyxcJl.s:77     .text:0000000000000050 .L0 
+     /tmp/cciyxcJl.s:770    .data.rel.local.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
+     /tmp/cciyxcJl.s:81     .text:0000000000000050 .L0 
+     /tmp/cciyxcJl.s:82     .text:0000000000000054 .L0 
+     /tmp/cciyxcJl.s:85     .text:000000000000005c .L0 
+     /tmp/cciyxcJl.s:86     .text:000000000000005c .L0 
+     /tmp/cciyxcJl.s:88     .text:0000000000000060 .L0 
+     /tmp/cciyxcJl.s:90     .text:0000000000000060 .L0 
+     /tmp/cciyxcJl.s:91     .text:0000000000000060 .L0 
+     /tmp/cciyxcJl.s:94     .text:0000000000000068 .L0 
+     /tmp/cciyxcJl.s:95     .text:000000000000006c .L0 
+     /tmp/cciyxcJl.s:97     .text:0000000000000070 .L0 
+     /tmp/cciyxcJl.s:98     .text:0000000000000070 .L0 
+     /tmp/cciyxcJl.s:100    .text:0000000000000074 .L0 
+     /tmp/cciyxcJl.s:102    .text:0000000000000078 .L0 
+     /tmp/cciyxcJl.s:116    .text:0000000000000078 _ZdaPv
+     /tmp/cciyxcJl.s:119    .text:0000000000000078 .L0 
+     /tmp/cciyxcJl.s:121    .text:0000000000000078 .L0 
+     /tmp/cciyxcJl.s:122    .text:000000000000007c .L0 
+     /tmp/cciyxcJl.s:124    .text:0000000000000080 .L0 
+     /tmp/cciyxcJl.s:126    .text:0000000000000084 .L0 
+     /tmp/cciyxcJl.s:128    .text:0000000000000084 .L0 
+     /tmp/cciyxcJl.s:129    .text:0000000000000088 .L0 
+     /tmp/cciyxcJl.s:130    .text:0000000000000088 .L0 
+GAS LISTING /tmp/cciyxcJl.s 			page 5
+
+
+     /tmp/cciyxcJl.s:132    .text:000000000000008c .L0 
+     /tmp/cciyxcJl.s:134    .text:0000000000000090 .L0 
+     /tmp/cciyxcJl.s:140    .text:0000000000000090 .L0 
+     /tmp/cciyxcJl.s:390    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/cciyxcJl.s:748    .debug_str:000000000000014e .LASF27
+     /tmp/cciyxcJl.s:754    .debug_str:0000000000000228 .LASF28
+     /tmp/cciyxcJl.s:728    .debug_str:000000000000009b .LASF29
+     /tmp/cciyxcJl.s:5      .text:0000000000000000 .Ltext0
+     /tmp/cciyxcJl.s:137    .text:0000000000000090 .Letext0
+     /tmp/cciyxcJl.s:702    .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/cciyxcJl.s:710    .debug_str:0000000000000027 .LASF0
+     /tmp/cciyxcJl.s:746    .debug_str:000000000000013b .LASF1
+     /tmp/cciyxcJl.s:734    .debug_str:00000000000000d5 .LASF2
+     /tmp/cciyxcJl.s:726    .debug_str:0000000000000094 .LASF4
+     /tmp/cciyxcJl.s:722    .debug_str:000000000000006f .LASF3
+     /tmp/cciyxcJl.s:716    .debug_str:0000000000000051 .LASF5
+     /tmp/cciyxcJl.s:724    .debug_str:0000000000000081 .LASF6
+     /tmp/cciyxcJl.s:744    .debug_str:0000000000000128 .LASF7
+     /tmp/cciyxcJl.s:758    .debug_str:000000000000023a .LASF8
+     /tmp/cciyxcJl.s:712    .debug_str:0000000000000034 .LASF9
+     /tmp/cciyxcJl.s:714    .debug_str:0000000000000042 .LASF10
+     /tmp/cciyxcJl.s:750    .debug_str:0000000000000212 .LASF11
+     /tmp/cciyxcJl.s:718    .debug_str:0000000000000058 .LASF12
+     /tmp/cciyxcJl.s:760    .debug_str:000000000000024a .LASF13
+     /tmp/cciyxcJl.s:732    .debug_str:00000000000000c9 .LASF14
+     /tmp/cciyxcJl.s:740    .debug_str:000000000000010c .LASF15
+     /tmp/cciyxcJl.s:738    .debug_str:00000000000000f6 .LASF16
+     /tmp/cciyxcJl.s:736    .debug_str:00000000000000e3 .LASF17
+     /tmp/cciyxcJl.s:752    .debug_str:0000000000000221 .LASF19
+     /tmp/cciyxcJl.s:117    .text:0000000000000078 .LFB3
+     /tmp/cciyxcJl.s:135    .text:0000000000000090 .LFE3
+     /tmp/cciyxcJl.s:730    .debug_str:00000000000000b9 .LASF18
+     /tmp/cciyxcJl.s:720    .debug_str:0000000000000068 .LASF20
+     /tmp/cciyxcJl.s:75     .text:0000000000000050 .LFB2
+     /tmp/cciyxcJl.s:103    .text:0000000000000078 .LFE2
+     /tmp/cciyxcJl.s:647    .debug_loc:0000000000000000 .LLST2
+     /tmp/cciyxcJl.s:92     .text:0000000000000068 .LVL5
+     /tmp/cciyxcJl.s:706    .debug_str:000000000000000b .LASF21
+     /tmp/cciyxcJl.s:742    .debug_str:0000000000000122 .LASF23
+     /tmp/cciyxcJl.s:43     .text:0000000000000028 .LFB1
+     /tmp/cciyxcJl.s:69     .text:0000000000000050 .LFE1
+     /tmp/cciyxcJl.s:661    .debug_loc:0000000000000039 .LLST1
+     /tmp/cciyxcJl.s:58     .text:0000000000000040 .LVL3
+     /tmp/cciyxcJl.s:762    .debug_str:000000000000025a .LASF22
+     /tmp/cciyxcJl.s:756    .debug_str:0000000000000234 .LASF24
+     /tmp/cciyxcJl.s:10     .text:0000000000000000 .LFB0
+     /tmp/cciyxcJl.s:37     .text:0000000000000028 .LFE0
+     /tmp/cciyxcJl.s:675    .debug_loc:0000000000000072 .LLST0
+     /tmp/cciyxcJl.s:26     .text:0000000000000018 .LVL1
+     /tmp/cciyxcJl.s:704    .debug_str:0000000000000000 .LASF25
+     /tmp/cciyxcJl.s:708    .debug_str:000000000000001b .LASF26
+     /tmp/cciyxcJl.s:80     .text:0000000000000050 .LVL4
+     /tmp/cciyxcJl.s:46     .text:0000000000000028 .LVL2
+     /tmp/cciyxcJl.s:14     .text:0000000000000000 .LVL0
+     /tmp/cciyxcJl.s:141    .debug_info:0000000000000000 .Ldebug_info0
+     /tmp/cciyxcJl.s:106    .gcc_except_table:0000000000000000 .LLSDA2
+
+GAS LISTING /tmp/cciyxcJl.s 			page 6
+
+
+UNDEFINED SYMBOLS
+__mem_alloc
+__mem_free
+__gxx_personality_v0
