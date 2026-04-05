@@ -56,14 +56,12 @@
 
         static void w_sstatus(uint64 sstatus);
 
-        static uint64 readARegister(int reg_number);
-
-        static void writeARegister(int reg_number, uint64 value);
+       
 
 
         static void supervisorTrap();
     private:
-        static void handleSupervisorTrap();
+        static void handleSupervisorTrap(uint64* regs);
 
     };
 
@@ -159,14 +157,6 @@
         __asm__ volatile ("csrw sstatus, %[sstatus]" : : [sstatus] "r"(sstatus));
     }
 
-inline uint64 Riscv::readARegister(int reg_number) {
-        uint64 value;
-        __asm__ volatile("mv %[val], a%[reg]" : [val] "=r" (value) : [reg] "i" (reg_number));
-        return value;
-    }
 
 
-inline void Riscv::writeARegister( int reg_number, uint64 value) {
-        __asm__ volatile("mv a%[reg], %[val]" :: [reg] "i" (reg_number), [val] "r" (value));
-    }
     #endif //PROJECT_BASE_RISCB_H

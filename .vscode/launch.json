@@ -1,16 +1,16 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"type": "gdb",
-			"request": "attach",
-			"name": "Attach to QEMU",
-			"executable": "kernel",
-			"target": "localhost:26000",
-			"remote": true,
-			"cwd": "${workspaceRoot}",
-			"valuesFormatting": "prettyPrinters",
-			"gdbpath": "gdb-multiarch",
-		}
-	]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "attach",
+            "name": "Attach to QEMU",
+            "executable": "${workspaceRoot}/kernel",
+            "target": "localhost:27609", 
+            "remote": true,
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "prettyPrinters",
+            "gdbpath": "C:\\msys64\\mingw64\\bin\\gdb-multiarch.exe" // Stavi punu putanju sa duplim backslash-om
+        }
+    ]
 }

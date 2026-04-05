@@ -1,4 +1,4 @@
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 1
 
 
    1              		.file	"MemoryAllocator.cpp"
@@ -58,7 +58,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
   42:src/MemoryAllocator.cpp **** 
   43:src/MemoryAllocator.cpp **** void *MemoryAllocator::kmalloc(size_t size) {  // argument is in bytes
   44:src/MemoryAllocator.cpp ****     if(!isinit){
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 2
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 2
 
 
   45:src/MemoryAllocator.cpp ****         isinit = true;
@@ -118,7 +118,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
   86:src/MemoryAllocator.cpp ****     size_t end = (size_t)HEAP_END_ADDR;
   27              		.loc 1 86 5 is_stmt 1
   28              		.loc 1 86 12 is_stmt 0
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 3
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 3
 
 
   29 0014 17070000 		ld	a4,HEAP_END_ADDR
@@ -178,7 +178,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
   73              		.cfi_endproc
   74              	.LFE2:
   76              		.align	2
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 4
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 4
 
 
   77              		.globl	_ZN15MemoryAllocator7kmallocEm
@@ -238,7 +238,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  118              	.L17:
   45:src/MemoryAllocator.cpp ****         init();
  119              		.loc 1 45 9 is_stmt 1
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 5
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 5
 
 
   45:src/MemoryAllocator.cpp ****         init();
@@ -298,7 +298,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  156              	.LVL16:
  157              	.L7:
   63:src/MemoryAllocator.cpp ****     size_t remaining_bytes = curr->size - bytes_needed;
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 6
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 6
 
 
  158              		.loc 1 63 5 is_stmt 1
@@ -358,7 +358,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  194              		.loc 1 76 9
   76:src/MemoryAllocator.cpp ****     }else{
  195              		.loc 1 76 22 is_stmt 0
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 7
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 7
 
 
  196 0104 2330B600 		sd	a1,0(a2)
@@ -418,7 +418,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  241              		.loc 1 98 54 is_stmt 1
  242              		.cfi_startproc
  243              	.LVL29:
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 8
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 8
 
 
  244 0138 130101FF 		addi	sp,sp,-16
@@ -478,7 +478,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  107:src/MemoryAllocator.cpp ****     }
  284              		.loc 1 107 9 is_stmt 1
  107:src/MemoryAllocator.cpp ****     }
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 9
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 9
 
 
  285              		.loc 1 107 38 is_stmt 0
@@ -538,7 +538,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
   11:src/MemoryAllocator.cpp ****         return -1;
  331              		.loc 1 11 24 is_stmt 0
  332 01b8 97070000 		ld	a5,HEAP_START_ADDR
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 10
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 10
 
 
  332      83B70700 
@@ -598,7 +598,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  367              	.LVL41:
  368              	.L34:
    6:src/MemoryAllocator.cpp ****     if(!addr) return -1;
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 11
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 11
 
 
  369              		.loc 1 6 18 is_stmt 1 discriminator 1
@@ -658,7 +658,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  404              	.LVL47:
  405              	.L24:
   41:src/MemoryAllocator.cpp **** 
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 12
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 12
 
 
  406              		.loc 1 41 1
@@ -718,7 +718,7 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  452              	.LVL57:
  453 027c 6FF0DFFB 		j	.L24
  454              		.cfi_endproc
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 13
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 13
 
 
  455              	.LFE0:
@@ -735,399 +735,399 @@ GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 1
  470              	.Letext0:
  471              		.file 2 "src/../h/../lib/hw.h"
  472              		.file 3 "src/../h/MemoryAllocator.h"
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 14
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 14
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 MemoryAllocator.cpp
-C:\msys64\tmp\ccKOonaH.s:12     .text:0000000000000000 _ZN15MemoryAllocator4initEv
-C:\msys64\tmp\ccKOonaH.s:16     .text:0000000000000000 .L0 
-C:\msys64\tmp\ccKOonaH.s:17     .text:0000000000000000 .L0 
-C:\msys64\tmp\ccKOonaH.s:18     .text:0000000000000004 .L0 
-C:\msys64\tmp\ccKOonaH.s:20     .text:0000000000000008 .L0 
-C:\msys64\tmp\ccKOonaH.s:22     .text:000000000000000c .L0 
-C:\msys64\tmp\ccKOonaH.s:24     .text:000000000000000c .L0 
-C:\msys64\tmp\ccKOonaH.s:25     .text:000000000000000c .L0 
-C:\msys64\tmp\ccKOonaH.s:28     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccKOonaH.s:29     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccKOonaH.s:32     .text:000000000000001c .L0 
-C:\msys64\tmp\ccKOonaH.s:33     .text:000000000000001c .L0 
-C:\msys64\tmp\ccKOonaH.s:35     .text:0000000000000020 .L0 
-C:\msys64\tmp\ccKOonaH.s:37     .text:0000000000000024 .L0 
-C:\msys64\tmp\ccKOonaH.s:40     .text:0000000000000028 .L0 
-C:\msys64\tmp\ccKOonaH.s:44     .text:000000000000002c .L0 
-C:\msys64\tmp\ccKOonaH.s:45     .text:000000000000002c .L0 
-C:\msys64\tmp\ccKOonaH.s:47     .text:0000000000000030 .L0 
-C:\msys64\tmp\ccKOonaH.s:49     .text:0000000000000034 .L0 
-C:\msys64\tmp\ccKOonaH.s:53     .text:0000000000000038 .L0 
-C:\msys64\tmp\ccKOonaH.s:463    .sbss:0000000000000000 _ZN15MemoryAllocator4headE
-C:\msys64\tmp\ccKOonaH.s:54     .text:0000000000000038 .L0 
-C:\msys64\tmp\ccKOonaH.s:56     .text:0000000000000040 .L0 
-C:\msys64\tmp\ccKOonaH.s:57     .text:0000000000000040 .L0 
-C:\msys64\tmp\ccKOonaH.s:60     .text:0000000000000044 .L0 
-C:\msys64\tmp\ccKOonaH.s:62     .text:0000000000000048 .L0 
-C:\msys64\tmp\ccKOonaH.s:64     .text:000000000000004c .L0 
-C:\msys64\tmp\ccKOonaH.s:65     .text:000000000000004c .L0 
-C:\msys64\tmp\ccKOonaH.s:67     .text:0000000000000050 .L0 
-C:\msys64\tmp\ccKOonaH.s:68     .text:0000000000000054 .L0 
-C:\msys64\tmp\ccKOonaH.s:69     .text:0000000000000054 .L0 
-C:\msys64\tmp\ccKOonaH.s:71     .text:0000000000000058 .L0 
-C:\msys64\tmp\ccKOonaH.s:73     .text:000000000000005c .L0 
-C:\msys64\tmp\ccKOonaH.s:79     .text:000000000000005c _ZN15MemoryAllocator7kmallocEm
-C:\msys64\tmp\ccKOonaH.s:82     .text:000000000000005c .L0 
-C:\msys64\tmp\ccKOonaH.s:84     .text:000000000000005c .L0 
-C:\msys64\tmp\ccKOonaH.s:85     .text:0000000000000060 .L0 
-C:\msys64\tmp\ccKOonaH.s:89     .text:000000000000006c .L0 
-C:\msys64\tmp\ccKOonaH.s:90     .text:000000000000006c .L0 
-C:\msys64\tmp\ccKOonaH.s:91     .text:000000000000006c .L0 
-C:\msys64\tmp\ccKOonaH.s:93     .text:0000000000000070 .L0 
-C:\msys64\tmp\ccKOonaH.s:96     .text:0000000000000074 .L0 
-C:\msys64\tmp\ccKOonaH.s:467    .sbss:0000000000000008 _ZN15MemoryAllocator6isinitE
-C:\msys64\tmp\ccKOonaH.s:97     .text:0000000000000074 .L0 
-C:\msys64\tmp\ccKOonaH.s:99     .text:000000000000007c .L0 
-C:\msys64\tmp\ccKOonaH.s:103    .text:0000000000000080 .L0 
-C:\msys64\tmp\ccKOonaH.s:104    .text:0000000000000080 .L0 
-C:\msys64\tmp\ccKOonaH.s:106    .text:0000000000000084 .L0 
-C:\msys64\tmp\ccKOonaH.s:109    .text:0000000000000088 .L0 
-C:\msys64\tmp\ccKOonaH.s:110    .text:0000000000000088 .L0 
-C:\msys64\tmp\ccKOonaH.s:111    .text:0000000000000088 .L0 
-C:\msys64\tmp\ccKOonaH.s:114    .text:0000000000000090 .L0 
-C:\msys64\tmp\ccKOonaH.s:115    .text:0000000000000090 .L0 
-C:\msys64\tmp\ccKOonaH.s:120    .text:0000000000000098 .L0 
-C:\msys64\tmp\ccKOonaH.s:121    .text:0000000000000098 .L0 
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 15
+C:\msys64\tmp\ccf6EPvR.s:12     .text:0000000000000000 _ZN15MemoryAllocator4initEv
+C:\msys64\tmp\ccf6EPvR.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccf6EPvR.s:17     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccf6EPvR.s:18     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccf6EPvR.s:20     .text:0000000000000008 .L0 
+C:\msys64\tmp\ccf6EPvR.s:22     .text:000000000000000c .L0 
+C:\msys64\tmp\ccf6EPvR.s:24     .text:000000000000000c .L0 
+C:\msys64\tmp\ccf6EPvR.s:25     .text:000000000000000c .L0 
+C:\msys64\tmp\ccf6EPvR.s:28     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccf6EPvR.s:29     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccf6EPvR.s:32     .text:000000000000001c .L0 
+C:\msys64\tmp\ccf6EPvR.s:33     .text:000000000000001c .L0 
+C:\msys64\tmp\ccf6EPvR.s:35     .text:0000000000000020 .L0 
+C:\msys64\tmp\ccf6EPvR.s:37     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccf6EPvR.s:40     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccf6EPvR.s:44     .text:000000000000002c .L0 
+C:\msys64\tmp\ccf6EPvR.s:45     .text:000000000000002c .L0 
+C:\msys64\tmp\ccf6EPvR.s:47     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccf6EPvR.s:49     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccf6EPvR.s:53     .text:0000000000000038 .L0 
+C:\msys64\tmp\ccf6EPvR.s:463    .sbss:0000000000000000 _ZN15MemoryAllocator4headE
+C:\msys64\tmp\ccf6EPvR.s:54     .text:0000000000000038 .L0 
+C:\msys64\tmp\ccf6EPvR.s:56     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccf6EPvR.s:57     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccf6EPvR.s:60     .text:0000000000000044 .L0 
+C:\msys64\tmp\ccf6EPvR.s:62     .text:0000000000000048 .L0 
+C:\msys64\tmp\ccf6EPvR.s:64     .text:000000000000004c .L0 
+C:\msys64\tmp\ccf6EPvR.s:65     .text:000000000000004c .L0 
+C:\msys64\tmp\ccf6EPvR.s:67     .text:0000000000000050 .L0 
+C:\msys64\tmp\ccf6EPvR.s:68     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccf6EPvR.s:69     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccf6EPvR.s:71     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccf6EPvR.s:73     .text:000000000000005c .L0 
+C:\msys64\tmp\ccf6EPvR.s:79     .text:000000000000005c _ZN15MemoryAllocator7kmallocEm
+C:\msys64\tmp\ccf6EPvR.s:82     .text:000000000000005c .L0 
+C:\msys64\tmp\ccf6EPvR.s:84     .text:000000000000005c .L0 
+C:\msys64\tmp\ccf6EPvR.s:85     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccf6EPvR.s:89     .text:000000000000006c .L0 
+C:\msys64\tmp\ccf6EPvR.s:90     .text:000000000000006c .L0 
+C:\msys64\tmp\ccf6EPvR.s:91     .text:000000000000006c .L0 
+C:\msys64\tmp\ccf6EPvR.s:93     .text:0000000000000070 .L0 
+C:\msys64\tmp\ccf6EPvR.s:96     .text:0000000000000074 .L0 
+C:\msys64\tmp\ccf6EPvR.s:467    .sbss:0000000000000008 _ZN15MemoryAllocator6isinitE
+C:\msys64\tmp\ccf6EPvR.s:97     .text:0000000000000074 .L0 
+C:\msys64\tmp\ccf6EPvR.s:99     .text:000000000000007c .L0 
+C:\msys64\tmp\ccf6EPvR.s:103    .text:0000000000000080 .L0 
+C:\msys64\tmp\ccf6EPvR.s:104    .text:0000000000000080 .L0 
+C:\msys64\tmp\ccf6EPvR.s:106    .text:0000000000000084 .L0 
+C:\msys64\tmp\ccf6EPvR.s:109    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccf6EPvR.s:110    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccf6EPvR.s:111    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccf6EPvR.s:114    .text:0000000000000090 .L0 
+C:\msys64\tmp\ccf6EPvR.s:115    .text:0000000000000090 .L0 
+C:\msys64\tmp\ccf6EPvR.s:120    .text:0000000000000098 .L0 
+C:\msys64\tmp\ccf6EPvR.s:121    .text:0000000000000098 .L0 
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 15
 
 
-C:\msys64\tmp\ccKOonaH.s:124    .text:00000000000000a4 .L0 
-C:\msys64\tmp\ccKOonaH.s:125    .text:00000000000000a4 .L0 
-C:\msys64\tmp\ccKOonaH.s:131    .text:00000000000000b0 .L0 
-C:\msys64\tmp\ccKOonaH.s:132    .text:00000000000000b0 .L0 
-C:\msys64\tmp\ccKOonaH.s:133    .text:00000000000000b0 .L0 
-C:\msys64\tmp\ccKOonaH.s:135    .text:00000000000000b4 .L0 
-C:\msys64\tmp\ccKOonaH.s:139    .text:00000000000000b8 .L0 
-C:\msys64\tmp\ccKOonaH.s:140    .text:00000000000000b8 .L0 
-C:\msys64\tmp\ccKOonaH.s:142    .text:00000000000000bc .L0 
-C:\msys64\tmp\ccKOonaH.s:143    .text:00000000000000bc .L0 
-C:\msys64\tmp\ccKOonaH.s:145    .text:00000000000000c0 .L0 
-C:\msys64\tmp\ccKOonaH.s:147    .text:00000000000000c4 .L0 
-C:\msys64\tmp\ccKOonaH.s:148    .text:00000000000000c4 .L0 
-C:\msys64\tmp\ccKOonaH.s:151    .text:00000000000000c8 .L0 
-C:\msys64\tmp\ccKOonaH.s:155    .text:00000000000000cc .L0 
-C:\msys64\tmp\ccKOonaH.s:159    .text:00000000000000d0 .L0 
-C:\msys64\tmp\ccKOonaH.s:161    .text:00000000000000d4 .L0 
-C:\msys64\tmp\ccKOonaH.s:162    .text:00000000000000d4 .L0 
-C:\msys64\tmp\ccKOonaH.s:164    .text:00000000000000d8 .L0 
-C:\msys64\tmp\ccKOonaH.s:167    .text:00000000000000dc .L0 
-C:\msys64\tmp\ccKOonaH.s:168    .text:00000000000000dc .L0 
-C:\msys64\tmp\ccKOonaH.s:171    .text:00000000000000e4 .L0 
-C:\msys64\tmp\ccKOonaH.s:172    .text:00000000000000e4 .L0 
-C:\msys64\tmp\ccKOonaH.s:174    .text:00000000000000e8 .L0 
-C:\msys64\tmp\ccKOonaH.s:177    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccKOonaH.s:178    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccKOonaH.s:180    .text:00000000000000f0 .L0 
-C:\msys64\tmp\ccKOonaH.s:182    .text:00000000000000f4 .L0 
-C:\msys64\tmp\ccKOonaH.s:183    .text:00000000000000f4 .L0 
-C:\msys64\tmp\ccKOonaH.s:186    .text:00000000000000f8 .L0 
-C:\msys64\tmp\ccKOonaH.s:188    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccKOonaH.s:189    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccKOonaH.s:193    .text:0000000000000100 .L0 
-C:\msys64\tmp\ccKOonaH.s:195    .text:0000000000000104 .L0 
-C:\msys64\tmp\ccKOonaH.s:196    .text:0000000000000104 .L0 
-C:\msys64\tmp\ccKOonaH.s:200    .text:0000000000000108 .L0 
-C:\msys64\tmp\ccKOonaH.s:201    .text:000000000000010c .L0 
-C:\msys64\tmp\ccKOonaH.s:202    .text:000000000000010c .L0 
-C:\msys64\tmp\ccKOonaH.s:204    .text:0000000000000110 .L0 
-C:\msys64\tmp\ccKOonaH.s:205    .text:0000000000000110 .L0 
-C:\msys64\tmp\ccKOonaH.s:207    .text:0000000000000114 .L0 
-C:\msys64\tmp\ccKOonaH.s:210    .text:0000000000000118 .L0 
-C:\msys64\tmp\ccKOonaH.s:214    .text:000000000000011c .L0 
-C:\msys64\tmp\ccKOonaH.s:216    .text:000000000000011c .L0 
-C:\msys64\tmp\ccKOonaH.s:217    .text:000000000000011c .L0 
-C:\msys64\tmp\ccKOonaH.s:223    .text:0000000000000124 .L0 
-C:\msys64\tmp\ccKOonaH.s:224    .text:0000000000000124 .L0 
-C:\msys64\tmp\ccKOonaH.s:230    .text:0000000000000130 .L0 
-C:\msys64\tmp\ccKOonaH.s:233    .text:0000000000000138 .L0 
-C:\msys64\tmp\ccKOonaH.s:239    .text:0000000000000138 _ZN15MemoryAllocator8tryMergeEPNS_13segmentHeaderE
-C:\msys64\tmp\ccKOonaH.s:242    .text:0000000000000138 .L0 
-C:\msys64\tmp\ccKOonaH.s:244    .text:0000000000000138 .L0 
-C:\msys64\tmp\ccKOonaH.s:245    .text:000000000000013c .L0 
-C:\msys64\tmp\ccKOonaH.s:247    .text:0000000000000140 .L0 
-C:\msys64\tmp\ccKOonaH.s:249    .text:0000000000000144 .L0 
-C:\msys64\tmp\ccKOonaH.s:251    .text:0000000000000144 .L0 
-C:\msys64\tmp\ccKOonaH.s:253    .text:0000000000000148 .L0 
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 16
+C:\msys64\tmp\ccf6EPvR.s:124    .text:00000000000000a4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:125    .text:00000000000000a4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:131    .text:00000000000000b0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:132    .text:00000000000000b0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:133    .text:00000000000000b0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:135    .text:00000000000000b4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:139    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:140    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:142    .text:00000000000000bc .L0 
+C:\msys64\tmp\ccf6EPvR.s:143    .text:00000000000000bc .L0 
+C:\msys64\tmp\ccf6EPvR.s:145    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:147    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:148    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:151    .text:00000000000000c8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:155    .text:00000000000000cc .L0 
+C:\msys64\tmp\ccf6EPvR.s:159    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:161    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:162    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:164    .text:00000000000000d8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:167    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccf6EPvR.s:168    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccf6EPvR.s:171    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:172    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:174    .text:00000000000000e8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:177    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccf6EPvR.s:178    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccf6EPvR.s:180    .text:00000000000000f0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:182    .text:00000000000000f4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:183    .text:00000000000000f4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:186    .text:00000000000000f8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:188    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccf6EPvR.s:189    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccf6EPvR.s:193    .text:0000000000000100 .L0 
+C:\msys64\tmp\ccf6EPvR.s:195    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccf6EPvR.s:196    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccf6EPvR.s:200    .text:0000000000000108 .L0 
+C:\msys64\tmp\ccf6EPvR.s:201    .text:000000000000010c .L0 
+C:\msys64\tmp\ccf6EPvR.s:202    .text:000000000000010c .L0 
+C:\msys64\tmp\ccf6EPvR.s:204    .text:0000000000000110 .L0 
+C:\msys64\tmp\ccf6EPvR.s:205    .text:0000000000000110 .L0 
+C:\msys64\tmp\ccf6EPvR.s:207    .text:0000000000000114 .L0 
+C:\msys64\tmp\ccf6EPvR.s:210    .text:0000000000000118 .L0 
+C:\msys64\tmp\ccf6EPvR.s:214    .text:000000000000011c .L0 
+C:\msys64\tmp\ccf6EPvR.s:216    .text:000000000000011c .L0 
+C:\msys64\tmp\ccf6EPvR.s:217    .text:000000000000011c .L0 
+C:\msys64\tmp\ccf6EPvR.s:223    .text:0000000000000124 .L0 
+C:\msys64\tmp\ccf6EPvR.s:224    .text:0000000000000124 .L0 
+C:\msys64\tmp\ccf6EPvR.s:230    .text:0000000000000130 .L0 
+C:\msys64\tmp\ccf6EPvR.s:233    .text:0000000000000138 .L0 
+C:\msys64\tmp\ccf6EPvR.s:239    .text:0000000000000138 _ZN15MemoryAllocator8tryMergeEPNS_13segmentHeaderE
+C:\msys64\tmp\ccf6EPvR.s:242    .text:0000000000000138 .L0 
+C:\msys64\tmp\ccf6EPvR.s:244    .text:0000000000000138 .L0 
+C:\msys64\tmp\ccf6EPvR.s:245    .text:000000000000013c .L0 
+C:\msys64\tmp\ccf6EPvR.s:247    .text:0000000000000140 .L0 
+C:\msys64\tmp\ccf6EPvR.s:249    .text:0000000000000144 .L0 
+C:\msys64\tmp\ccf6EPvR.s:251    .text:0000000000000144 .L0 
+C:\msys64\tmp\ccf6EPvR.s:253    .text:0000000000000148 .L0 
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 16
 
 
-C:\msys64\tmp\ccKOonaH.s:254    .text:0000000000000148 .L0 
-C:\msys64\tmp\ccKOonaH.s:257    .text:000000000000014c .L0 
-C:\msys64\tmp\ccKOonaH.s:259    .text:0000000000000150 .L0 
-C:\msys64\tmp\ccKOonaH.s:260    .text:0000000000000150 .L0 
-C:\msys64\tmp\ccKOonaH.s:262    .text:0000000000000154 .L0 
-C:\msys64\tmp\ccKOonaH.s:265    .text:000000000000015c .L0 
-C:\msys64\tmp\ccKOonaH.s:269    .text:0000000000000160 .L0 
-C:\msys64\tmp\ccKOonaH.s:270    .text:0000000000000164 .L0 
-C:\msys64\tmp\ccKOonaH.s:271    .text:0000000000000164 .L0 
-C:\msys64\tmp\ccKOonaH.s:272    .text:0000000000000164 .L0 
-C:\msys64\tmp\ccKOonaH.s:274    .text:0000000000000168 .L0 
-C:\msys64\tmp\ccKOonaH.s:278    .text:000000000000016c .L0 
-C:\msys64\tmp\ccKOonaH.s:280    .text:000000000000016c .L0 
-C:\msys64\tmp\ccKOonaH.s:281    .text:000000000000016c .L0 
-C:\msys64\tmp\ccKOonaH.s:283    .text:0000000000000170 .L0 
-C:\msys64\tmp\ccKOonaH.s:285    .text:0000000000000174 .L0 
-C:\msys64\tmp\ccKOonaH.s:286    .text:0000000000000174 .L0 
-C:\msys64\tmp\ccKOonaH.s:289    .text:0000000000000178 .L0 
-C:\msys64\tmp\ccKOonaH.s:293    .text:0000000000000188 .L0 
-C:\msys64\tmp\ccKOonaH.s:299    .text:0000000000000188 _ZN15MemoryAllocator5kfreeEPv
-C:\msys64\tmp\ccKOonaH.s:302    .text:0000000000000188 .L0 
-C:\msys64\tmp\ccKOonaH.s:304    .text:0000000000000188 .L0 
-C:\msys64\tmp\ccKOonaH.s:305    .text:000000000000018c .L0 
-C:\msys64\tmp\ccKOonaH.s:310    .text:000000000000019c .L0 
-C:\msys64\tmp\ccKOonaH.s:311    .text:000000000000019c .L0 
-C:\msys64\tmp\ccKOonaH.s:312    .text:000000000000019c .L0 
-C:\msys64\tmp\ccKOonaH.s:313    .text:000000000000019c .L0 
-C:\msys64\tmp\ccKOonaH.s:315    .text:00000000000001a0 .L0 
-C:\msys64\tmp\ccKOonaH.s:318    .text:00000000000001a4 .L0 
-C:\msys64\tmp\ccKOonaH.s:319    .text:00000000000001a4 .L0 
-C:\msys64\tmp\ccKOonaH.s:321    .text:00000000000001ac .L0 
-C:\msys64\tmp\ccKOonaH.s:325    .text:00000000000001b0 .L0 
-C:\msys64\tmp\ccKOonaH.s:327    .text:00000000000001b4 .L0 
-C:\msys64\tmp\ccKOonaH.s:328    .text:00000000000001b4 .L0 
-C:\msys64\tmp\ccKOonaH.s:331    .text:00000000000001b8 .L0 
-C:\msys64\tmp\ccKOonaH.s:332    .text:00000000000001b8 .L0 
-C:\msys64\tmp\ccKOonaH.s:334    .text:00000000000001c0 .L0 
-C:\msys64\tmp\ccKOonaH.s:336    .text:00000000000001c4 .L0 
-C:\msys64\tmp\ccKOonaH.s:338    .text:00000000000001cc .L0 
-C:\msys64\tmp\ccKOonaH.s:340    .text:00000000000001d0 .L0 
-C:\msys64\tmp\ccKOonaH.s:341    .text:00000000000001d0 .L0 
-C:\msys64\tmp\ccKOonaH.s:344    .text:00000000000001d8 .L0 
-C:\msys64\tmp\ccKOonaH.s:345    .text:00000000000001d8 .L0 
-C:\msys64\tmp\ccKOonaH.s:347    .text:00000000000001dc .L0 
-C:\msys64\tmp\ccKOonaH.s:351    .text:00000000000001e0 .L0 
-C:\msys64\tmp\ccKOonaH.s:352    .text:00000000000001e0 .L0 
-C:\msys64\tmp\ccKOonaH.s:354    .text:00000000000001e4 .L0 
-C:\msys64\tmp\ccKOonaH.s:356    .text:00000000000001e8 .L0 
-C:\msys64\tmp\ccKOonaH.s:359    .text:00000000000001ec .L0 
-C:\msys64\tmp\ccKOonaH.s:360    .text:00000000000001ec .L0 
-C:\msys64\tmp\ccKOonaH.s:361    .text:00000000000001ec .L0 
-C:\msys64\tmp\ccKOonaH.s:363    .text:00000000000001f0 .L0 
-C:\msys64\tmp\ccKOonaH.s:366    .text:00000000000001f4 .L0 
-C:\msys64\tmp\ccKOonaH.s:370    .text:00000000000001f8 .L0 
-C:\msys64\tmp\ccKOonaH.s:371    .text:00000000000001f8 .L0 
-C:\msys64\tmp\ccKOonaH.s:374    .text:0000000000000204 .L0 
-C:\msys64\tmp\ccKOonaH.s:375    .text:0000000000000204 .L0 
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 17
+C:\msys64\tmp\ccf6EPvR.s:254    .text:0000000000000148 .L0 
+C:\msys64\tmp\ccf6EPvR.s:257    .text:000000000000014c .L0 
+C:\msys64\tmp\ccf6EPvR.s:259    .text:0000000000000150 .L0 
+C:\msys64\tmp\ccf6EPvR.s:260    .text:0000000000000150 .L0 
+C:\msys64\tmp\ccf6EPvR.s:262    .text:0000000000000154 .L0 
+C:\msys64\tmp\ccf6EPvR.s:265    .text:000000000000015c .L0 
+C:\msys64\tmp\ccf6EPvR.s:269    .text:0000000000000160 .L0 
+C:\msys64\tmp\ccf6EPvR.s:270    .text:0000000000000164 .L0 
+C:\msys64\tmp\ccf6EPvR.s:271    .text:0000000000000164 .L0 
+C:\msys64\tmp\ccf6EPvR.s:272    .text:0000000000000164 .L0 
+C:\msys64\tmp\ccf6EPvR.s:274    .text:0000000000000168 .L0 
+C:\msys64\tmp\ccf6EPvR.s:278    .text:000000000000016c .L0 
+C:\msys64\tmp\ccf6EPvR.s:280    .text:000000000000016c .L0 
+C:\msys64\tmp\ccf6EPvR.s:281    .text:000000000000016c .L0 
+C:\msys64\tmp\ccf6EPvR.s:283    .text:0000000000000170 .L0 
+C:\msys64\tmp\ccf6EPvR.s:285    .text:0000000000000174 .L0 
+C:\msys64\tmp\ccf6EPvR.s:286    .text:0000000000000174 .L0 
+C:\msys64\tmp\ccf6EPvR.s:289    .text:0000000000000178 .L0 
+C:\msys64\tmp\ccf6EPvR.s:293    .text:0000000000000188 .L0 
+C:\msys64\tmp\ccf6EPvR.s:299    .text:0000000000000188 _ZN15MemoryAllocator5kfreeEPv
+C:\msys64\tmp\ccf6EPvR.s:302    .text:0000000000000188 .L0 
+C:\msys64\tmp\ccf6EPvR.s:304    .text:0000000000000188 .L0 
+C:\msys64\tmp\ccf6EPvR.s:305    .text:000000000000018c .L0 
+C:\msys64\tmp\ccf6EPvR.s:310    .text:000000000000019c .L0 
+C:\msys64\tmp\ccf6EPvR.s:311    .text:000000000000019c .L0 
+C:\msys64\tmp\ccf6EPvR.s:312    .text:000000000000019c .L0 
+C:\msys64\tmp\ccf6EPvR.s:313    .text:000000000000019c .L0 
+C:\msys64\tmp\ccf6EPvR.s:315    .text:00000000000001a0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:318    .text:00000000000001a4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:319    .text:00000000000001a4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:321    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccf6EPvR.s:325    .text:00000000000001b0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:327    .text:00000000000001b4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:328    .text:00000000000001b4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:331    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:332    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:334    .text:00000000000001c0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:336    .text:00000000000001c4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:338    .text:00000000000001cc .L0 
+C:\msys64\tmp\ccf6EPvR.s:340    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:341    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:344    .text:00000000000001d8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:345    .text:00000000000001d8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:347    .text:00000000000001dc .L0 
+C:\msys64\tmp\ccf6EPvR.s:351    .text:00000000000001e0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:352    .text:00000000000001e0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:354    .text:00000000000001e4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:356    .text:00000000000001e8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:359    .text:00000000000001ec .L0 
+C:\msys64\tmp\ccf6EPvR.s:360    .text:00000000000001ec .L0 
+C:\msys64\tmp\ccf6EPvR.s:361    .text:00000000000001ec .L0 
+C:\msys64\tmp\ccf6EPvR.s:363    .text:00000000000001f0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:366    .text:00000000000001f4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:370    .text:00000000000001f8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:371    .text:00000000000001f8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:374    .text:0000000000000204 .L0 
+C:\msys64\tmp\ccf6EPvR.s:375    .text:0000000000000204 .L0 
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 17
 
 
-C:\msys64\tmp\ccKOonaH.s:381    .text:0000000000000210 .L0 
-C:\msys64\tmp\ccKOonaH.s:383    .text:0000000000000214 .L0 
-C:\msys64\tmp\ccKOonaH.s:384    .text:0000000000000214 .L0 
-C:\msys64\tmp\ccKOonaH.s:387    .text:0000000000000218 .L0 
-C:\msys64\tmp\ccKOonaH.s:389    .text:000000000000021c .L0 
-C:\msys64\tmp\ccKOonaH.s:390    .text:000000000000021c .L0 
-C:\msys64\tmp\ccKOonaH.s:393    .text:0000000000000220 .L0 
-C:\msys64\tmp\ccKOonaH.s:394    .text:0000000000000220 .L0 
-C:\msys64\tmp\ccKOonaH.s:397    .text:0000000000000228 .L0 
-C:\msys64\tmp\ccKOonaH.s:398    .text:0000000000000228 .L0 
-C:\msys64\tmp\ccKOonaH.s:402    .text:0000000000000234 .L0 
-C:\msys64\tmp\ccKOonaH.s:403    .text:0000000000000234 .L0 
-C:\msys64\tmp\ccKOonaH.s:407    .text:0000000000000238 .L0 
-C:\msys64\tmp\ccKOonaH.s:408    .text:000000000000023c .L0 
-C:\msys64\tmp\ccKOonaH.s:409    .text:000000000000023c .L0 
-C:\msys64\tmp\ccKOonaH.s:411    .text:0000000000000240 .L0 
-C:\msys64\tmp\ccKOonaH.s:412    .text:0000000000000240 .L0 
-C:\msys64\tmp\ccKOonaH.s:414    .text:0000000000000244 .L0 
-C:\msys64\tmp\ccKOonaH.s:416    .text:0000000000000248 .L0 
-C:\msys64\tmp\ccKOonaH.s:419    .text:000000000000024c .L0 
-C:\msys64\tmp\ccKOonaH.s:423    .text:0000000000000250 .L0 
-C:\msys64\tmp\ccKOonaH.s:425    .text:0000000000000250 .L0 
-C:\msys64\tmp\ccKOonaH.s:426    .text:0000000000000250 .L0 
-C:\msys64\tmp\ccKOonaH.s:428    .text:0000000000000254 .L0 
-C:\msys64\tmp\ccKOonaH.s:429    .text:0000000000000254 .L0 
-C:\msys64\tmp\ccKOonaH.s:435    .text:0000000000000260 .L0 
-C:\msys64\tmp\ccKOonaH.s:440    .text:0000000000000268 .L0 
-C:\msys64\tmp\ccKOonaH.s:451    .text:0000000000000278 .L0 
-C:\msys64\tmp\ccKOonaH.s:454    .text:0000000000000280 .L0 
-C:\msys64\tmp\ccKOonaH.s:473    .text:0000000000000280 .L0 
-C:\msys64\tmp\ccKOonaH.s:25     .text:000000000000000c .L0 
-C:\msys64\tmp\ccKOonaH.s:29     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccKOonaH.s:54     .text:0000000000000038 .L0 
-C:\msys64\tmp\ccKOonaH.s:97     .text:0000000000000074 .L0 
-C:\msys64\tmp\ccKOonaH.s:111    .text:0000000000000088 .L0 
-C:\msys64\tmp\ccKOonaH.s:122    .text:000000000000009c .L0 
-C:\msys64\tmp\ccKOonaH.s:224    .text:0000000000000124 .L0 
-C:\msys64\tmp\ccKOonaH.s:319    .text:00000000000001a4 .L0 
-C:\msys64\tmp\ccKOonaH.s:332    .text:00000000000001b8 .L0 
-C:\msys64\tmp\ccKOonaH.s:336    .text:00000000000001c4 .L0 
-C:\msys64\tmp\ccKOonaH.s:341    .text:00000000000001d0 .L0 
-C:\msys64\tmp\ccKOonaH.s:372    .text:00000000000001fc .L0 
-C:\msys64\tmp\ccKOonaH.s:429    .text:0000000000000254 .L0 
-C:\msys64\tmp\ccKOonaH.s:41     .text:000000000000002c .L2
-C:\msys64\tmp\ccKOonaH.s:51     .text:0000000000000038 .L3
-C:\msys64\tmp\ccKOonaH.s:118    .text:0000000000000098 .L17
-C:\msys64\tmp\ccKOonaH.s:137    .text:00000000000000b8 .L9
-C:\msys64\tmp\ccKOonaH.s:101    .text:0000000000000080 .L6
-C:\msys64\tmp\ccKOonaH.s:153    .text:00000000000000cc .L14
-C:\msys64\tmp\ccKOonaH.s:129    .text:00000000000000b0 .L8
-C:\msys64\tmp\ccKOonaH.s:157    .text:00000000000000d0 .L7
-C:\msys64\tmp\ccKOonaH.s:228    .text:0000000000000130 .L15
-C:\msys64\tmp\ccKOonaH.s:213    .text:000000000000011c .L11
-C:\msys64\tmp\ccKOonaH.s:221    .text:0000000000000124 .L13
-C:\msys64\tmp\ccKOonaH.s:191    .text:0000000000000100 .L12
-C:\msys64\tmp\ccKOonaH.s:198    .text:0000000000000108 .L5
-C:\msys64\tmp\ccKOonaH.s:267    .text:0000000000000160 .L18
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 18
+C:\msys64\tmp\ccf6EPvR.s:381    .text:0000000000000210 .L0 
+C:\msys64\tmp\ccf6EPvR.s:383    .text:0000000000000214 .L0 
+C:\msys64\tmp\ccf6EPvR.s:384    .text:0000000000000214 .L0 
+C:\msys64\tmp\ccf6EPvR.s:387    .text:0000000000000218 .L0 
+C:\msys64\tmp\ccf6EPvR.s:389    .text:000000000000021c .L0 
+C:\msys64\tmp\ccf6EPvR.s:390    .text:000000000000021c .L0 
+C:\msys64\tmp\ccf6EPvR.s:393    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccf6EPvR.s:394    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccf6EPvR.s:397    .text:0000000000000228 .L0 
+C:\msys64\tmp\ccf6EPvR.s:398    .text:0000000000000228 .L0 
+C:\msys64\tmp\ccf6EPvR.s:402    .text:0000000000000234 .L0 
+C:\msys64\tmp\ccf6EPvR.s:403    .text:0000000000000234 .L0 
+C:\msys64\tmp\ccf6EPvR.s:407    .text:0000000000000238 .L0 
+C:\msys64\tmp\ccf6EPvR.s:408    .text:000000000000023c .L0 
+C:\msys64\tmp\ccf6EPvR.s:409    .text:000000000000023c .L0 
+C:\msys64\tmp\ccf6EPvR.s:411    .text:0000000000000240 .L0 
+C:\msys64\tmp\ccf6EPvR.s:412    .text:0000000000000240 .L0 
+C:\msys64\tmp\ccf6EPvR.s:414    .text:0000000000000244 .L0 
+C:\msys64\tmp\ccf6EPvR.s:416    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccf6EPvR.s:419    .text:000000000000024c .L0 
+C:\msys64\tmp\ccf6EPvR.s:423    .text:0000000000000250 .L0 
+C:\msys64\tmp\ccf6EPvR.s:425    .text:0000000000000250 .L0 
+C:\msys64\tmp\ccf6EPvR.s:426    .text:0000000000000250 .L0 
+C:\msys64\tmp\ccf6EPvR.s:428    .text:0000000000000254 .L0 
+C:\msys64\tmp\ccf6EPvR.s:429    .text:0000000000000254 .L0 
+C:\msys64\tmp\ccf6EPvR.s:435    .text:0000000000000260 .L0 
+C:\msys64\tmp\ccf6EPvR.s:440    .text:0000000000000268 .L0 
+C:\msys64\tmp\ccf6EPvR.s:451    .text:0000000000000278 .L0 
+C:\msys64\tmp\ccf6EPvR.s:454    .text:0000000000000280 .L0 
+C:\msys64\tmp\ccf6EPvR.s:473    .text:0000000000000280 .L0 
+C:\msys64\tmp\ccf6EPvR.s:25     .text:000000000000000c .L0 
+C:\msys64\tmp\ccf6EPvR.s:29     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccf6EPvR.s:54     .text:0000000000000038 .L0 
+C:\msys64\tmp\ccf6EPvR.s:97     .text:0000000000000074 .L0 
+C:\msys64\tmp\ccf6EPvR.s:111    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccf6EPvR.s:122    .text:000000000000009c .L0 
+C:\msys64\tmp\ccf6EPvR.s:224    .text:0000000000000124 .L0 
+C:\msys64\tmp\ccf6EPvR.s:319    .text:00000000000001a4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:332    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccf6EPvR.s:336    .text:00000000000001c4 .L0 
+C:\msys64\tmp\ccf6EPvR.s:341    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccf6EPvR.s:372    .text:00000000000001fc .L0 
+C:\msys64\tmp\ccf6EPvR.s:429    .text:0000000000000254 .L0 
+C:\msys64\tmp\ccf6EPvR.s:41     .text:000000000000002c .L2
+C:\msys64\tmp\ccf6EPvR.s:51     .text:0000000000000038 .L3
+C:\msys64\tmp\ccf6EPvR.s:118    .text:0000000000000098 .L17
+C:\msys64\tmp\ccf6EPvR.s:137    .text:00000000000000b8 .L9
+C:\msys64\tmp\ccf6EPvR.s:101    .text:0000000000000080 .L6
+C:\msys64\tmp\ccf6EPvR.s:153    .text:00000000000000cc .L14
+C:\msys64\tmp\ccf6EPvR.s:129    .text:00000000000000b0 .L8
+C:\msys64\tmp\ccf6EPvR.s:157    .text:00000000000000d0 .L7
+C:\msys64\tmp\ccf6EPvR.s:228    .text:0000000000000130 .L15
+C:\msys64\tmp\ccf6EPvR.s:213    .text:000000000000011c .L11
+C:\msys64\tmp\ccf6EPvR.s:221    .text:0000000000000124 .L13
+C:\msys64\tmp\ccf6EPvR.s:191    .text:0000000000000100 .L12
+C:\msys64\tmp\ccf6EPvR.s:198    .text:0000000000000108 .L5
+C:\msys64\tmp\ccf6EPvR.s:267    .text:0000000000000160 .L18
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 18
 
 
-C:\msys64\tmp\ccKOonaH.s:277    .text:000000000000016c .L21
-C:\msys64\tmp\ccKOonaH.s:368    .text:00000000000001f8 .L34
-C:\msys64\tmp\ccKOonaH.s:433    .text:0000000000000260 .L29
-C:\msys64\tmp\ccKOonaH.s:438    .text:0000000000000268 .L30
-C:\msys64\tmp\ccKOonaH.s:444    .text:0000000000000270 .L31
-C:\msys64\tmp\ccKOonaH.s:379    .text:0000000000000210 .L25
-C:\msys64\tmp\ccKOonaH.s:449    .text:0000000000000278 .L32
-C:\msys64\tmp\ccKOonaH.s:349    .text:00000000000001e0 .L26
-C:\msys64\tmp\ccKOonaH.s:323    .text:00000000000001b0 .L23
-C:\msys64\tmp\ccKOonaH.s:422    .text:0000000000000250 .L27
-C:\msys64\tmp\ccKOonaH.s:391    .text:0000000000000220 .L28
-C:\msys64\tmp\ccKOonaH.s:405    .text:0000000000000238 .L24
-C:\msys64\tmp\ccKOonaH.s:912    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
-C:\msys64\tmp\ccKOonaH.s:1844   .debug_str:0000000000000209 .LASF39
-C:\msys64\tmp\ccKOonaH.s:1856   .debug_str:000000000000034a .LASF40
-C:\msys64\tmp\ccKOonaH.s:1840   .debug_str:00000000000001cd .LASF41
-C:\msys64\tmp\ccKOonaH.s:8      .text:0000000000000000 .Ltext0
-C:\msys64\tmp\ccKOonaH.s:470    .text:0000000000000280 .Letext0
-C:\msys64\tmp\ccKOonaH.s:1776   .debug_line:0000000000000000 .Ldebug_line0
-C:\msys64\tmp\ccKOonaH.s:1842   .debug_str:00000000000001fc .LASF0
-C:\msys64\tmp\ccKOonaH.s:1826   .debug_str:000000000000015a .LASF1
-C:\msys64\tmp\ccKOonaH.s:1818   .debug_str:0000000000000116 .LASF2
-C:\msys64\tmp\ccKOonaH.s:1796   .debug_str:0000000000000073 .LASF4
-C:\msys64\tmp\ccKOonaH.s:1824   .debug_str:0000000000000148 .LASF3
-C:\msys64\tmp\ccKOonaH.s:1782   .debug_str:0000000000000023 .LASF5
-C:\msys64\tmp\ccKOonaH.s:1778   .debug_str:0000000000000000 .LASF6
-C:\msys64\tmp\ccKOonaH.s:1814   .debug_str:00000000000000fd .LASF7
-C:\msys64\tmp\ccKOonaH.s:1850   .debug_str:0000000000000308 .LASF8
-C:\msys64\tmp\ccKOonaH.s:1794   .debug_str:0000000000000065 .LASF9
-C:\msys64\tmp\ccKOonaH.s:1874   .debug_str:00000000000003b8 .LASF10
-C:\msys64\tmp\ccKOonaH.s:1828   .debug_str:000000000000016d .LASF11
-C:\msys64\tmp\ccKOonaH.s:1804   .debug_str:00000000000000a0 .LASF12
-C:\msys64\tmp\ccKOonaH.s:1852   .debug_str:0000000000000318 .LASF13
-C:\msys64\tmp\ccKOonaH.s:1780   .debug_str:0000000000000013 .LASF16
-C:\msys64\tmp\ccKOonaH.s:1860   .debug_str:000000000000036b .LASF42
-C:\msys64\tmp\ccKOonaH.s:1784   .debug_str:000000000000002a .LASF14
-C:\msys64\tmp\ccKOonaH.s:1870   .debug_str:00000000000003ae .LASF15
-C:\msys64\tmp\ccKOonaH.s:1836   .debug_str:00000000000001af .LASF17
-C:\msys64\tmp\ccKOonaH.s:1800   .debug_str:000000000000007f .LASF18
-C:\msys64\tmp\ccKOonaH.s:1864   .debug_str:000000000000037e .LASF43
-C:\msys64\tmp\ccKOonaH.s:1820   .debug_str:0000000000000124 .LASF44
-C:\msys64\tmp\ccKOonaH.s:1830   .debug_str:0000000000000179 .LASF19
-C:\msys64\tmp\ccKOonaH.s:1846   .debug_str:00000000000002dc .LASF21
-C:\msys64\tmp\ccKOonaH.s:1810   .debug_str:00000000000000c4 .LASF20
-C:\msys64\tmp\ccKOonaH.s:1832   .debug_str:0000000000000181 .LASF22
-C:\msys64\tmp\ccKOonaH.s:1802   .debug_str:000000000000009b .LASF45
-C:\msys64\tmp\ccKOonaH.s:1854   .debug_str:000000000000032e .LASF46
-C:\msys64\tmp\ccKOonaH.s:1838   .debug_str:00000000000001c8 .LASF23
-C:\msys64\tmp\ccKOonaH.s:1790   .debug_str:000000000000004f .LASF24
-C:\msys64\tmp\ccKOonaH.s:1858   .debug_str:0000000000000362 .LASF47
-C:\msys64\tmp\ccKOonaH.s:1812   .debug_str:00000000000000ca .LASF48
-C:\msys64\tmp\ccKOonaH.s:1798   .debug_str:000000000000007a .LASF25
-C:\msys64\tmp\ccKOonaH.s:1866   .debug_str:0000000000000388 .LASF26
-C:\msys64\tmp\ccKOonaH.s:1786   .debug_str:000000000000002f .LASF27
-C:\msys64\tmp\ccKOonaH.s:240    .text:0000000000000138 .LFB3
-C:\msys64\tmp\ccKOonaH.s:294    .text:0000000000000188 .LFE3
-C:\msys64\tmp\ccKOonaH.s:1816   .debug_str:0000000000000110 .LASF30
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 19
+C:\msys64\tmp\ccf6EPvR.s:277    .text:000000000000016c .L21
+C:\msys64\tmp\ccf6EPvR.s:368    .text:00000000000001f8 .L34
+C:\msys64\tmp\ccf6EPvR.s:433    .text:0000000000000260 .L29
+C:\msys64\tmp\ccf6EPvR.s:438    .text:0000000000000268 .L30
+C:\msys64\tmp\ccf6EPvR.s:444    .text:0000000000000270 .L31
+C:\msys64\tmp\ccf6EPvR.s:379    .text:0000000000000210 .L25
+C:\msys64\tmp\ccf6EPvR.s:449    .text:0000000000000278 .L32
+C:\msys64\tmp\ccf6EPvR.s:349    .text:00000000000001e0 .L26
+C:\msys64\tmp\ccf6EPvR.s:323    .text:00000000000001b0 .L23
+C:\msys64\tmp\ccf6EPvR.s:422    .text:0000000000000250 .L27
+C:\msys64\tmp\ccf6EPvR.s:391    .text:0000000000000220 .L28
+C:\msys64\tmp\ccf6EPvR.s:405    .text:0000000000000238 .L24
+C:\msys64\tmp\ccf6EPvR.s:912    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccf6EPvR.s:1844   .debug_str:0000000000000209 .LASF39
+C:\msys64\tmp\ccf6EPvR.s:1856   .debug_str:000000000000034a .LASF40
+C:\msys64\tmp\ccf6EPvR.s:1840   .debug_str:00000000000001cd .LASF41
+C:\msys64\tmp\ccf6EPvR.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccf6EPvR.s:470    .text:0000000000000280 .Letext0
+C:\msys64\tmp\ccf6EPvR.s:1776   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccf6EPvR.s:1842   .debug_str:00000000000001fc .LASF0
+C:\msys64\tmp\ccf6EPvR.s:1826   .debug_str:000000000000015a .LASF1
+C:\msys64\tmp\ccf6EPvR.s:1818   .debug_str:0000000000000116 .LASF2
+C:\msys64\tmp\ccf6EPvR.s:1796   .debug_str:0000000000000073 .LASF4
+C:\msys64\tmp\ccf6EPvR.s:1824   .debug_str:0000000000000148 .LASF3
+C:\msys64\tmp\ccf6EPvR.s:1782   .debug_str:0000000000000023 .LASF5
+C:\msys64\tmp\ccf6EPvR.s:1778   .debug_str:0000000000000000 .LASF6
+C:\msys64\tmp\ccf6EPvR.s:1814   .debug_str:00000000000000fd .LASF7
+C:\msys64\tmp\ccf6EPvR.s:1850   .debug_str:0000000000000308 .LASF8
+C:\msys64\tmp\ccf6EPvR.s:1794   .debug_str:0000000000000065 .LASF9
+C:\msys64\tmp\ccf6EPvR.s:1874   .debug_str:00000000000003b8 .LASF10
+C:\msys64\tmp\ccf6EPvR.s:1828   .debug_str:000000000000016d .LASF11
+C:\msys64\tmp\ccf6EPvR.s:1804   .debug_str:00000000000000a0 .LASF12
+C:\msys64\tmp\ccf6EPvR.s:1852   .debug_str:0000000000000318 .LASF13
+C:\msys64\tmp\ccf6EPvR.s:1780   .debug_str:0000000000000013 .LASF16
+C:\msys64\tmp\ccf6EPvR.s:1860   .debug_str:000000000000036b .LASF42
+C:\msys64\tmp\ccf6EPvR.s:1784   .debug_str:000000000000002a .LASF14
+C:\msys64\tmp\ccf6EPvR.s:1870   .debug_str:00000000000003ae .LASF15
+C:\msys64\tmp\ccf6EPvR.s:1836   .debug_str:00000000000001af .LASF17
+C:\msys64\tmp\ccf6EPvR.s:1800   .debug_str:000000000000007f .LASF18
+C:\msys64\tmp\ccf6EPvR.s:1864   .debug_str:000000000000037e .LASF43
+C:\msys64\tmp\ccf6EPvR.s:1820   .debug_str:0000000000000124 .LASF44
+C:\msys64\tmp\ccf6EPvR.s:1830   .debug_str:0000000000000179 .LASF19
+C:\msys64\tmp\ccf6EPvR.s:1846   .debug_str:00000000000002dc .LASF21
+C:\msys64\tmp\ccf6EPvR.s:1810   .debug_str:00000000000000c4 .LASF20
+C:\msys64\tmp\ccf6EPvR.s:1832   .debug_str:0000000000000181 .LASF22
+C:\msys64\tmp\ccf6EPvR.s:1802   .debug_str:000000000000009b .LASF45
+C:\msys64\tmp\ccf6EPvR.s:1854   .debug_str:000000000000032e .LASF46
+C:\msys64\tmp\ccf6EPvR.s:1838   .debug_str:00000000000001c8 .LASF23
+C:\msys64\tmp\ccf6EPvR.s:1790   .debug_str:000000000000004f .LASF24
+C:\msys64\tmp\ccf6EPvR.s:1858   .debug_str:0000000000000362 .LASF47
+C:\msys64\tmp\ccf6EPvR.s:1812   .debug_str:00000000000000ca .LASF48
+C:\msys64\tmp\ccf6EPvR.s:1798   .debug_str:000000000000007a .LASF25
+C:\msys64\tmp\ccf6EPvR.s:1866   .debug_str:0000000000000388 .LASF26
+C:\msys64\tmp\ccf6EPvR.s:1786   .debug_str:000000000000002f .LASF27
+C:\msys64\tmp\ccf6EPvR.s:240    .text:0000000000000138 .LFB3
+C:\msys64\tmp\ccf6EPvR.s:294    .text:0000000000000188 .LFE3
+C:\msys64\tmp\ccf6EPvR.s:1816   .debug_str:0000000000000110 .LASF30
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 19
 
 
-C:\msys64\tmp\ccKOonaH.s:1868   .debug_str:00000000000003a5 .LASF28
-C:\msys64\tmp\ccKOonaH.s:1448   .debug_loc:0000000000000000 .LLST9
-C:\msys64\tmp\ccKOonaH.s:13     .text:0000000000000000 .LFB2
-C:\msys64\tmp\ccKOonaH.s:74     .text:000000000000005c .LFE2
-C:\msys64\tmp\ccKOonaH.s:1808   .debug_str:00000000000000be .LASF29
-C:\msys64\tmp\ccKOonaH.s:1459   .debug_loc:0000000000000036 .LLST0
-C:\msys64\tmp\ccKOonaH.s:1470   .debug_loc:000000000000006c .LLST1
-C:\msys64\tmp\ccKOonaH.s:80     .text:000000000000005c .LFB1
-C:\msys64\tmp\ccKOonaH.s:234    .text:0000000000000138 .LFE1
-C:\msys64\tmp\ccKOonaH.s:1477   .debug_loc:000000000000008f .LLST2
-C:\msys64\tmp\ccKOonaH.s:1848   .debug_str:00000000000002fb .LASF31
-C:\msys64\tmp\ccKOonaH.s:1499   .debug_loc:00000000000000ee .LLST3
-C:\msys64\tmp\ccKOonaH.s:1822   .debug_str:0000000000000140 .LASF32
-C:\msys64\tmp\ccKOonaH.s:1510   .debug_loc:0000000000000124 .LLST4
-C:\msys64\tmp\ccKOonaH.s:1788   .debug_str:000000000000004a .LASF33
-C:\msys64\tmp\ccKOonaH.s:1540   .debug_loc:00000000000001a9 .LLST5
-C:\msys64\tmp\ccKOonaH.s:1872   .debug_str:00000000000003b3 .LASF34
-C:\msys64\tmp\ccKOonaH.s:1564   .debug_loc:0000000000000219 .LLST6
-C:\msys64\tmp\ccKOonaH.s:1834   .debug_str:000000000000019f .LASF35
-C:\msys64\tmp\ccKOonaH.s:1580   .debug_loc:0000000000000263 .LLST7
-C:\msys64\tmp\ccKOonaH.s:1792   .debug_str:0000000000000056 .LASF36
-C:\msys64\tmp\ccKOonaH.s:1597   .debug_loc:00000000000002af .LLST8
-C:\msys64\tmp\ccKOonaH.s:126    .text:00000000000000ac .LVL11
-C:\msys64\tmp\ccKOonaH.s:300    .text:0000000000000188 .LFB0
-C:\msys64\tmp\ccKOonaH.s:455    .text:0000000000000280 .LFE0
-C:\msys64\tmp\ccKOonaH.s:1862   .debug_str:0000000000000379 .LASF37
-C:\msys64\tmp\ccKOonaH.s:1618   .debug_loc:000000000000030d .LLST10
-C:\msys64\tmp\ccKOonaH.s:1806   .debug_str:00000000000000b6 .LASF38
-C:\msys64\tmp\ccKOonaH.s:1648   .debug_loc:0000000000000392 .LLST11
-C:\msys64\tmp\ccKOonaH.s:1699   .debug_loc:0000000000000468 .LLST12
-C:\msys64\tmp\ccKOonaH.s:1731   .debug_loc:00000000000004fe .LLST13
-C:\msys64\tmp\ccKOonaH.s:376    .text:000000000000020c .LVL42
-C:\msys64\tmp\ccKOonaH.s:395    .text:0000000000000228 .LVL45
-C:\msys64\tmp\ccKOonaH.s:400    .text:0000000000000234 .LVL46
-C:\msys64\tmp\ccKOonaH.s:255    .text:000000000000014c .LVL30
-C:\msys64\tmp\ccKOonaH.s:266    .text:0000000000000160 .LVL31
-C:\msys64\tmp\ccKOonaH.s:276    .text:000000000000016c .LVL32
-C:\msys64\tmp\ccKOonaH.s:287    .text:0000000000000178 .LVL33
-C:\msys64\tmp\ccKOonaH.s:26     .text:0000000000000014 .LVL0
-C:\msys64\tmp\ccKOonaH.s:38     .text:0000000000000028 .LVL2
-C:\msys64\tmp\ccKOonaH.s:42     .text:000000000000002c .LVL3
-C:\msys64\tmp\ccKOonaH.s:30     .text:000000000000001c .LVL1
-C:\msys64\tmp\ccKOonaH.s:58     .text:0000000000000044 .LVL5
-C:\msys64\tmp\ccKOonaH.s:83     .text:000000000000005c .LVL6
-C:\msys64\tmp\ccKOonaH.s:100    .text:0000000000000080 .LVL7
-C:\msys64\tmp\ccKOonaH.s:208    .text:0000000000000114 .LVL22
-C:\msys64\tmp\ccKOonaH.s:212    .text:000000000000011c .LVL23
-C:\msys64\tmp\ccKOonaH.s:107    .text:0000000000000088 .LVL8
-C:\msys64\tmp\ccKOonaH.s:117    .text:0000000000000098 .LVL10
-C:\msys64\tmp\ccKOonaH.s:128    .text:00000000000000b0 .LVL12
-C:\msys64\tmp\ccKOonaH.s:149    .text:00000000000000c8 .LVL14
-C:\msys64\tmp\ccKOonaH.s:152    .text:00000000000000cc .LVL15
-C:\msys64\tmp\ccKOonaH.s:156    .text:00000000000000d0 .LVL16
-C:\msys64\tmp\ccKOonaH.s:197    .text:0000000000000108 .LVL21
-C:\msys64\tmp\ccKOonaH.s:231    .text:0000000000000134 .LVL28
-C:\msys64\tmp\ccKOonaH.s:112    .text:0000000000000090 .LVL9
-C:\msys64\tmp\ccKOonaH.s:136    .text:00000000000000b8 .LVL13
-GAS LISTING C:\msys64\tmp\ccKOonaH.s 			page 20
+C:\msys64\tmp\ccf6EPvR.s:1868   .debug_str:00000000000003a5 .LASF28
+C:\msys64\tmp\ccf6EPvR.s:1448   .debug_loc:0000000000000000 .LLST9
+C:\msys64\tmp\ccf6EPvR.s:13     .text:0000000000000000 .LFB2
+C:\msys64\tmp\ccf6EPvR.s:74     .text:000000000000005c .LFE2
+C:\msys64\tmp\ccf6EPvR.s:1808   .debug_str:00000000000000be .LASF29
+C:\msys64\tmp\ccf6EPvR.s:1459   .debug_loc:0000000000000036 .LLST0
+C:\msys64\tmp\ccf6EPvR.s:1470   .debug_loc:000000000000006c .LLST1
+C:\msys64\tmp\ccf6EPvR.s:80     .text:000000000000005c .LFB1
+C:\msys64\tmp\ccf6EPvR.s:234    .text:0000000000000138 .LFE1
+C:\msys64\tmp\ccf6EPvR.s:1477   .debug_loc:000000000000008f .LLST2
+C:\msys64\tmp\ccf6EPvR.s:1848   .debug_str:00000000000002fb .LASF31
+C:\msys64\tmp\ccf6EPvR.s:1499   .debug_loc:00000000000000ee .LLST3
+C:\msys64\tmp\ccf6EPvR.s:1822   .debug_str:0000000000000140 .LASF32
+C:\msys64\tmp\ccf6EPvR.s:1510   .debug_loc:0000000000000124 .LLST4
+C:\msys64\tmp\ccf6EPvR.s:1788   .debug_str:000000000000004a .LASF33
+C:\msys64\tmp\ccf6EPvR.s:1540   .debug_loc:00000000000001a9 .LLST5
+C:\msys64\tmp\ccf6EPvR.s:1872   .debug_str:00000000000003b3 .LASF34
+C:\msys64\tmp\ccf6EPvR.s:1564   .debug_loc:0000000000000219 .LLST6
+C:\msys64\tmp\ccf6EPvR.s:1834   .debug_str:000000000000019f .LASF35
+C:\msys64\tmp\ccf6EPvR.s:1580   .debug_loc:0000000000000263 .LLST7
+C:\msys64\tmp\ccf6EPvR.s:1792   .debug_str:0000000000000056 .LASF36
+C:\msys64\tmp\ccf6EPvR.s:1597   .debug_loc:00000000000002af .LLST8
+C:\msys64\tmp\ccf6EPvR.s:126    .text:00000000000000ac .LVL11
+C:\msys64\tmp\ccf6EPvR.s:300    .text:0000000000000188 .LFB0
+C:\msys64\tmp\ccf6EPvR.s:455    .text:0000000000000280 .LFE0
+C:\msys64\tmp\ccf6EPvR.s:1862   .debug_str:0000000000000379 .LASF37
+C:\msys64\tmp\ccf6EPvR.s:1618   .debug_loc:000000000000030d .LLST10
+C:\msys64\tmp\ccf6EPvR.s:1806   .debug_str:00000000000000b6 .LASF38
+C:\msys64\tmp\ccf6EPvR.s:1648   .debug_loc:0000000000000392 .LLST11
+C:\msys64\tmp\ccf6EPvR.s:1699   .debug_loc:0000000000000468 .LLST12
+C:\msys64\tmp\ccf6EPvR.s:1731   .debug_loc:00000000000004fe .LLST13
+C:\msys64\tmp\ccf6EPvR.s:376    .text:000000000000020c .LVL42
+C:\msys64\tmp\ccf6EPvR.s:395    .text:0000000000000228 .LVL45
+C:\msys64\tmp\ccf6EPvR.s:400    .text:0000000000000234 .LVL46
+C:\msys64\tmp\ccf6EPvR.s:255    .text:000000000000014c .LVL30
+C:\msys64\tmp\ccf6EPvR.s:266    .text:0000000000000160 .LVL31
+C:\msys64\tmp\ccf6EPvR.s:276    .text:000000000000016c .LVL32
+C:\msys64\tmp\ccf6EPvR.s:287    .text:0000000000000178 .LVL33
+C:\msys64\tmp\ccf6EPvR.s:26     .text:0000000000000014 .LVL0
+C:\msys64\tmp\ccf6EPvR.s:38     .text:0000000000000028 .LVL2
+C:\msys64\tmp\ccf6EPvR.s:42     .text:000000000000002c .LVL3
+C:\msys64\tmp\ccf6EPvR.s:30     .text:000000000000001c .LVL1
+C:\msys64\tmp\ccf6EPvR.s:58     .text:0000000000000044 .LVL5
+C:\msys64\tmp\ccf6EPvR.s:83     .text:000000000000005c .LVL6
+C:\msys64\tmp\ccf6EPvR.s:100    .text:0000000000000080 .LVL7
+C:\msys64\tmp\ccf6EPvR.s:208    .text:0000000000000114 .LVL22
+C:\msys64\tmp\ccf6EPvR.s:212    .text:000000000000011c .LVL23
+C:\msys64\tmp\ccf6EPvR.s:107    .text:0000000000000088 .LVL8
+C:\msys64\tmp\ccf6EPvR.s:117    .text:0000000000000098 .LVL10
+C:\msys64\tmp\ccf6EPvR.s:128    .text:00000000000000b0 .LVL12
+C:\msys64\tmp\ccf6EPvR.s:149    .text:00000000000000c8 .LVL14
+C:\msys64\tmp\ccf6EPvR.s:152    .text:00000000000000cc .LVL15
+C:\msys64\tmp\ccf6EPvR.s:156    .text:00000000000000d0 .LVL16
+C:\msys64\tmp\ccf6EPvR.s:197    .text:0000000000000108 .LVL21
+C:\msys64\tmp\ccf6EPvR.s:231    .text:0000000000000134 .LVL28
+C:\msys64\tmp\ccf6EPvR.s:112    .text:0000000000000090 .LVL9
+C:\msys64\tmp\ccf6EPvR.s:136    .text:00000000000000b8 .LVL13
+GAS LISTING C:\msys64\tmp\ccf6EPvR.s 			page 20
 
 
-C:\msys64\tmp\ccKOonaH.s:225    .text:000000000000012c .LVL26
-C:\msys64\tmp\ccKOonaH.s:227    .text:0000000000000130 .LVL27
-C:\msys64\tmp\ccKOonaH.s:165    .text:00000000000000dc .LVL17
-C:\msys64\tmp\ccKOonaH.s:184    .text:00000000000000f8 .LVL19
-C:\msys64\tmp\ccKOonaH.s:190    .text:0000000000000100 .LVL20
-C:\msys64\tmp\ccKOonaH.s:220    .text:0000000000000124 .LVL25
-C:\msys64\tmp\ccKOonaH.s:175    .text:00000000000000ec .LVL18
-C:\msys64\tmp\ccKOonaH.s:218    .text:0000000000000120 .LVL24
-C:\msys64\tmp\ccKOonaH.s:303    .text:0000000000000188 .LVL34
-C:\msys64\tmp\ccKOonaH.s:322    .text:00000000000001b0 .LVL35
-C:\msys64\tmp\ccKOonaH.s:367    .text:00000000000001f8 .LVL41
-C:\msys64\tmp\ccKOonaH.s:417    .text:0000000000000248 .LVL48
-C:\msys64\tmp\ccKOonaH.s:421    .text:0000000000000250 .LVL49
-C:\msys64\tmp\ccKOonaH.s:329    .text:00000000000001b8 .LVL36
-C:\msys64\tmp\ccKOonaH.s:378    .text:0000000000000210 .LVL43
-C:\msys64\tmp\ccKOonaH.s:404    .text:0000000000000238 .LVL47
-C:\msys64\tmp\ccKOonaH.s:432    .text:0000000000000260 .LVL51
-C:\msys64\tmp\ccKOonaH.s:437    .text:0000000000000268 .LVL52
-C:\msys64\tmp\ccKOonaH.s:441    .text:000000000000026c .LVL53
-C:\msys64\tmp\ccKOonaH.s:443    .text:0000000000000270 .LVL54
-C:\msys64\tmp\ccKOonaH.s:446    .text:0000000000000274 .LVL55
-C:\msys64\tmp\ccKOonaH.s:448    .text:0000000000000278 .LVL56
-C:\msys64\tmp\ccKOonaH.s:452    .text:000000000000027c .LVL57
-C:\msys64\tmp\ccKOonaH.s:342    .text:00000000000001d8 .LVL37
-C:\msys64\tmp\ccKOonaH.s:348    .text:00000000000001e0 .LVL38
-C:\msys64\tmp\ccKOonaH.s:358    .text:00000000000001ec .LVL39
-C:\msys64\tmp\ccKOonaH.s:364    .text:00000000000001f4 .LVL40
-C:\msys64\tmp\ccKOonaH.s:385    .text:0000000000000218 .LVL44
-C:\msys64\tmp\ccKOonaH.s:430    .text:000000000000025c .LVL50
-C:\msys64\tmp\ccKOonaH.s:474    .debug_info:0000000000000000 .Ldebug_info0
+C:\msys64\tmp\ccf6EPvR.s:225    .text:000000000000012c .LVL26
+C:\msys64\tmp\ccf6EPvR.s:227    .text:0000000000000130 .LVL27
+C:\msys64\tmp\ccf6EPvR.s:165    .text:00000000000000dc .LVL17
+C:\msys64\tmp\ccf6EPvR.s:184    .text:00000000000000f8 .LVL19
+C:\msys64\tmp\ccf6EPvR.s:190    .text:0000000000000100 .LVL20
+C:\msys64\tmp\ccf6EPvR.s:220    .text:0000000000000124 .LVL25
+C:\msys64\tmp\ccf6EPvR.s:175    .text:00000000000000ec .LVL18
+C:\msys64\tmp\ccf6EPvR.s:218    .text:0000000000000120 .LVL24
+C:\msys64\tmp\ccf6EPvR.s:303    .text:0000000000000188 .LVL34
+C:\msys64\tmp\ccf6EPvR.s:322    .text:00000000000001b0 .LVL35
+C:\msys64\tmp\ccf6EPvR.s:367    .text:00000000000001f8 .LVL41
+C:\msys64\tmp\ccf6EPvR.s:417    .text:0000000000000248 .LVL48
+C:\msys64\tmp\ccf6EPvR.s:421    .text:0000000000000250 .LVL49
+C:\msys64\tmp\ccf6EPvR.s:329    .text:00000000000001b8 .LVL36
+C:\msys64\tmp\ccf6EPvR.s:378    .text:0000000000000210 .LVL43
+C:\msys64\tmp\ccf6EPvR.s:404    .text:0000000000000238 .LVL47
+C:\msys64\tmp\ccf6EPvR.s:432    .text:0000000000000260 .LVL51
+C:\msys64\tmp\ccf6EPvR.s:437    .text:0000000000000268 .LVL52
+C:\msys64\tmp\ccf6EPvR.s:441    .text:000000000000026c .LVL53
+C:\msys64\tmp\ccf6EPvR.s:443    .text:0000000000000270 .LVL54
+C:\msys64\tmp\ccf6EPvR.s:446    .text:0000000000000274 .LVL55
+C:\msys64\tmp\ccf6EPvR.s:448    .text:0000000000000278 .LVL56
+C:\msys64\tmp\ccf6EPvR.s:452    .text:000000000000027c .LVL57
+C:\msys64\tmp\ccf6EPvR.s:342    .text:00000000000001d8 .LVL37
+C:\msys64\tmp\ccf6EPvR.s:348    .text:00000000000001e0 .LVL38
+C:\msys64\tmp\ccf6EPvR.s:358    .text:00000000000001ec .LVL39
+C:\msys64\tmp\ccf6EPvR.s:364    .text:00000000000001f4 .LVL40
+C:\msys64\tmp\ccf6EPvR.s:385    .text:0000000000000218 .LVL44
+C:\msys64\tmp\ccf6EPvR.s:430    .text:000000000000025c .LVL50
+C:\msys64\tmp\ccf6EPvR.s:474    .debug_info:0000000000000000 .Ldebug_info0
 
 UNDEFINED SYMBOLS
 HEAP_START_ADDR

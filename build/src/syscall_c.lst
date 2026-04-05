@@ -1,4 +1,4 @@
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 1
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 1
 
 
    1              		.file	"syscall_c.cpp"
@@ -12,11 +12,11 @@ GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 1
    9              		.align	2
   10              		.globl	_Z9mem_allocm
   12              	_Z9mem_allocm:
-  13              	.LFB18:
+  13              	.LFB16:
   14              		.file 1 "src/syscall_c.cpp"
    1:src/syscall_c.cpp **** #include "../h/syscall_c.h"
    2:src/syscall_c.cpp **** #include  "../h/riscv.h"
-   3:src/syscall_c.cpp **** #include "../lib/mem.h"
+   3:src/syscall_c.cpp **** 
    4:src/syscall_c.cpp **** void *mem_alloc(size_t size) {
   15              		.loc 1 4 30
   16              		.cfi_startproc
@@ -36,818 +36,447 @@ GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 1
   29 0010 13556500 		srli	a0,a0,6
   30              	.LVL2:
    6:src/syscall_c.cpp **** 
-   7:src/syscall_c.cpp ****     Riscv::writeARegister(1, blocks);
-  31              		.loc 1 7 5 is_stmt 1
-  32              	.LBB14:
-  33              	.LBB15:
-  34              		.file 2 "src/../h/riscv.h"
-   1:src/../h/riscv.h ****     //
-   2:src/../h/riscv.h ****     // Created by os on 3/31/26.
-   3:src/../h/riscv.h ****     //
-   4:src/../h/riscv.h **** 
-   5:src/../h/riscv.h ****     #ifndef PROJECT_BASE_RISCB_H
-   6:src/../h/riscv.h ****     #define PROJECT_BASE_RISCB_H
-   7:src/../h/riscv.h ****     #include "../lib/hw.h"
-   8:src/../h/riscv.h **** 
-   9:src/../h/riscv.h ****     class Riscv {
-  10:src/../h/riscv.h ****     public:
-  11:src/../h/riscv.h **** 	
-  12:src/../h/riscv.h **** 	static void popSppSpie();
-  13:src/../h/riscv.h **** 	
-  14:src/../h/riscv.h **** 	
-  15:src/../h/riscv.h ****         static uint64 r_scause();
-  16:src/../h/riscv.h **** 
-  17:src/../h/riscv.h ****         static void w_scause(uint64 scause);
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 2
-
-
-  18:src/../h/riscv.h **** 
-  19:src/../h/riscv.h ****         static uint64 r_sepc();
-  20:src/../h/riscv.h **** 
-  21:src/../h/riscv.h ****         static void w_sepc(uint64 sepc);
-  22:src/../h/riscv.h **** 
-  23:src/../h/riscv.h ****         static uint64 r_stvec();
-  24:src/../h/riscv.h **** 
-  25:src/../h/riscv.h ****         static void w_stvec(uint64 stvec);
-  26:src/../h/riscv.h **** 
-  27:src/../h/riscv.h ****         static uint64 r_stval();
-  28:src/../h/riscv.h **** 
-  29:src/../h/riscv.h ****         static void w_stval(uint64 stval);
-  30:src/../h/riscv.h **** 
-  31:src/../h/riscv.h ****         enum BitMaskSip {
-  32:src/../h/riscv.h ****             SIP_SSIP = (1 << 1),
-  33:src/../h/riscv.h ****             SIP_STIP = (1 << 5),
-  34:src/../h/riscv.h ****             SIP_SEIP = (1 << 9),
-  35:src/../h/riscv.h ****         };
-  36:src/../h/riscv.h **** 
-  37:src/../h/riscv.h ****         static void ms_sip(uint64 mask);
-  38:src/../h/riscv.h **** 
-  39:src/../h/riscv.h ****         static void mc_sip(uint64 mask);
-  40:src/../h/riscv.h **** 
-  41:src/../h/riscv.h ****         static uint64 r_sip();
-  42:src/../h/riscv.h **** 
-  43:src/../h/riscv.h ****         static void w_sip(uint64 sip);
-  44:src/../h/riscv.h **** 
-  45:src/../h/riscv.h ****         enum BitMaskSstatus {
-  46:src/../h/riscv.h ****             SSTATUS_SIE = (1 << 1),
-  47:src/../h/riscv.h ****             SSTATUS_SPIE = (1 << 5),
-  48:src/../h/riscv.h ****             SSTATUS_SPP = (1 <<8),
-  49:src/../h/riscv.h ****         };
-  50:src/../h/riscv.h **** 
-  51:src/../h/riscv.h ****         static void ms_sstatus(uint64 mask);
-  52:src/../h/riscv.h **** 
-  53:src/../h/riscv.h ****         static void mc_sstatus(uint64 mask);
-  54:src/../h/riscv.h **** 
-  55:src/../h/riscv.h ****         static uint64 r_sstatus();
-  56:src/../h/riscv.h **** 
-  57:src/../h/riscv.h ****         static void w_sstatus(uint64 sstatus);
-  58:src/../h/riscv.h **** 
-  59:src/../h/riscv.h ****         static uint64 readARegister(int reg_number);
-  60:src/../h/riscv.h **** 
-  61:src/../h/riscv.h ****         static void writeARegister(int reg_number, uint64 value);
-  62:src/../h/riscv.h **** 
-  63:src/../h/riscv.h **** 
-  64:src/../h/riscv.h ****         static void supervisorTrap();
-  65:src/../h/riscv.h ****     private:
-  66:src/../h/riscv.h ****         static void handleSupervisorTrap();
-  67:src/../h/riscv.h **** 
-  68:src/../h/riscv.h ****     };
-  69:src/../h/riscv.h **** 
-  70:src/../h/riscv.h ****     inline uint64 Riscv::r_scause()
-  71:src/../h/riscv.h ****     {
-  72:src/../h/riscv.h ****         uint64 volatile scause;
-  73:src/../h/riscv.h ****         __asm__ volatile ("csrr %[scause], scause" : [scause] "=r"(scause));
-  74:src/../h/riscv.h ****         return scause;
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 3
-
-
-  75:src/../h/riscv.h ****     }
-  76:src/../h/riscv.h **** 
-  77:src/../h/riscv.h ****     inline void Riscv::w_scause(uint64 scause)
-  78:src/../h/riscv.h ****     {
-  79:src/../h/riscv.h ****         __asm__ volatile ("csrw scause, %[scause]" : : [scause] "r"(scause));
-  80:src/../h/riscv.h ****     }
-  81:src/../h/riscv.h **** 
-  82:src/../h/riscv.h ****     inline uint64 Riscv::r_sepc()
-  83:src/../h/riscv.h ****     {
-  84:src/../h/riscv.h ****         uint64 volatile sepc;
-  85:src/../h/riscv.h ****         __asm__ volatile ("csrr %[sepc], sepc" : [sepc] "=r"(sepc));
-  86:src/../h/riscv.h ****         return sepc;
-  87:src/../h/riscv.h ****     }
-  88:src/../h/riscv.h **** 
-  89:src/../h/riscv.h ****     inline void Riscv::w_sepc(uint64 sepc)
-  90:src/../h/riscv.h ****     {
-  91:src/../h/riscv.h ****         __asm__ volatile ("csrw sepc, %[sepc]" : : [sepc] "r"(sepc));
-  92:src/../h/riscv.h ****     }
-  93:src/../h/riscv.h **** 
-  94:src/../h/riscv.h ****     inline uint64 Riscv::r_stvec()
-  95:src/../h/riscv.h ****     {
-  96:src/../h/riscv.h ****         uint64 volatile stvec;
-  97:src/../h/riscv.h ****         __asm__ volatile ("csrr %[stvec], stvec" : [stvec] "=r"(stvec));
-  98:src/../h/riscv.h ****         return stvec;
-  99:src/../h/riscv.h ****     }
- 100:src/../h/riscv.h **** 
- 101:src/../h/riscv.h ****     inline void Riscv::w_stvec(uint64 stvec)
- 102:src/../h/riscv.h ****     {
- 103:src/../h/riscv.h ****         __asm__ volatile ("csrw stvec, %[stvec]" : : [stvec] "r"(stvec));
- 104:src/../h/riscv.h ****     }
- 105:src/../h/riscv.h **** 
- 106:src/../h/riscv.h ****     inline uint64 Riscv::r_stval()
- 107:src/../h/riscv.h ****     {
- 108:src/../h/riscv.h ****         uint64 volatile stval;
- 109:src/../h/riscv.h ****         __asm__ volatile ("csrr %[stval], stval" : [stval] "=r"(stval));
- 110:src/../h/riscv.h ****         return stval;
- 111:src/../h/riscv.h ****     }
- 112:src/../h/riscv.h **** 
- 113:src/../h/riscv.h ****     inline void Riscv::w_stval(uint64 stval)
- 114:src/../h/riscv.h ****     {
- 115:src/../h/riscv.h ****         __asm__ volatile ("csrw stval, %[stval]" : : [stval] "r"(stval));
- 116:src/../h/riscv.h ****     }
- 117:src/../h/riscv.h **** 
- 118:src/../h/riscv.h ****     inline void Riscv::ms_sip(uint64 mask)
- 119:src/../h/riscv.h ****     {
- 120:src/../h/riscv.h ****         __asm__ volatile ("csrs sip, %[mask]" : : [mask] "r"(mask));
- 121:src/../h/riscv.h ****     }
- 122:src/../h/riscv.h **** 
- 123:src/../h/riscv.h ****     inline void Riscv::mc_sip(uint64 mask)
- 124:src/../h/riscv.h ****     {
- 125:src/../h/riscv.h ****         __asm__ volatile ("csrc sip, %[mask]" : : [mask] "r"(mask));
- 126:src/../h/riscv.h ****     }
- 127:src/../h/riscv.h **** 
- 128:src/../h/riscv.h ****     inline uint64 Riscv::r_sip()
- 129:src/../h/riscv.h ****     {
- 130:src/../h/riscv.h ****         uint64 volatile sip;
- 131:src/../h/riscv.h ****         __asm__ volatile ("csrr %[sip], sip" : [sip] "=r"(sip));
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 4
-
-
- 132:src/../h/riscv.h ****         return sip;
- 133:src/../h/riscv.h ****     }
- 134:src/../h/riscv.h **** 
- 135:src/../h/riscv.h ****     inline void Riscv::w_sip(uint64 sip)
- 136:src/../h/riscv.h ****     {
- 137:src/../h/riscv.h ****         __asm__ volatile ("csrw sip, %[sip]" : : [sip] "r"(sip));
- 138:src/../h/riscv.h ****     }
- 139:src/../h/riscv.h **** 
- 140:src/../h/riscv.h ****     inline void Riscv::ms_sstatus(uint64 mask)
- 141:src/../h/riscv.h ****     {
- 142:src/../h/riscv.h ****         __asm__ volatile ("csrs sstatus, %[mask]" : : [mask] "r"(mask));
- 143:src/../h/riscv.h ****     }
- 144:src/../h/riscv.h **** 
- 145:src/../h/riscv.h ****     inline void Riscv::mc_sstatus(uint64 mask)
- 146:src/../h/riscv.h ****     {
- 147:src/../h/riscv.h ****         __asm__ volatile ("csrc sstatus, %[mask]" : : [mask] "r"(mask));
- 148:src/../h/riscv.h ****     }
- 149:src/../h/riscv.h **** 
- 150:src/../h/riscv.h ****     inline uint64 Riscv::r_sstatus()
- 151:src/../h/riscv.h ****     {
- 152:src/../h/riscv.h ****         uint64 volatile sstatus;
- 153:src/../h/riscv.h ****         __asm__ volatile ("csrr %[sstatus], sstatus" : [sstatus] "=r"(sstatus));
- 154:src/../h/riscv.h ****         return sstatus;
- 155:src/../h/riscv.h ****     }
- 156:src/../h/riscv.h **** 
- 157:src/../h/riscv.h ****     inline void Riscv::w_sstatus(uint64 sstatus)
- 158:src/../h/riscv.h ****     {
- 159:src/../h/riscv.h ****         __asm__ volatile ("csrw sstatus, %[sstatus]" : : [sstatus] "r"(sstatus));
- 160:src/../h/riscv.h ****     }
- 161:src/../h/riscv.h **** 
- 162:src/../h/riscv.h **** inline uint64 Riscv::readARegister(int reg_number) {
- 163:src/../h/riscv.h ****         uint64 value;
- 164:src/../h/riscv.h ****         __asm__ volatile("mv %[val], a%[reg]" : [val] "=r" (value) : [reg] "i" (reg_number));
- 165:src/../h/riscv.h ****         return value;
- 166:src/../h/riscv.h ****     }
- 167:src/../h/riscv.h **** 
- 168:src/../h/riscv.h **** 
- 169:src/../h/riscv.h **** inline void Riscv::writeARegister( int reg_number, uint64 value) {
- 170:src/../h/riscv.h ****         __asm__ volatile("mv a%[reg], %[val]" :: [reg] "i" (reg_number), [val] "r" (value));
-  35              		.loc 2 170 9
-  36              	 #APP
-  37              	# 170 "src/../h/riscv.h" 1
- 171              	    }
-  38              		mv a1, a0
-  39              	# 0 "" 2
-  40              	.LVL3:
-  41              	 #NO_APP
-  42              	.LBE15:
-  43              	.LBE14:
-   8:src/syscall_c.cpp ****     Riscv::writeARegister(0, 0x01);
-  44              		.loc 1 8 5
-  45              	.LBB16:
-  46              	.LBB17:
- 170:src/../h/riscv.h ****     }
-  47              		.loc 2 170 9
-  48 0018 93071000 		li	a5,1
-  49              	 #APP
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 5
-
-
-  50              	# 170 "src/../h/riscv.h" 1
-  51              		mv a0, a5
-  52              	# 0 "" 2
-  53              	.LVL4:
-  54              	 #NO_APP
-  55              	.LBE17:
-  56              	.LBE16:
-   9:src/syscall_c.cpp **** 
+   7:src/syscall_c.cpp ****      __asm__ volatile ("mv a0, %0" :: "r"(0x01));
+  31              		.loc 1 7 6 is_stmt 1
+  32 0014 93071000 		li	a5,1
+  33              	 #APP
+  34              	# 7 "src/syscall_c.cpp" 1
+   8              	     __asm__ volatile ("mv a1, %0" :: "r"(blocks));
+  35              		mv a0, a5
+  36              	# 0 "" 2
+  37              		.loc 1 8 6
+  38              	# 8 "src/syscall_c.cpp" 1
+   9              	
   10:src/syscall_c.cpp ****     __asm__ volatile("ecall");
-  57              		.loc 1 10 5
-  58              	 #APP
-  59              	# 10 "src/syscall_c.cpp" 1
+  39              		mv a1, a0
+  40              	# 0 "" 2
+  41              		.loc 1 10 5
+  42              	# 10 "src/syscall_c.cpp" 1
   11              	
-  12:src/syscall_c.cpp ****     volatile long a0 = Riscv::readARegister(0);
-  60              		ecall
-  61              	# 0 "" 2
-  62              		.loc 1 12 5
-  63              	.LVL5:
-  64              	 #NO_APP
-  65              	.LBB18:
-  66              	.LBB19:
- 163:src/../h/riscv.h ****         __asm__ volatile("mv %[val], a%[reg]" : [val] "=r" (value) : [reg] "i" (reg_number));
-  67              		.loc 2 163 9
- 164:src/../h/riscv.h ****         return value;
-  68              		.loc 2 164 9
-  69              	 #APP
-  70              	# 164 "src/../h/riscv.h" 1
-  71              		mv a5, a0
-  72              	# 0 "" 2
-  73              	.LVL6:
- 165:src/../h/riscv.h ****     }
-  74              		.loc 2 165 9
-  75              	 #NO_APP
-  76              	.LBE19:
-  77              	.LBE18:
-  78              		.loc 1 12 46 is_stmt 0
-  79 0028 2334F4FE 		sd	a5,-24(s0)
-  13:src/syscall_c.cpp ****     return (void*) a0;
-  80              		.loc 1 13 5 is_stmt 1
-  81              		.loc 1 13 20 is_stmt 0
-  82 002c 033584FE 		ld	a0,-24(s0)
-  83              	.LVL7:
-  14:src/syscall_c.cpp **** 
+  12:src/syscall_c.cpp ****     volatile long ret;
+  43              		ecall
+  44              	# 0 "" 2
+  45              		.loc 1 12 5
+  13:src/syscall_c.cpp ****     __asm__ volatile ("mv %0, a0" : "=r"(ret));
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 2
+
+
+  46              		.loc 1 13 5
+  47              	# 13 "src/syscall_c.cpp" 1
+  14              	    return (void*) ret;
+  48              		mv a5, a0
+  49              	# 0 "" 2
+  50              	 #NO_APP
+  51 0028 2334F4FE 		sd	a5,-24(s0)
+  52              		.loc 1 14 5
+  53              		.loc 1 14 20 is_stmt 0
+  54 002c 033584FE 		ld	a0,-24(s0)
+  55              	.LVL3:
   15:src/syscall_c.cpp **** 
-  16:src/syscall_c.cpp **** }
-  84              		.loc 1 16 1
-  85 0030 03348101 		ld	s0,24(sp)
-  86              		.cfi_restore 8
-  87              		.cfi_def_cfa 2, 32
-  88 0034 13010102 		addi	sp,sp,32
-  89              		.cfi_def_cfa_offset 0
-  90 0038 67800000 		jr	ra
-  91              		.cfi_endproc
-  92              	.LFE18:
-  94              		.align	2
-  95              		.globl	_Z8mem_freePv
-  97              	_Z8mem_freePv:
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 6
+  16:src/syscall_c.cpp **** 
+  17:src/syscall_c.cpp **** }
+  56              		.loc 1 17 1
+  57 0030 03348101 		ld	s0,24(sp)
+  58              		.cfi_restore 8
+  59              		.cfi_def_cfa 2, 32
+  60 0034 13010102 		addi	sp,sp,32
+  61              		.cfi_def_cfa_offset 0
+  62 0038 67800000 		jr	ra
+  63              		.cfi_endproc
+  64              	.LFE16:
+  66              		.align	2
+  67              		.globl	_Z8mem_freePv
+  69              	_Z8mem_freePv:
+  70              	.LFB17:
+  18:src/syscall_c.cpp **** 
+  19:src/syscall_c.cpp **** int mem_free (void* ptr) {
+  71              		.loc 1 19 26 is_stmt 1
+  72              		.cfi_startproc
+  73              	.LVL4:
+  74 003c 130101FE 		addi	sp,sp,-32
+  75              		.cfi_def_cfa_offset 32
+  76 0040 233C8100 		sd	s0,24(sp)
+  77              		.cfi_offset 8, -8
+  78 0044 13040102 		addi	s0,sp,32
+  79              		.cfi_def_cfa 8, 0
+  20:src/syscall_c.cpp ****      __asm__ volatile ("mv a0, %0" :: "r"(0x02));
+  80              		.loc 1 20 6
+  81 0048 93072000 		li	a5,2
+  82              	 #APP
+  83              	# 20 "src/syscall_c.cpp" 1
+  21              	     __asm__ volatile ("mv a1, %0" :: "r"(ptr));
+  84              		mv a0, a5
+  85              	# 0 "" 2
+  86              		.loc 1 21 6
+  87              	# 21 "src/syscall_c.cpp" 1
+  22              	
+  23:src/syscall_c.cpp ****     __asm__ volatile("ecall");
+  88              		mv a1, a0
+  89              	# 0 "" 2
+  90              		.loc 1 23 5
+  91              	# 23 "src/syscall_c.cpp" 1
+  24              	
+  25:src/syscall_c.cpp ****     volatile long ret;
+  92              		ecall
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 3
 
 
-  98              	.LFB19:
-  17:src/syscall_c.cpp **** 
-  18:src/syscall_c.cpp **** int mem_free (void* ptr) {
-  99              		.loc 1 18 26 is_stmt 1
- 100              		.cfi_startproc
- 101              	.LVL8:
- 102 003c 130101FE 		addi	sp,sp,-32
- 103              		.cfi_def_cfa_offset 32
- 104 0040 233C8100 		sd	s0,24(sp)
- 105              		.cfi_offset 8, -8
- 106 0044 13040102 		addi	s0,sp,32
- 107              		.cfi_def_cfa 8, 0
-  19:src/syscall_c.cpp ****     Riscv::writeARegister(1, (uint64)ptr);
- 108              		.loc 1 19 5
- 109              	.LVL9:
- 110              	.LBB20:
- 111              	.LBB21:
- 170:src/../h/riscv.h ****     }
- 112              		.loc 2 170 9
- 113              	 #APP
- 114              	# 170 "src/../h/riscv.h" 1
- 115              		mv a1, a0
- 116              	# 0 "" 2
- 117              	.LVL10:
- 118              	 #NO_APP
- 119              	.LBE21:
- 120              	.LBE20:
-  20:src/syscall_c.cpp ****     Riscv::writeARegister(0, 0x02);
- 121              		.loc 1 20 5
- 122              	.LBB22:
- 123              	.LBB23:
- 170:src/../h/riscv.h ****     }
- 124              		.loc 2 170 9
- 125 004c 93072000 		li	a5,2
- 126              	 #APP
- 127              	# 170 "src/../h/riscv.h" 1
- 128              		mv a0, a5
- 129              	# 0 "" 2
- 130              	.LVL11:
- 131              	 #NO_APP
- 132              	.LBE23:
- 133              	.LBE22:
-  21:src/syscall_c.cpp **** 
-  22:src/syscall_c.cpp ****     __asm__ volatile("ecall");
- 134              		.loc 1 22 5
- 135              	 #APP
- 136              	# 22 "src/syscall_c.cpp" 1
-  23              	
-  24:src/syscall_c.cpp ****     volatile long a0 = Riscv::readARegister(0);
- 137              		ecall
- 138              	# 0 "" 2
- 139              		.loc 1 24 5
- 140              	.LVL12:
- 141              	 #NO_APP
- 142              	.LBB24:
- 143              	.LBB25:
- 163:src/../h/riscv.h ****         __asm__ volatile("mv %[val], a%[reg]" : [val] "=r" (value) : [reg] "i" (reg_number));
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 7
+  93              	# 0 "" 2
+  94              		.loc 1 25 5
+  26:src/syscall_c.cpp ****     __asm__ volatile ("mv %0, a0" : "=r"(ret));
+  95              		.loc 1 26 5
+  96              	# 26 "src/syscall_c.cpp" 1
+  27              	    return (int) ret;
+  97              		mv a5, a0
+  98              	# 0 "" 2
+  99              	 #NO_APP
+ 100 005c 2334F4FE 		sd	a5,-24(s0)
+ 101              		.loc 1 27 5
+ 102              		.loc 1 27 18 is_stmt 0
+ 103 0060 033584FE 		ld	a0,-24(s0)
+ 104              	.LVL5:
+  28:src/syscall_c.cpp **** }
+ 105              		.loc 1 28 1
+ 106 0064 1B050500 		sext.w	a0,a0
+ 107 0068 03348101 		ld	s0,24(sp)
+ 108              		.cfi_restore 8
+ 109              		.cfi_def_cfa 2, 32
+ 110 006c 13010102 		addi	sp,sp,32
+ 111              		.cfi_def_cfa_offset 0
+ 112 0070 67800000 		jr	ra
+ 113              		.cfi_endproc
+ 114              	.LFE17:
+ 116              		.align	2
+ 117              		.globl	_Znwm
+ 119              	_Znwm:
+ 120              	.LFB18:
+  29:src/syscall_c.cpp **** 
+  30:src/syscall_c.cpp **** void* operator new(size_t size) {
+ 121              		.loc 1 30 33 is_stmt 1
+ 122              		.cfi_startproc
+ 123              	.LVL6:
+ 124 0074 130101FF 		addi	sp,sp,-16
+ 125              		.cfi_def_cfa_offset 16
+ 126 0078 23341100 		sd	ra,8(sp)
+ 127 007c 23308100 		sd	s0,0(sp)
+ 128              		.cfi_offset 1, -8
+ 129              		.cfi_offset 8, -16
+ 130 0080 13040101 		addi	s0,sp,16
+ 131              		.cfi_def_cfa 8, 0
+  31:src/syscall_c.cpp ****     return mem_alloc(size);
+ 132              		.loc 1 31 5
+ 133              		.loc 1 31 21 is_stmt 0
+ 134 0084 97000000 		call	_Z9mem_allocm
+ 134      E7800000 
+ 135              	.LVL7:
+  32:src/syscall_c.cpp **** }
+ 136              		.loc 1 32 1
+ 137 008c 83308100 		ld	ra,8(sp)
+ 138              		.cfi_restore 1
+ 139 0090 03340100 		ld	s0,0(sp)
+ 140              		.cfi_restore 8
+ 141              		.cfi_def_cfa 2, 16
+ 142 0094 13010101 		addi	sp,sp,16
+ 143              		.cfi_def_cfa_offset 0
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 4
 
 
- 144              		.loc 2 163 9
- 164:src/../h/riscv.h ****         return value;
- 145              		.loc 2 164 9
- 146              	 #APP
- 147              	# 164 "src/../h/riscv.h" 1
- 148              		mv a5, a0
- 149              	# 0 "" 2
- 150              	.LVL13:
- 165:src/../h/riscv.h ****     }
- 151              		.loc 2 165 9
- 152              	 #NO_APP
- 153              	.LBE25:
- 154              	.LBE24:
- 155              		.loc 1 24 46 is_stmt 0
- 156 005c 2334F4FE 		sd	a5,-24(s0)
-  25:src/syscall_c.cpp ****     return (int) a0;
- 157              		.loc 1 25 5 is_stmt 1
- 158              		.loc 1 25 18 is_stmt 0
- 159 0060 033584FE 		ld	a0,-24(s0)
- 160              	.LVL14:
-  26:src/syscall_c.cpp **** }
- 161              		.loc 1 26 1
- 162 0064 1B050500 		sext.w	a0,a0
- 163 0068 03348101 		ld	s0,24(sp)
- 164              		.cfi_restore 8
- 165              		.cfi_def_cfa 2, 32
- 166 006c 13010102 		addi	sp,sp,32
- 167              		.cfi_def_cfa_offset 0
- 168 0070 67800000 		jr	ra
- 169              		.cfi_endproc
- 170              	.LFE19:
- 172              		.align	2
- 173              		.globl	_Znwm
- 175              	_Znwm:
- 176              	.LFB20:
-  27:src/syscall_c.cpp **** 
-  28:src/syscall_c.cpp **** void* operator new(size_t size) {
- 177              		.loc 1 28 33 is_stmt 1
- 178              		.cfi_startproc
- 179              	.LVL15:
- 180 0074 130101FF 		addi	sp,sp,-16
- 181              		.cfi_def_cfa_offset 16
- 182 0078 23341100 		sd	ra,8(sp)
- 183 007c 23308100 		sd	s0,0(sp)
- 184              		.cfi_offset 1, -8
- 185              		.cfi_offset 8, -16
- 186 0080 13040101 		addi	s0,sp,16
- 187              		.cfi_def_cfa 8, 0
-  29:src/syscall_c.cpp ****     return __mem_alloc(size);
- 188              		.loc 1 29 5
- 189              		.loc 1 29 23 is_stmt 0
- 190 0084 97000000 		call	__mem_alloc
- 190      E7800000 
- 191              	.LVL16:
-  30:src/syscall_c.cpp **** }
- 192              		.loc 1 30 1
- 193 008c 83308100 		ld	ra,8(sp)
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 8
+ 144 0098 67800000 		jr	ra
+ 145              		.cfi_endproc
+ 146              	.LFE18:
+ 148              		.align	2
+ 149              		.globl	_Znam
+ 151              	_Znam:
+ 152              	.LFB19:
+  33:src/syscall_c.cpp **** 
+  34:src/syscall_c.cpp **** 
+  35:src/syscall_c.cpp **** void* operator new[](size_t size) {
+ 153              		.loc 1 35 35 is_stmt 1
+ 154              		.cfi_startproc
+ 155              	.LVL8:
+ 156 009c 130101FF 		addi	sp,sp,-16
+ 157              		.cfi_def_cfa_offset 16
+ 158 00a0 23341100 		sd	ra,8(sp)
+ 159 00a4 23308100 		sd	s0,0(sp)
+ 160              		.cfi_offset 1, -8
+ 161              		.cfi_offset 8, -16
+ 162 00a8 13040101 		addi	s0,sp,16
+ 163              		.cfi_def_cfa 8, 0
+  36:src/syscall_c.cpp ****     return mem_alloc(size);
+ 164              		.loc 1 36 5
+ 165              		.loc 1 36 21 is_stmt 0
+ 166 00ac 97000000 		call	_Z9mem_allocm
+ 166      E7800000 
+ 167              	.LVL9:
+  37:src/syscall_c.cpp **** }
+ 168              		.loc 1 37 1
+ 169 00b4 83308100 		ld	ra,8(sp)
+ 170              		.cfi_restore 1
+ 171 00b8 03340100 		ld	s0,0(sp)
+ 172              		.cfi_restore 8
+ 173              		.cfi_def_cfa 2, 16
+ 174 00bc 13010101 		addi	sp,sp,16
+ 175              		.cfi_def_cfa_offset 0
+ 176 00c0 67800000 		jr	ra
+ 177              		.cfi_endproc
+ 178              	.LFE19:
+ 180              		.align	2
+ 181              		.globl	_ZdlPv
+ 183              	_ZdlPv:
+ 184              	.LFB20:
+  38:src/syscall_c.cpp **** 
+  39:src/syscall_c.cpp **** 
+  40:src/syscall_c.cpp **** void operator delete(void* ptr) noexcept {
+ 185              		.loc 1 40 42 is_stmt 1
+ 186              		.cfi_startproc
+ 187              	.LVL10:
+ 188 00c4 130101FF 		addi	sp,sp,-16
+ 189              		.cfi_def_cfa_offset 16
+ 190 00c8 23341100 		sd	ra,8(sp)
+ 191 00cc 23308100 		sd	s0,0(sp)
+ 192              		.cfi_offset 1, -8
+ 193              		.cfi_offset 8, -16
+ 194 00d0 13040101 		addi	s0,sp,16
+ 195              		.cfi_def_cfa 8, 0
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 5
 
 
- 194              		.cfi_restore 1
- 195 0090 03340100 		ld	s0,0(sp)
- 196              		.cfi_restore 8
- 197              		.cfi_def_cfa 2, 16
- 198 0094 13010101 		addi	sp,sp,16
- 199              		.cfi_def_cfa_offset 0
- 200 0098 67800000 		jr	ra
- 201              		.cfi_endproc
- 202              	.LFE20:
- 204              		.align	2
- 205              		.globl	_Znam
- 207              	_Znam:
- 208              	.LFB21:
-  31:src/syscall_c.cpp **** 
-  32:src/syscall_c.cpp **** 
-  33:src/syscall_c.cpp **** void* operator new[](size_t size) {
- 209              		.loc 1 33 35 is_stmt 1
- 210              		.cfi_startproc
- 211              	.LVL17:
- 212 009c 130101FF 		addi	sp,sp,-16
- 213              		.cfi_def_cfa_offset 16
- 214 00a0 23341100 		sd	ra,8(sp)
- 215 00a4 23308100 		sd	s0,0(sp)
- 216              		.cfi_offset 1, -8
- 217              		.cfi_offset 8, -16
- 218 00a8 13040101 		addi	s0,sp,16
- 219              		.cfi_def_cfa 8, 0
-  34:src/syscall_c.cpp ****     return __mem_alloc(size);
- 220              		.loc 1 34 5
- 221              		.loc 1 34 23 is_stmt 0
- 222 00ac 97000000 		call	__mem_alloc
- 222      E7800000 
- 223              	.LVL18:
-  35:src/syscall_c.cpp **** }
- 224              		.loc 1 35 1
- 225 00b4 83308100 		ld	ra,8(sp)
- 226              		.cfi_restore 1
- 227 00b8 03340100 		ld	s0,0(sp)
- 228              		.cfi_restore 8
- 229              		.cfi_def_cfa 2, 16
- 230 00bc 13010101 		addi	sp,sp,16
- 231              		.cfi_def_cfa_offset 0
- 232 00c0 67800000 		jr	ra
- 233              		.cfi_endproc
- 234              	.LFE21:
- 236              		.align	2
- 237              		.globl	_ZdlPv
- 239              	_ZdlPv:
- 240              	.LFB22:
-  36:src/syscall_c.cpp **** 
-  37:src/syscall_c.cpp **** 
-  38:src/syscall_c.cpp **** void operator delete(void* ptr) noexcept {
- 241              		.loc 1 38 42 is_stmt 1
- 242              		.cfi_startproc
- 243              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
- 244              		.cfi_lsda 0x1b,.LLSDA22
- 245              	.LVL19:
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 9
-
-
- 246 00c4 130101FF 		addi	sp,sp,-16
- 247              		.cfi_def_cfa_offset 16
- 248 00c8 23341100 		sd	ra,8(sp)
- 249 00cc 23308100 		sd	s0,0(sp)
- 250              		.cfi_offset 1, -8
- 251              		.cfi_offset 8, -16
- 252 00d0 13040101 		addi	s0,sp,16
- 253              		.cfi_def_cfa 8, 0
-  39:src/syscall_c.cpp ****     __mem_free(ptr);
- 254              		.loc 1 39 5
- 255              		.loc 1 39 15 is_stmt 0
- 256 00d4 97000000 		call	__mem_free
- 256      E7800000 
- 257              	.LVL20:
-  40:src/syscall_c.cpp **** }
- 258              		.loc 1 40 1
- 259 00dc 83308100 		ld	ra,8(sp)
- 260              		.cfi_restore 1
- 261 00e0 03340100 		ld	s0,0(sp)
- 262              		.cfi_restore 8
- 263              		.cfi_def_cfa 2, 16
- 264 00e4 13010101 		addi	sp,sp,16
- 265              		.cfi_def_cfa_offset 0
- 266 00e8 67800000 		jr	ra
- 267              		.cfi_endproc
- 268              	.LFE22:
- 269              		.globl	__gxx_personality_v0
- 270              		.section	.gcc_except_table,"aw",@progbits
- 271              	.LLSDA22:
- 272 0000 FF       		.byte	0xff
- 273 0001 FF       		.byte	0xff
- 274 0002 03       		.byte	0x3
- 275 0003 00       		.byte	0
- 276              		.text
- 278              		.align	2
- 279              		.globl	_ZdaPv
- 281              	_ZdaPv:
- 282              	.LFB23:
-  41:src/syscall_c.cpp **** 
-  42:src/syscall_c.cpp **** void operator delete[](void* ptr) noexcept {
- 283              		.loc 1 42 44 is_stmt 1
- 284              		.cfi_startproc
- 285              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
- 286              		.cfi_lsda 0x1b,.LLSDA23
- 287              	.LVL21:
- 288 00ec 130101FF 		addi	sp,sp,-16
- 289              		.cfi_def_cfa_offset 16
- 290 00f0 23341100 		sd	ra,8(sp)
- 291 00f4 23308100 		sd	s0,0(sp)
- 292              		.cfi_offset 1, -8
- 293              		.cfi_offset 8, -16
- 294 00f8 13040101 		addi	s0,sp,16
- 295              		.cfi_def_cfa 8, 0
-  43:src/syscall_c.cpp ****     __mem_free(ptr);
- 296              		.loc 1 43 5
- 297              		.loc 1 43 15 is_stmt 0
- 298 00fc 97000000 		call	__mem_free
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 10
-
-
- 298      E7800000 
- 299              	.LVL22:
-  44:src/syscall_c.cpp **** }...
- 300              		.loc 1 44 1
- 301 0104 83308100 		ld	ra,8(sp)
- 302              		.cfi_restore 1
- 303 0108 03340100 		ld	s0,0(sp)
- 304              		.cfi_restore 8
- 305              		.cfi_def_cfa 2, 16
- 306 010c 13010101 		addi	sp,sp,16
- 307              		.cfi_def_cfa_offset 0
- 308 0110 67800000 		jr	ra
- 309              		.cfi_endproc
- 310              	.LFE23:
- 311              		.section	.gcc_except_table
- 312              	.LLSDA23:
- 313 0004 FF       		.byte	0xff
- 314 0005 FF       		.byte	0xff
- 315 0006 03       		.byte	0x3
- 316 0007 00       		.byte	0
- 317              		.text
- 319              	.Letext0:
- 320              		.file 3 "src/../h/../lib/hw.h"
- 321              		.file 4 "src/../lib/mem.h"
- 1824              		.align	3
- 1827              	DW.ref.__gxx_personality_v0:
- 1828 0000 00000000 		.dword	__gxx_personality_v0
- 1828      00000000 
- 1829              		.ident	"GCC: (GNU) 10.1.0"
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 11
+  41:src/syscall_c.cpp ****     mem_free(ptr);
+ 196              		.loc 1 41 5
+ 197              		.loc 1 41 13 is_stmt 0
+ 198 00d4 97000000 		call	_Z8mem_freePv
+ 198      E7800000 
+ 199              	.LVL11:
+  42:src/syscall_c.cpp **** }
+ 200              		.loc 1 42 1
+ 201 00dc 83308100 		ld	ra,8(sp)
+ 202              		.cfi_restore 1
+ 203 00e0 03340100 		ld	s0,0(sp)
+ 204              		.cfi_restore 8
+ 205              		.cfi_def_cfa 2, 16
+ 206 00e4 13010101 		addi	sp,sp,16
+ 207              		.cfi_def_cfa_offset 0
+ 208 00e8 67800000 		jr	ra
+ 209              		.cfi_endproc
+ 210              	.LFE20:
+ 212              		.align	2
+ 213              		.globl	_ZdaPv
+ 215              	_ZdaPv:
+ 216              	.LFB21:
+  43:src/syscall_c.cpp **** 
+  44:src/syscall_c.cpp **** void operator delete[](void* ptr) noexcept {
+ 217              		.loc 1 44 44 is_stmt 1
+ 218              		.cfi_startproc
+ 219              	.LVL12:
+ 220 00ec 130101FF 		addi	sp,sp,-16
+ 221              		.cfi_def_cfa_offset 16
+ 222 00f0 23341100 		sd	ra,8(sp)
+ 223 00f4 23308100 		sd	s0,0(sp)
+ 224              		.cfi_offset 1, -8
+ 225              		.cfi_offset 8, -16
+ 226 00f8 13040101 		addi	s0,sp,16
+ 227              		.cfi_def_cfa 8, 0
+  45:src/syscall_c.cpp ****     mem_free(ptr);
+ 228              		.loc 1 45 5
+ 229              		.loc 1 45 13 is_stmt 0
+ 230 00fc 97000000 		call	_Z8mem_freePv
+ 230      E7800000 
+ 231              	.LVL13:
+  46:src/syscall_c.cpp **** }...
+ 232              		.loc 1 46 1
+ 233 0104 83308100 		ld	ra,8(sp)
+ 234              		.cfi_restore 1
+ 235 0108 03340100 		ld	s0,0(sp)
+ 236              		.cfi_restore 8
+ 237              		.cfi_def_cfa 2, 16
+ 238 010c 13010101 		addi	sp,sp,16
+ 239              		.cfi_def_cfa_offset 0
+ 240 0110 67800000 		jr	ra
+ 241              		.cfi_endproc
+ 242              	.LFE21:
+ 244              	.Letext0:
+ 245              		.file 2 "src/../h/../lib/hw.h"
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 6
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 syscall_c.cpp
-C:\msys64\tmp\ccFBSHc2.s:12     .text:0000000000000000 _Z9mem_allocm
-C:\msys64\tmp\ccFBSHc2.s:16     .text:0000000000000000 .L0 
-C:\msys64\tmp\ccFBSHc2.s:18     .text:0000000000000000 .L0 
-C:\msys64\tmp\ccFBSHc2.s:19     .text:0000000000000004 .L0 
-C:\msys64\tmp\ccFBSHc2.s:21     .text:0000000000000008 .L0 
-C:\msys64\tmp\ccFBSHc2.s:23     .text:000000000000000c .L0 
-C:\msys64\tmp\ccFBSHc2.s:25     .text:000000000000000c .L0 
-C:\msys64\tmp\ccFBSHc2.s:26     .text:000000000000000c .L0 
-C:\msys64\tmp\ccFBSHc2.s:29     .text:0000000000000010 .L0 
-C:\msys64\tmp\ccFBSHc2.s:35     .text:0000000000000014 .L0 
-    src/../h/riscv.h:170    .text:0000000000000014 .L0 
-C:\msys64\tmp\ccFBSHc2.s:47     .text:0000000000000018 .L0 
-C:\msys64\tmp\ccFBSHc2.s:48     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccyzHjwt.s:12     .text:0000000000000000 _Z9mem_allocm
+C:\msys64\tmp\ccyzHjwt.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccyzHjwt.s:18     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccyzHjwt.s:19     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccyzHjwt.s:21     .text:0000000000000008 .L0 
+C:\msys64\tmp\ccyzHjwt.s:23     .text:000000000000000c .L0 
+C:\msys64\tmp\ccyzHjwt.s:25     .text:000000000000000c .L0 
+C:\msys64\tmp\ccyzHjwt.s:26     .text:000000000000000c .L0 
+C:\msys64\tmp\ccyzHjwt.s:29     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccyzHjwt.s:32     .text:0000000000000014 .L0 
+   src/syscall_c.cpp:8      .text:000000000000001c .L0 
    src/syscall_c.cpp:10     .text:0000000000000020 .L0 
-C:\msys64\tmp\ccFBSHc2.s:67     .text:0000000000000024 .L0 
-C:\msys64\tmp\ccFBSHc2.s:68     .text:0000000000000024 .L0 
-    src/../h/riscv.h:164    .text:0000000000000024 .L0 
-C:\msys64\tmp\ccFBSHc2.s:78     .text:0000000000000028 .L0 
-C:\msys64\tmp\ccFBSHc2.s:79     .text:0000000000000028 .L0 
-C:\msys64\tmp\ccFBSHc2.s:81     .text:000000000000002c .L0 
-C:\msys64\tmp\ccFBSHc2.s:82     .text:000000000000002c .L0 
-C:\msys64\tmp\ccFBSHc2.s:85     .text:0000000000000030 .L0 
-C:\msys64\tmp\ccFBSHc2.s:86     .text:0000000000000034 .L0 
-C:\msys64\tmp\ccFBSHc2.s:87     .text:0000000000000034 .L0 
-C:\msys64\tmp\ccFBSHc2.s:89     .text:0000000000000038 .L0 
-C:\msys64\tmp\ccFBSHc2.s:91     .text:000000000000003c .L0 
-C:\msys64\tmp\ccFBSHc2.s:97     .text:000000000000003c _Z8mem_freePv
-C:\msys64\tmp\ccFBSHc2.s:100    .text:000000000000003c .L0 
-C:\msys64\tmp\ccFBSHc2.s:102    .text:000000000000003c .L0 
-C:\msys64\tmp\ccFBSHc2.s:103    .text:0000000000000040 .L0 
-C:\msys64\tmp\ccFBSHc2.s:105    .text:0000000000000044 .L0 
-C:\msys64\tmp\ccFBSHc2.s:107    .text:0000000000000048 .L0 
-C:\msys64\tmp\ccFBSHc2.s:112    .text:0000000000000048 .L0 
-    src/../h/riscv.h:170    .text:0000000000000048 .L0 
-C:\msys64\tmp\ccFBSHc2.s:124    .text:000000000000004c .L0 
-C:\msys64\tmp\ccFBSHc2.s:125    .text:000000000000004c .L0 
-   src/syscall_c.cpp:22     .text:0000000000000054 .L0 
-C:\msys64\tmp\ccFBSHc2.s:144    .text:0000000000000058 .L0 
-C:\msys64\tmp\ccFBSHc2.s:145    .text:0000000000000058 .L0 
-    src/../h/riscv.h:164    .text:0000000000000058 .L0 
-C:\msys64\tmp\ccFBSHc2.s:155    .text:000000000000005c .L0 
-C:\msys64\tmp\ccFBSHc2.s:156    .text:000000000000005c .L0 
-C:\msys64\tmp\ccFBSHc2.s:158    .text:0000000000000060 .L0 
-C:\msys64\tmp\ccFBSHc2.s:159    .text:0000000000000060 .L0 
-C:\msys64\tmp\ccFBSHc2.s:162    .text:0000000000000064 .L0 
-C:\msys64\tmp\ccFBSHc2.s:164    .text:000000000000006c .L0 
-C:\msys64\tmp\ccFBSHc2.s:165    .text:000000000000006c .L0 
-C:\msys64\tmp\ccFBSHc2.s:167    .text:0000000000000070 .L0 
-C:\msys64\tmp\ccFBSHc2.s:169    .text:0000000000000074 .L0 
-C:\msys64\tmp\ccFBSHc2.s:175    .text:0000000000000074 _Znwm
-C:\msys64\tmp\ccFBSHc2.s:178    .text:0000000000000074 .L0 
-C:\msys64\tmp\ccFBSHc2.s:180    .text:0000000000000074 .L0 
-C:\msys64\tmp\ccFBSHc2.s:181    .text:0000000000000078 .L0 
-C:\msys64\tmp\ccFBSHc2.s:184    .text:0000000000000080 .L0 
-C:\msys64\tmp\ccFBSHc2.s:185    .text:0000000000000080 .L0 
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 12
+C:\msys64\tmp\ccyzHjwt.s:46     .text:0000000000000024 .L0 
+   src/syscall_c.cpp:13     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccyzHjwt.s:53     .text:000000000000002c .L0 
+C:\msys64\tmp\ccyzHjwt.s:54     .text:000000000000002c .L0 
+C:\msys64\tmp\ccyzHjwt.s:57     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccyzHjwt.s:58     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccyzHjwt.s:59     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccyzHjwt.s:61     .text:0000000000000038 .L0 
+C:\msys64\tmp\ccyzHjwt.s:63     .text:000000000000003c .L0 
+C:\msys64\tmp\ccyzHjwt.s:69     .text:000000000000003c _Z8mem_freePv
+C:\msys64\tmp\ccyzHjwt.s:72     .text:000000000000003c .L0 
+C:\msys64\tmp\ccyzHjwt.s:74     .text:000000000000003c .L0 
+C:\msys64\tmp\ccyzHjwt.s:75     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccyzHjwt.s:77     .text:0000000000000044 .L0 
+C:\msys64\tmp\ccyzHjwt.s:79     .text:0000000000000048 .L0 
+C:\msys64\tmp\ccyzHjwt.s:81     .text:0000000000000048 .L0 
+   src/syscall_c.cpp:21     .text:0000000000000050 .L0 
+   src/syscall_c.cpp:23     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccyzHjwt.s:95     .text:0000000000000058 .L0 
+   src/syscall_c.cpp:26     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccyzHjwt.s:102    .text:0000000000000060 .L0 
+C:\msys64\tmp\ccyzHjwt.s:103    .text:0000000000000060 .L0 
+C:\msys64\tmp\ccyzHjwt.s:106    .text:0000000000000064 .L0 
+C:\msys64\tmp\ccyzHjwt.s:108    .text:000000000000006c .L0 
+C:\msys64\tmp\ccyzHjwt.s:109    .text:000000000000006c .L0 
+C:\msys64\tmp\ccyzHjwt.s:111    .text:0000000000000070 .L0 
+C:\msys64\tmp\ccyzHjwt.s:113    .text:0000000000000074 .L0 
+C:\msys64\tmp\ccyzHjwt.s:119    .text:0000000000000074 _Znwm
+C:\msys64\tmp\ccyzHjwt.s:122    .text:0000000000000074 .L0 
+C:\msys64\tmp\ccyzHjwt.s:124    .text:0000000000000074 .L0 
+C:\msys64\tmp\ccyzHjwt.s:125    .text:0000000000000078 .L0 
+C:\msys64\tmp\ccyzHjwt.s:128    .text:0000000000000080 .L0 
+C:\msys64\tmp\ccyzHjwt.s:129    .text:0000000000000080 .L0 
+C:\msys64\tmp\ccyzHjwt.s:131    .text:0000000000000084 .L0 
+C:\msys64\tmp\ccyzHjwt.s:133    .text:0000000000000084 .L0 
+C:\msys64\tmp\ccyzHjwt.s:134    .text:0000000000000084 .L0 
+C:\msys64\tmp\ccyzHjwt.s:137    .text:000000000000008c .L0 
+C:\msys64\tmp\ccyzHjwt.s:138    .text:0000000000000090 .L0 
+C:\msys64\tmp\ccyzHjwt.s:140    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccyzHjwt.s:141    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccyzHjwt.s:143    .text:0000000000000098 .L0 
+C:\msys64\tmp\ccyzHjwt.s:145    .text:000000000000009c .L0 
+C:\msys64\tmp\ccyzHjwt.s:151    .text:000000000000009c _Znam
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 7
 
 
-C:\msys64\tmp\ccFBSHc2.s:187    .text:0000000000000084 .L0 
-C:\msys64\tmp\ccFBSHc2.s:189    .text:0000000000000084 .L0 
-C:\msys64\tmp\ccFBSHc2.s:190    .text:0000000000000084 .L0 
-C:\msys64\tmp\ccFBSHc2.s:193    .text:000000000000008c .L0 
-C:\msys64\tmp\ccFBSHc2.s:194    .text:0000000000000090 .L0 
-C:\msys64\tmp\ccFBSHc2.s:196    .text:0000000000000094 .L0 
-C:\msys64\tmp\ccFBSHc2.s:197    .text:0000000000000094 .L0 
-C:\msys64\tmp\ccFBSHc2.s:199    .text:0000000000000098 .L0 
-C:\msys64\tmp\ccFBSHc2.s:201    .text:000000000000009c .L0 
-C:\msys64\tmp\ccFBSHc2.s:207    .text:000000000000009c _Znam
-C:\msys64\tmp\ccFBSHc2.s:210    .text:000000000000009c .L0 
-C:\msys64\tmp\ccFBSHc2.s:212    .text:000000000000009c .L0 
-C:\msys64\tmp\ccFBSHc2.s:213    .text:00000000000000a0 .L0 
-C:\msys64\tmp\ccFBSHc2.s:216    .text:00000000000000a8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:217    .text:00000000000000a8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:219    .text:00000000000000ac .L0 
-C:\msys64\tmp\ccFBSHc2.s:221    .text:00000000000000ac .L0 
-C:\msys64\tmp\ccFBSHc2.s:222    .text:00000000000000ac .L0 
-C:\msys64\tmp\ccFBSHc2.s:225    .text:00000000000000b4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:226    .text:00000000000000b8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:228    .text:00000000000000bc .L0 
-C:\msys64\tmp\ccFBSHc2.s:229    .text:00000000000000bc .L0 
-C:\msys64\tmp\ccFBSHc2.s:231    .text:00000000000000c0 .L0 
-C:\msys64\tmp\ccFBSHc2.s:233    .text:00000000000000c4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:239    .text:00000000000000c4 _ZdlPv
-C:\msys64\tmp\ccFBSHc2.s:242    .text:00000000000000c4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:1827   .sdata.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
-C:\msys64\tmp\ccFBSHc2.s:246    .text:00000000000000c4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:247    .text:00000000000000c8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:250    .text:00000000000000d0 .L0 
-C:\msys64\tmp\ccFBSHc2.s:251    .text:00000000000000d0 .L0 
-C:\msys64\tmp\ccFBSHc2.s:253    .text:00000000000000d4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:255    .text:00000000000000d4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:256    .text:00000000000000d4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:259    .text:00000000000000dc .L0 
-C:\msys64\tmp\ccFBSHc2.s:260    .text:00000000000000e0 .L0 
-C:\msys64\tmp\ccFBSHc2.s:262    .text:00000000000000e4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:263    .text:00000000000000e4 .L0 
-C:\msys64\tmp\ccFBSHc2.s:265    .text:00000000000000e8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:267    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccFBSHc2.s:281    .text:00000000000000ec _ZdaPv
-C:\msys64\tmp\ccFBSHc2.s:284    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccFBSHc2.s:288    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccFBSHc2.s:289    .text:00000000000000f0 .L0 
-C:\msys64\tmp\ccFBSHc2.s:292    .text:00000000000000f8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:293    .text:00000000000000f8 .L0 
-C:\msys64\tmp\ccFBSHc2.s:295    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccFBSHc2.s:297    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccFBSHc2.s:298    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccFBSHc2.s:301    .text:0000000000000104 .L0 
-C:\msys64\tmp\ccFBSHc2.s:302    .text:0000000000000108 .L0 
-C:\msys64\tmp\ccFBSHc2.s:304    .text:000000000000010c .L0 
-C:\msys64\tmp\ccFBSHc2.s:305    .text:000000000000010c .L0 
-C:\msys64\tmp\ccFBSHc2.s:307    .text:0000000000000110 .L0 
-C:\msys64\tmp\ccFBSHc2.s:309    .text:0000000000000114 .L0 
-C:\msys64\tmp\ccFBSHc2.s:322    .text:0000000000000114 .L0 
-C:\msys64\tmp\ccFBSHc2.s:958    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 13
+C:\msys64\tmp\ccyzHjwt.s:154    .text:000000000000009c .L0 
+C:\msys64\tmp\ccyzHjwt.s:156    .text:000000000000009c .L0 
+C:\msys64\tmp\ccyzHjwt.s:157    .text:00000000000000a0 .L0 
+C:\msys64\tmp\ccyzHjwt.s:160    .text:00000000000000a8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:161    .text:00000000000000a8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:163    .text:00000000000000ac .L0 
+C:\msys64\tmp\ccyzHjwt.s:165    .text:00000000000000ac .L0 
+C:\msys64\tmp\ccyzHjwt.s:166    .text:00000000000000ac .L0 
+C:\msys64\tmp\ccyzHjwt.s:169    .text:00000000000000b4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:170    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:172    .text:00000000000000bc .L0 
+C:\msys64\tmp\ccyzHjwt.s:173    .text:00000000000000bc .L0 
+C:\msys64\tmp\ccyzHjwt.s:175    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccyzHjwt.s:177    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:183    .text:00000000000000c4 _ZdlPv
+C:\msys64\tmp\ccyzHjwt.s:186    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:188    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:189    .text:00000000000000c8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:192    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccyzHjwt.s:193    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccyzHjwt.s:195    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:197    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:198    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:201    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccyzHjwt.s:202    .text:00000000000000e0 .L0 
+C:\msys64\tmp\ccyzHjwt.s:204    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:205    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccyzHjwt.s:207    .text:00000000000000e8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:209    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccyzHjwt.s:215    .text:00000000000000ec _ZdaPv
+C:\msys64\tmp\ccyzHjwt.s:218    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccyzHjwt.s:220    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccyzHjwt.s:221    .text:00000000000000f0 .L0 
+C:\msys64\tmp\ccyzHjwt.s:224    .text:00000000000000f8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:225    .text:00000000000000f8 .L0 
+C:\msys64\tmp\ccyzHjwt.s:227    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccyzHjwt.s:229    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccyzHjwt.s:230    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccyzHjwt.s:233    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccyzHjwt.s:234    .text:0000000000000108 .L0 
+C:\msys64\tmp\ccyzHjwt.s:236    .text:000000000000010c .L0 
+C:\msys64\tmp\ccyzHjwt.s:237    .text:000000000000010c .L0 
+C:\msys64\tmp\ccyzHjwt.s:239    .text:0000000000000110 .L0 
+C:\msys64\tmp\ccyzHjwt.s:241    .text:0000000000000114 .L0 
+C:\msys64\tmp\ccyzHjwt.s:246    .text:0000000000000114 .L0 
+C:\msys64\tmp\ccyzHjwt.s:534    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccyzHjwt.s:971    .debug_str:00000000000000ee .LASF27
+C:\msys64\tmp\ccyzHjwt.s:997    .debug_str:000000000000024c .LASF28
+C:\msys64\tmp\ccyzHjwt.s:967    .debug_str:00000000000000b2 .LASF29
+C:\msys64\tmp\ccyzHjwt.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccyzHjwt.s:244    .text:0000000000000114 .Letext0
+C:\msys64\tmp\ccyzHjwt.s:939    .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccyzHjwt.s:969    .debug_str:00000000000000e1 .LASF0
+C:\msys64\tmp\ccyzHjwt.s:961    .debug_str:0000000000000085 .LASF1
+C:\msys64\tmp\ccyzHjwt.s:955    .debug_str:000000000000005f .LASF2
+C:\msys64\tmp\ccyzHjwt.s:951    .debug_str:0000000000000045 .LASF4
+C:\msys64\tmp\ccyzHjwt.s:959    .debug_str:0000000000000073 .LASF3
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 8
 
 
-C:\msys64\tmp\ccFBSHc2.s:1691   .debug_str:0000000000000088 .LASF69
-C:\msys64\tmp\ccFBSHc2.s:1727   .debug_str:0000000000000259 .LASF70
-C:\msys64\tmp\ccFBSHc2.s:1763   .debug_str:000000000000036e .LASF71
-C:\msys64\tmp\ccFBSHc2.s:8      .text:0000000000000000 .Ltext0
-C:\msys64\tmp\ccFBSHc2.s:319    .text:0000000000000114 .Letext0
-C:\msys64\tmp\ccFBSHc2.s:1665   .debug_line:0000000000000000 .Ldebug_line0
-C:\msys64\tmp\ccFBSHc2.s:1747   .debug_str:0000000000000308 .LASF0
-C:\msys64\tmp\ccFBSHc2.s:1753   .debug_str:0000000000000322 .LASF1
-C:\msys64\tmp\ccFBSHc2.s:1741   .debug_str:00000000000002dd .LASF2
-C:\msys64\tmp\ccFBSHc2.s:1723   .debug_str:000000000000023f .LASF4
-C:\msys64\tmp\ccFBSHc2.s:1781   .debug_str:0000000000000410 .LASF3
-C:\msys64\tmp\ccFBSHc2.s:1679   .debug_str:0000000000000032 .LASF5
-C:\msys64\tmp\ccFBSHc2.s:1755   .debug_str:0000000000000335 .LASF6
-C:\msys64\tmp\ccFBSHc2.s:1745   .debug_str:00000000000002f5 .LASF7
-C:\msys64\tmp\ccFBSHc2.s:1761   .debug_str:000000000000035f .LASF8
-C:\msys64\tmp\ccFBSHc2.s:1689   .debug_str:000000000000007c .LASF9
-C:\msys64\tmp\ccFBSHc2.s:1771   .debug_str:00000000000003c0 .LASF10
-C:\msys64\tmp\ccFBSHc2.s:1697   .debug_str:0000000000000174 .LASF11
-C:\msys64\tmp\ccFBSHc2.s:1751   .debug_str:000000000000031c .LASF72
-C:\msys64\tmp\ccFBSHc2.s:1769   .debug_str:00000000000003b5 .LASF46
-C:\msys64\tmp\ccFBSHc2.s:1813   .debug_str:0000000000000502 .LASF48
-C:\msys64\tmp\ccFBSHc2.s:1671   .debug_str:0000000000000016 .LASF12
-C:\msys64\tmp\ccFBSHc2.s:1789   .debug_str:0000000000000448 .LASF14
-C:\msys64\tmp\ccFBSHc2.s:1703   .debug_str:00000000000001b3 .LASF16
-C:\msys64\tmp\ccFBSHc2.s:1701   .debug_str:000000000000019e .LASF18
-C:\msys64\tmp\ccFBSHc2.s:1783   .debug_str:0000000000000422 .LASF13
-C:\msys64\tmp\ccFBSHc2.s:1765   .debug_str:000000000000039d .LASF15
-C:\msys64\tmp\ccFBSHc2.s:1797   .debug_str:000000000000049a .LASF17
-C:\msys64\tmp\ccFBSHc2.s:1793   .debug_str:0000000000000475 .LASF19
-C:\msys64\tmp\ccFBSHc2.s:1713   .debug_str:00000000000001f1 .LASF20
-C:\msys64\tmp\ccFBSHc2.s:1699   .debug_str:000000000000018a .LASF21
-C:\msys64\tmp\ccFBSHc2.s:1667   .debug_str:0000000000000000 .LASF22
-C:\msys64\tmp\ccFBSHc2.s:1719   .debug_str:0000000000000215 .LASF23
-C:\msys64\tmp\ccFBSHc2.s:1705   .debug_str:00000000000001bc .LASF24
-C:\msys64\tmp\ccFBSHc2.s:1683   .debug_str:0000000000000042 .LASF25
-C:\msys64\tmp\ccFBSHc2.s:1817   .debug_str:0000000000000525 .LASF26
-C:\msys64\tmp\ccFBSHc2.s:1707   .debug_str:00000000000001c4 .LASF27
-C:\msys64\tmp\ccFBSHc2.s:1749   .debug_str:0000000000000315 .LASF28
-C:\msys64\tmp\ccFBSHc2.s:1811   .debug_str:00000000000004ef .LASF29
-C:\msys64\tmp\ccFBSHc2.s:1677   .debug_str:000000000000002b .LASF30
-C:\msys64\tmp\ccFBSHc2.s:1711   .debug_str:00000000000001de .LASF31
-C:\msys64\tmp\ccFBSHc2.s:1715   .debug_str:00000000000001f9 .LASF32
-C:\msys64\tmp\ccFBSHc2.s:1795   .debug_str:0000000000000488 .LASF33
-C:\msys64\tmp\ccFBSHc2.s:1675   .debug_str:0000000000000025 .LASF34
-C:\msys64\tmp\ccFBSHc2.s:1819   .debug_str:000000000000052d .LASF35
-C:\msys64\tmp\ccFBSHc2.s:1815   .debug_str:000000000000051a .LASF36
-C:\msys64\tmp\ccFBSHc2.s:1777   .debug_str:00000000000003f1 .LASF37
-C:\msys64\tmp\ccFBSHc2.s:1729   .debug_str:000000000000026b .LASF38
-C:\msys64\tmp\ccFBSHc2.s:1791   .debug_str:000000000000045d .LASF39
-C:\msys64\tmp\ccFBSHc2.s:1687   .debug_str:0000000000000072 .LASF40
-C:\msys64\tmp\ccFBSHc2.s:1721   .debug_str:0000000000000229 .LASF41
-C:\msys64\tmp\ccFBSHc2.s:1743   .debug_str:00000000000002eb .LASF42
-C:\msys64\tmp\ccFBSHc2.s:1717   .debug_str:00000000000001ff .LASF43
-C:\msys64\tmp\ccFBSHc2.s:1669   .debug_str:0000000000000008 .LASF73
-C:\msys64\tmp\ccFBSHc2.s:1737   .debug_str:00000000000002bb .LASF74
-C:\msys64\tmp\ccFBSHc2.s:1801   .debug_str:00000000000004a8 .LASF44
-C:\msys64\tmp\ccFBSHc2.s:1735   .debug_str:000000000000029e .LASF45
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 14
+C:\msys64\tmp\ccyzHjwt.s:945    .debug_str:0000000000000021 .LASF5
+C:\msys64\tmp\ccyzHjwt.s:943    .debug_str:000000000000000e .LASF6
+C:\msys64\tmp\ccyzHjwt.s:953    .debug_str:000000000000004c .LASF7
+C:\msys64\tmp\ccyzHjwt.s:999    .debug_str:000000000000025e .LASF8
+C:\msys64\tmp\ccyzHjwt.s:963    .debug_str:0000000000000098 .LASF9
+C:\msys64\tmp\ccyzHjwt.s:949    .debug_str:000000000000002f .LASF10
+C:\msys64\tmp\ccyzHjwt.s:977    .debug_str:00000000000001d8 .LASF11
+C:\msys64\tmp\ccyzHjwt.s:981    .debug_str:00000000000001f7 .LASF12
+C:\msys64\tmp\ccyzHjwt.s:947    .debug_str:0000000000000028 .LASF14
+C:\msys64\tmp\ccyzHjwt.s:216    .text:00000000000000ec .LFB21
+C:\msys64\tmp\ccyzHjwt.s:242    .text:0000000000000114 .LFE21
+C:\msys64\tmp\ccyzHjwt.s:818    .debug_loc:0000000000000000 .LLST6
+C:\msys64\tmp\ccyzHjwt.s:231    .text:0000000000000104 .LVL13
+C:\msys64\tmp\ccyzHjwt.s:973    .debug_str:00000000000001c1 .LASF13
+C:\msys64\tmp\ccyzHjwt.s:985    .debug_str:0000000000000213 .LASF15
+C:\msys64\tmp\ccyzHjwt.s:184    .text:00000000000000c4 .LFB20
+C:\msys64\tmp\ccyzHjwt.s:210    .text:00000000000000ec .LFE20
+C:\msys64\tmp\ccyzHjwt.s:832    .debug_loc:0000000000000039 .LLST5
+C:\msys64\tmp\ccyzHjwt.s:199    .text:00000000000000dc .LVL11
+C:\msys64\tmp\ccyzHjwt.s:991    .debug_str:0000000000000231 .LASF17
+C:\msys64\tmp\ccyzHjwt.s:957    .debug_str:000000000000006d .LASF19
+C:\msys64\tmp\ccyzHjwt.s:152    .text:000000000000009c .LFB19
+C:\msys64\tmp\ccyzHjwt.s:178    .text:00000000000000c4 .LFE19
+C:\msys64\tmp\ccyzHjwt.s:993    .debug_str:0000000000000241 .LASF16
+C:\msys64\tmp\ccyzHjwt.s:846    .debug_loc:0000000000000072 .LLST4
+C:\msys64\tmp\ccyzHjwt.s:167    .text:00000000000000b4 .LVL9
+C:\msys64\tmp\ccyzHjwt.s:987    .debug_str:000000000000021a .LASF18
+C:\msys64\tmp\ccyzHjwt.s:995    .debug_str:0000000000000246 .LASF20
+C:\msys64\tmp\ccyzHjwt.s:120    .text:0000000000000074 .LFB18
+C:\msys64\tmp\ccyzHjwt.s:146    .text:000000000000009c .LFE18
+C:\msys64\tmp\ccyzHjwt.s:860    .debug_loc:00000000000000ab .LLST3
+C:\msys64\tmp\ccyzHjwt.s:135    .text:000000000000008c .LVL7
+C:\msys64\tmp\ccyzHjwt.s:979    .debug_str:00000000000001ee .LASF21
+C:\msys64\tmp\ccyzHjwt.s:941    .debug_str:0000000000000000 .LASF22
+C:\msys64\tmp\ccyzHjwt.s:70     .text:000000000000003c .LFB17
+C:\msys64\tmp\ccyzHjwt.s:114    .text:0000000000000074 .LFE17
+C:\msys64\tmp\ccyzHjwt.s:874    .debug_loc:00000000000000e4 .LLST2
+C:\msys64\tmp\ccyzHjwt.s:983    .debug_str:000000000000020a .LASF23
+C:\msys64\tmp\ccyzHjwt.s:989    .debug_str:0000000000000227 .LASF24
+C:\msys64\tmp\ccyzHjwt.s:965    .debug_str:00000000000000a4 .LASF25
+C:\msys64\tmp\ccyzHjwt.s:13     .text:0000000000000000 .LFB16
+C:\msys64\tmp\ccyzHjwt.s:64     .text:000000000000003c .LFE16
+C:\msys64\tmp\ccyzHjwt.s:888    .debug_loc:000000000000011d .LLST0
+C:\msys64\tmp\ccyzHjwt.s:975    .debug_str:00000000000001d1 .LASF26
+C:\msys64\tmp\ccyzHjwt.s:908    .debug_loc:000000000000016b .LLST1
+C:\msys64\tmp\ccyzHjwt.s:219    .text:00000000000000ec .LVL12
+C:\msys64\tmp\ccyzHjwt.s:187    .text:00000000000000c4 .LVL10
+C:\msys64\tmp\ccyzHjwt.s:155    .text:000000000000009c .LVL8
+C:\msys64\tmp\ccyzHjwt.s:123    .text:0000000000000074 .LVL6
+C:\msys64\tmp\ccyzHjwt.s:73     .text:000000000000003c .LVL4
+C:\msys64\tmp\ccyzHjwt.s:104    .text:0000000000000064 .LVL5
+C:\msys64\tmp\ccyzHjwt.s:17     .text:0000000000000000 .LVL0
+C:\msys64\tmp\ccyzHjwt.s:27     .text:0000000000000010 .LVL1
+C:\msys64\tmp\ccyzHjwt.s:30     .text:0000000000000014 .LVL2
+C:\msys64\tmp\ccyzHjwt.s:55     .text:0000000000000030 .LVL3
+C:\msys64\tmp\ccyzHjwt.s:247    .debug_info:0000000000000000 .Ldebug_info0
+
+GAS LISTING C:\msys64\tmp\ccyzHjwt.s 			page 9
 
 
-C:\msys64\tmp\ccFBSHc2.s:1785   .debug_str:0000000000000429 .LASF47
-C:\msys64\tmp\ccFBSHc2.s:1685   .debug_str:0000000000000056 .LASF49
-C:\msys64\tmp\ccFBSHc2.s:1807   .debug_str:00000000000004cd .LASF75
-C:\msys64\tmp\ccFBSHc2.s:1733   .debug_str:000000000000027c .LASF76
-C:\msys64\tmp\ccFBSHc2.s:1725   .debug_str:0000000000000246 .LASF50
-C:\msys64\tmp\ccFBSHc2.s:1779   .debug_str:0000000000000409 .LASF52
-C:\msys64\tmp\ccFBSHc2.s:282    .text:00000000000000ec .LFB23
-C:\msys64\tmp\ccFBSHc2.s:310    .text:0000000000000114 .LFE23
-C:\msys64\tmp\ccFBSHc2.s:1466   .debug_loc:0000000000000000 .LLST16
-C:\msys64\tmp\ccFBSHc2.s:299    .text:0000000000000104 .LVL22
-C:\msys64\tmp\ccFBSHc2.s:1787   .debug_str:0000000000000438 .LASF51
-C:\msys64\tmp\ccFBSHc2.s:1739   .debug_str:00000000000002d6 .LASF53
-C:\msys64\tmp\ccFBSHc2.s:240    .text:00000000000000c4 .LFB22
-C:\msys64\tmp\ccFBSHc2.s:268    .text:00000000000000ec .LFE22
-C:\msys64\tmp\ccFBSHc2.s:1480   .debug_loc:0000000000000039 .LLST15
-C:\msys64\tmp\ccFBSHc2.s:257    .text:00000000000000dc .LVL20
-C:\msys64\tmp\ccFBSHc2.s:1775   .debug_str:00000000000003e1 .LASF55
-C:\msys64\tmp\ccFBSHc2.s:1709   .debug_str:00000000000001d8 .LASF57
-C:\msys64\tmp\ccFBSHc2.s:208    .text:000000000000009c .LFB21
-C:\msys64\tmp\ccFBSHc2.s:234    .text:00000000000000c4 .LFE21
-C:\msys64\tmp\ccFBSHc2.s:1767   .debug_str:00000000000003b0 .LASF54
-C:\msys64\tmp\ccFBSHc2.s:1494   .debug_loc:0000000000000072 .LLST14
-C:\msys64\tmp\ccFBSHc2.s:223    .text:00000000000000b4 .LVL18
-C:\msys64\tmp\ccFBSHc2.s:1809   .debug_str:00000000000004e2 .LASF56
-C:\msys64\tmp\ccFBSHc2.s:1673   .debug_str:000000000000001f .LASF58
-C:\msys64\tmp\ccFBSHc2.s:176    .text:0000000000000074 .LFB20
-C:\msys64\tmp\ccFBSHc2.s:202    .text:000000000000009c .LFE20
-C:\msys64\tmp\ccFBSHc2.s:1508   .debug_loc:00000000000000ab .LLST13
-C:\msys64\tmp\ccFBSHc2.s:191    .text:000000000000008c .LVL16
-C:\msys64\tmp\ccFBSHc2.s:1681   .debug_str:0000000000000039 .LASF59
-C:\msys64\tmp\ccFBSHc2.s:1759   .debug_str:0000000000000351 .LASF60
-C:\msys64\tmp\ccFBSHc2.s:98     .text:000000000000003c .LFB19
-C:\msys64\tmp\ccFBSHc2.s:170    .text:0000000000000074 .LFE19
-C:\msys64\tmp\ccFBSHc2.s:1522   .debug_loc:00000000000000e4 .LLST7
-C:\msys64\tmp\ccFBSHc2.s:110    .text:0000000000000048 .LBB20
-C:\msys64\tmp\ccFBSHc2.s:120    .text:000000000000004c .LBE20
-C:\msys64\tmp\ccFBSHc2.s:1536   .debug_loc:000000000000011d .LLST8
-C:\msys64\tmp\ccFBSHc2.s:1543   .debug_loc:0000000000000140 .LLST9
-C:\msys64\tmp\ccFBSHc2.s:122    .text:000000000000004c .LBB22
-C:\msys64\tmp\ccFBSHc2.s:133    .text:0000000000000054 .LBE22
-C:\msys64\tmp\ccFBSHc2.s:1551   .debug_loc:0000000000000164 .LLST10
-C:\msys64\tmp\ccFBSHc2.s:1559   .debug_loc:0000000000000188 .LLST11
-C:\msys64\tmp\ccFBSHc2.s:142    .text:0000000000000058 .LBB24
-C:\msys64\tmp\ccFBSHc2.s:154    .text:000000000000005c .LBE24
-C:\msys64\tmp\ccFBSHc2.s:1567   .debug_loc:00000000000001ac .LLST12
-C:\msys64\tmp\ccFBSHc2.s:1757   .debug_str:0000000000000348 .LASF61
-C:\msys64\tmp\ccFBSHc2.s:1803   .debug_str:00000000000004b7 .LASF62
-C:\msys64\tmp\ccFBSHc2.s:1695   .debug_str:0000000000000166 .LASF63
-C:\msys64\tmp\ccFBSHc2.s:13     .text:0000000000000000 .LFB18
-C:\msys64\tmp\ccFBSHc2.s:92     .text:000000000000003c .LFE18
-C:\msys64\tmp\ccFBSHc2.s:1575   .debug_loc:00000000000001d0 .LLST0
-C:\msys64\tmp\ccFBSHc2.s:1799   .debug_str:00000000000004a1 .LASF64
-C:\msys64\tmp\ccFBSHc2.s:1595   .debug_loc:000000000000021e .LLST1
-C:\msys64\tmp\ccFBSHc2.s:32     .text:0000000000000014 .LBB14
-C:\msys64\tmp\ccFBSHc2.s:43     .text:0000000000000018 .LBE14
-C:\msys64\tmp\ccFBSHc2.s:1613   .debug_loc:000000000000025b .LLST2
-C:\msys64\tmp\ccFBSHc2.s:1620   .debug_loc:000000000000027e .LLST3
-GAS LISTING C:\msys64\tmp\ccFBSHc2.s 			page 15
-
-
-C:\msys64\tmp\ccFBSHc2.s:45     .text:0000000000000018 .LBB16
-C:\msys64\tmp\ccFBSHc2.s:56     .text:0000000000000020 .LBE16
-C:\msys64\tmp\ccFBSHc2.s:1628   .debug_loc:00000000000002a2 .LLST4
-C:\msys64\tmp\ccFBSHc2.s:1636   .debug_loc:00000000000002c6 .LLST5
-C:\msys64\tmp\ccFBSHc2.s:65     .text:0000000000000024 .LBB18
-C:\msys64\tmp\ccFBSHc2.s:77     .text:0000000000000028 .LBE18
-C:\msys64\tmp\ccFBSHc2.s:1644   .debug_loc:00000000000002ea .LLST6
-C:\msys64\tmp\ccFBSHc2.s:1693   .debug_str:000000000000015b .LASF65
-C:\msys64\tmp\ccFBSHc2.s:1731   .debug_str:0000000000000276 .LASF66
-C:\msys64\tmp\ccFBSHc2.s:1773   .debug_str:00000000000003d6 .LASF67
-C:\msys64\tmp\ccFBSHc2.s:1805   .debug_str:00000000000004c1 .LASF68
-C:\msys64\tmp\ccFBSHc2.s:287    .text:00000000000000ec .LVL21
-C:\msys64\tmp\ccFBSHc2.s:245    .text:00000000000000c4 .LVL19
-C:\msys64\tmp\ccFBSHc2.s:211    .text:000000000000009c .LVL17
-C:\msys64\tmp\ccFBSHc2.s:179    .text:0000000000000074 .LVL15
-C:\msys64\tmp\ccFBSHc2.s:101    .text:000000000000003c .LVL8
-C:\msys64\tmp\ccFBSHc2.s:160    .text:0000000000000064 .LVL14
-C:\msys64\tmp\ccFBSHc2.s:109    .text:0000000000000048 .LVL9
-C:\msys64\tmp\ccFBSHc2.s:117    .text:000000000000004c .LVL10
-C:\msys64\tmp\ccFBSHc2.s:130    .text:0000000000000054 .LVL11
-C:\msys64\tmp\ccFBSHc2.s:140    .text:0000000000000058 .LVL12
-C:\msys64\tmp\ccFBSHc2.s:150    .text:000000000000005c .LVL13
-C:\msys64\tmp\ccFBSHc2.s:17     .text:0000000000000000 .LVL0
-C:\msys64\tmp\ccFBSHc2.s:27     .text:0000000000000010 .LVL1
-C:\msys64\tmp\ccFBSHc2.s:30     .text:0000000000000014 .LVL2
-C:\msys64\tmp\ccFBSHc2.s:83     .text:0000000000000030 .LVL7
-C:\msys64\tmp\ccFBSHc2.s:40     .text:0000000000000018 .LVL3
-C:\msys64\tmp\ccFBSHc2.s:53     .text:0000000000000020 .LVL4
-C:\msys64\tmp\ccFBSHc2.s:63     .text:0000000000000024 .LVL5
-C:\msys64\tmp\ccFBSHc2.s:73     .text:0000000000000028 .LVL6
-C:\msys64\tmp\ccFBSHc2.s:323    .debug_info:0000000000000000 .Ldebug_info0
-C:\msys64\tmp\ccFBSHc2.s:271    .gcc_except_table:0000000000000000 .LLSDA22
-C:\msys64\tmp\ccFBSHc2.s:312    .gcc_except_table:0000000000000004 .LLSDA23
-
-UNDEFINED SYMBOLS
-__mem_alloc
-__mem_free
-__gxx_personality_v0
+NO UNDEFINED SYMBOLS

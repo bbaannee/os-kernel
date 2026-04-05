@@ -22,7 +22,7 @@ void workerBodyA()
 
 void workerBodyB()
 {
-    for (uint64 i = 0; i < 61; i++)
+    for (uint64 i = 0; i < 16; i++)
     {
         printString("B: i=");
         printInteger(i);
