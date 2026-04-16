@@ -1,5 +1,4 @@
 #include "../h/riscv.h"
-#include "../lib/console.h"
 #include "../h/MemoryAllocator.h"
 #include "../h/Thread.h"
 #include  "../h/Semaphore.h"
@@ -29,12 +28,12 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x11: {
-				Thread** handle = (Thread**) a1;
-				Thread::Body body =(Thread::Body) a2;
+				kThread** handle = (kThread**) a1;
+				kThread::Body body =(kThread::Body) a2;
 				void* volatile arg = (void*) a3;
 				void* volatile stack_space = (void*) a4;
 
-				*handle =  Thread::createThread(body, arg, stack_space);
+				*handle =  kThread::createkThread(body, arg, stack_space);
 
 				if(*handle) {
 					if (body!=nullptr) Scheduler::instance().put(*handle);
@@ -44,28 +43,28 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x12: {
-				Thread::timeSliceCounter = 0;
-				if (Thread::running) {
-					Thread::running -> setFinished(true);		//possible need to notify if someone is wating for this thread on join
+				kThread::timeSliceCounter = 0;
+				if (kThread::running) {
+					kThread::running -> setFinished(true);		//possible need to notify if someone is wating for this kThread on join
 					writeARegister(0, 0);
 				}else {
 					writeARegister(0, -1);
 				}
 
 
-				Thread::dispatch();
+				kThread::dispatch();
 				break;
 			}
 			case 0x13: {
-				Thread::timeSliceCounter = 0;
-				Thread::dispatch();
+				kThread::timeSliceCounter = 0;
+				kThread::dispatch();
 				break;
 			}
 			case 0x21: {
-				Semaphore** handle = (Semaphore**) a1;
+				kSemaphore** handle = (kSemaphore**) a1;
 
 
-				*handle = new Semaphore(a2);
+				*handle = new kSemaphore(a2);
 
 				if(*handle) {
 					writeARegister(0, 0);
@@ -74,7 +73,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x22: {
-				Semaphore* s = (Semaphore*)a1;
+				kSemaphore* s = (kSemaphore*)a1;
 				if (s == nullptr) {
 					writeARegister(0, -1);
 				}else {
@@ -85,7 +84,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x23: {
-				Semaphore* s = (Semaphore*)a1;
+				kSemaphore* s = (kSemaphore*)a1;
 				if (s == nullptr) {
 					writeARegister(0, -1);
 				}else {
@@ -95,7 +94,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x24: {
-				Semaphore* s = (Semaphore*)a1;
+				kSemaphore* s = (kSemaphore*)a1;
 				if (s == nullptr) {
 					writeARegister(0, -1);
 				}else {
@@ -104,24 +103,24 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x31: {
-				if (Thread::running == nullptr) {
+				if (kThread::running == nullptr) {
 					writeARegister(0, -1);
 				}else {
-					Thread::running -> time_sleep(a1);
+					kThread::running -> time_sleep(a1);
 					writeARegister(0, 0);
 				}
 
 				break;
 			}
 			case 0x41: {
-				char c = Console::getc();
+				char c = kConsole::getc();
 				writeARegister(0, (uint64)c);
 				break;
 			}
 
 			case 0x42: { // putc
 				char c = (char)a1; // Karakter koji je korisnik prosledio
-				Console::putc(c);
+				kConsole::putc(c);
 				break;
 			}
 			default: {
@@ -138,32 +137,32 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
     	if (irq == CONSOLE_IRQ) { // Proveravamo da li je prekid stigao baš sa konzole (obično 10)
 
     		// RX deo: Čitamo sve dok hardver ima podataka I dok imamo gde da ih smestimo
-    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x01) && !Console::getInBuff()->isFull()) {
+    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x01) && !kConsole::getInBuff()->isFull()) {
     		char c = *((volatile uint8*)CONSOLE_RX_DATA);
-    		Console::getInBuff()->put(c);
-    		Console::getInSem()->signal();
+    		kConsole::getInBuff()->put(c);
+    		kConsole::getInSem()->signal();
     	}
 
     	// TX deo: Šaljemo sve dok je hardver spreman I dok imamo šta da pošaljemo
-    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x20) && !Console::getOutBuff()->isEmpty()) {
-    		char c = Console::getOutBuff()->get();
+    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x20) && !kConsole::getOutBuff()->isEmpty()) {
+    		char c = kConsole::getOutBuff()->get();
     		*((volatile uint8*)CONSOLE_TX_DATA) = (uint8)c;
-    		Console::getOutSem()->signal();
+    		kConsole::getOutSem()->signal();
     	}
     	}
 
     	plic_complete(irq); // Obaveštavamo PLIC da je obrada završena
     } else if (scause == 0x8000000000000001UL) {
-    	Thread::timeSliceCounter++;
-    	if (Thread::sleepingHead) {
-    		if (Thread::sleepingHead->timeSleeping > 0) {
-    			Thread::sleepingHead->timeSleeping--;
+    	kThread::timeSliceCounter++;
+    	if (kThread::sleepingHead) {
+    		if (kThread::sleepingHead->timeSleeping > 0) {
+    			kThread::sleepingHead->timeSleeping--;
     		}
 
-    		while (Thread::sleepingHead && Thread::sleepingHead -> timeSleeping == 0) {
-    			Thread* t = Thread::sleepingHead;
+    		while (kThread::sleepingHead && kThread::sleepingHead -> timeSleeping == 0) {
+    			kThread* t = kThread::sleepingHead;
 
-    			Thread::sleepingHead = t->waitnext;
+    			kThread::sleepingHead = t->waitnext;
 
     			t->waitnext = nullptr;
     			t->isReady = true;
@@ -171,12 +170,12 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
     		}
 
     	}
-    if(Thread::timeSliceCounter >= Thread::running -> getTimeSlice())
+    if(kThread::timeSliceCounter >= kThread::running -> getTimeSlice())
     {
     	uint64 volatile sepc = r_sepc();
     	uint64 volatile sstatus = r_sstatus();
-    	Thread::timeSliceCounter = 0;
-    	Thread::dispatch();
+    	kThread::timeSliceCounter = 0;
+    	kThread::dispatch();
     	w_sstatus(sstatus);
     	w_sepc(sepc);
     	

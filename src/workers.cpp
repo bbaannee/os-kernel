@@ -13,7 +13,7 @@ void workerBodyA(void* arg) {
         printInteger(res);
         printString("\n");
 
-        thread_dispatch();
+        kThread_dispatch();
     }
 }
 
@@ -25,13 +25,13 @@ void workerBodyB(void* arg) {
 
         printString("Nit B: se probudila!\n");
 
-        thread_dispatch();
+        kThread_dispatch();
     }
 }
 
 // U tvojoj main/userMain funkciji:
 /*
-    thread_t tA, tB;
-    thread_create(&tA, workerSleepA, nullptr);
-    thread_create(&tB, workerSleepB, nullptr);
+    kThread_t tA, tB;
+    kThread_create(&tA, workerSleepA, nullptr);
+    kThread_create(&tB, workerSleepB, nullptr);
 */

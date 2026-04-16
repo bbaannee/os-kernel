@@ -25,7 +25,7 @@ int mem_free (void* ptr) {
     return (int) a0;
 }
 
-int thread_create(thread_t* handle, void(*start_routine)(void *), void *arg) {
+int kThread_create(kThread_t* handle, void(*start_routine)(void *), void *arg) {
     void* volatile stack = nullptr;
     if (start_routine) {
         stack = mem_alloc(DEFAULT_STACK_SIZE);
@@ -45,14 +45,14 @@ int thread_create(thread_t* handle, void(*start_routine)(void *), void *arg) {
     return (int) a0;
 }
 
-void thread_dispatch() {
+void kThread_dispatch() {
     Riscv::writeARegister(0, 0x13);
 
     __asm__ volatile("ecall");
 
 }
 
-int thread_exit() {
+int kThread_exit() {
     Riscv::writeARegister(0, 0x12);
 
     __asm__ volatile("ecall");

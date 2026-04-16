@@ -1,24 +1,24 @@
- #ifndef PROJEKAT_THREAD_H
-#define PROJEKAT_THREAD_H
+ #ifndef PROJEKAT_kThread_H
+#define PROJEKAT_kThread_H
 
 #include "../lib/hw.h"
 #include "MemoryAllocator.h"
 #include "Scheduler.h"
 
 typedef unsigned long time_t;
-class Thread {
+class kThread {
 public:
 
 	void* operator new(size_t size){
 		void* ptr = MemoryAllocator::kmalloc(size);
 		return ptr;
 	}
-    ~Thread() {delete stack;};
+    ~kThread() {delete stack;};
     using Body = void (*)(void*);
 
-    static Thread* createThread(Body body, void* args, void* stack);
+    static kThread* createkThread(Body body, void* args, void* stack);
     
-    static Thread* running;
+    static kThread* running;
 
 
 
@@ -29,15 +29,15 @@ public:
 	uint64 getTimeSlice() const {
 		return timeSlice;
 	}
-    void setFinished(bool finished){Thread::finished = finished;};
+    void setFinished(bool finished){kThread::finished = finished;};
 
 	void time_sleep(time_t n);
 private:
     // Konstruktor je privatan
     friend class Scheduler;
     friend class Riscv;
-	friend class Semaphore;
-	Thread(Body body, void* args, void* stack_space ,uint64 time = DEFAULT_TIME_SLICE);
+	friend class kSemaphore;
+	kThread(Body body, void* args, void* stack_space ,uint64 time = DEFAULT_TIME_SLICE);
 
 
 	struct Context {
@@ -45,10 +45,10 @@ private:
     	uint64 sp;
     };
     
-    static void threadWrapper();
+    static void kThreadWrapper();
     static void switchContext(Context *oldContext, Context *newContext);
-    Thread* next;
-	Thread* waitnext;
+    kThread* next;
+	kThread* waitnext;
 
 
 	Body body;
@@ -62,7 +62,7 @@ private:
 	int semStatus; //0 normal, -1 closed sem while wiating
 	uint64 timeSleeping;
 	static uint64 timeSliceCounter;
-	static Thread* sleepingHead;
+	static kThread* sleepingHead;
 };
 
 

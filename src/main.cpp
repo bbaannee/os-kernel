@@ -6,35 +6,32 @@
 #include "../h/workers.h"
 #include "../h/printer.h"
 void idlef(void*) {
-    while (1) thread_dispatch();
+    while (1) kThread_dispatch();
 }
 int main() {
     Riscv::w_stvec((uint64) &Riscv::supervisorTrap);
 
-    // 2. INICIJALIZACIJA KONZOLE (Pre svega ostalog!)
-    // Ovo alocira bafere i semafore unutar Console klase
-    Console::init();
-
+    
     // 3. Postavi main nit
-    thread_t mainThr;
-    thread_create(&mainThr, nullptr, nullptr);
-    Thread::running = (Thread*)mainThr;
+    kThread_t mainThr;
+    kThread_create(&mainThr, nullptr, nullptr);
+    kThread::running = (kThread*)mainThr;
 
-    printString("System initialized. Main thread started.\n");
+    printString("System initialized. Main kThread started.\n");
 
     // 4. Kreiranje semafora za sinhronizaciju ispisa
     sem_t ispisSem;
     sem_open(&ispisSem, 1);
 
     // 5. Kreiranje radnih niti i idle niti
-    thread_t threads[2];
-    thread_t idle;
-    thread_create(&threads[0], workerBodyA, ispisSem);
-    thread_create(&threads[1], workerBodyB, ispisSem);
-    thread_create(&idle, idlef, nullptr);
+    kThread_t kThreads[2];
+    kThread_t idle;
+    kThread_create(&kThreads[0], workerBodyA, ispisSem);
+    kThread_create(&kThreads[1], workerBodyB, ispisSem);
+    kThread_create(&idle, idlef, nullptr);
     Riscv::ms_sstatus(Riscv::SSTATUS_SIE);
 
-    while (!(((Thread*)threads[0])->isFinished() && ((Thread*)threads[1])->isFinished())) {
+    while (!(((kThread*)kThreads[0])->isFinished() && ((kThread*)kThreads[1])->isFinished())) {
         time_sleep(10); // Spavaj malo da ne trošiš CPU dok čekaš
     }
 

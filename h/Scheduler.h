@@ -5,7 +5,7 @@
 #ifndef PROJEKAT_SCHEDULER_H
 #define PROJEKAT_SCHEDULER_H
 
-class Thread;
+class kThread;
 
 class Scheduler {
 public:
@@ -15,13 +15,13 @@ public:
     Scheduler& operator=(const Scheduler&) = delete;
 
 
-    void put(Thread* t);
+    void put(kThread* t);
 
-    Thread* get();
+    kThread* get();
 private:
     Scheduler():head(nullptr), tail(nullptr){};
-    Thread* head;
-    Thread* tail;
+    kThread* head;
+    kThread* tail;
 };
 
 #endif //PROJEKAT_SCHEDULER_H
