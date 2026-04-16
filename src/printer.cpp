@@ -1,39 +1,29 @@
-// Created by marko on 20.4.22..
-//
-
 #include "../h/printer.h"
-#include "../lib/console.h"
+#include "../h/syscall_c.h" // Koristimo tvoj javni API
 #include "../h/riscv.h"
+
 void printString(char const *string)
 {
-	uint64 sstatus = Riscv::r_sstatus();
-	Riscv::mc_sstatus(Riscv::SSTATUS_SIE);
+    // NEMOJ gasiti prekide ovde! 
+    // Tvoj novi Console::putc je thread-safe i koristi semafore.
     while (*string != '\0')
     {
-        __putc(*string);
+        putc(*string); // Koristi sistemski poziv (0x42)
         string++;
     }
-    Riscv::ms_sstatus(sstatus & Riscv::SSTATUS_SIE ? Riscv::SSTATUS_SIE : 0);
 }
 
 void printInteger(uint64 integer)
-{	
-	uint64 sstatus = Riscv::r_sstatus();
-	Riscv::mc_sstatus(Riscv::SSTATUS_SIE);
+{   
     static char digits[] = "0123456789";
-    char buf[16];
-    int i, neg;
-    uint64 x;
+    char buf[20]; // Povećaj malo za svaki slučaj (uint64 može biti dug)
+    int i;
+    uint64 x = integer;
 
-    neg = 0;
-    if (integer < 0)
-    {
-        neg = 1;
-        x = -integer;
-    }
-    else
-    {
-        x = integer;
+    // Obrada nule
+    if (x == 0) {
+        putc('0');
+        return;
     }
 
     i = 0;
@@ -42,9 +32,8 @@ void printInteger(uint64 integer)
         buf[i++] = digits[x % 10];
     } while ((x /= 10) != 0);
 
-    if (neg)
-        buf[i++] = '-';
-
-    while (--i >= 0)        __putc(buf[i]);
-    Riscv::ms_sstatus(sstatus & Riscv::SSTATUS_SIE ? Riscv::SSTATUS_SIE : 0);
+    // Ispis unazad
+    while (--i >= 0) {
+        putc(buf[i]);
+    }
 }

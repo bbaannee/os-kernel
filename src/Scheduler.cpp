@@ -1,5 +1,8 @@
 #include "../h/Scheduler.h"
+
 #include "../h/Thread.h"
+#include "../h/printer.h"
+
 void Scheduler::put(Thread* t) {
     if (!t) return;
     t->next = nullptr;

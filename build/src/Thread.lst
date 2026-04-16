@@ -1,4 +1,4 @@
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 1
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 1
 
 
    1              		.file	"Thread.cpp"
@@ -10,58 +10,131 @@ GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 1
    7              		.text
    8              	.Ltext0:
    9              		.align	2
-  10              		.globl	_ZN6Thread12createThreadEPFvvE
-  12              	_ZN6Thread12createThreadEPFvvE:
-  13              	.LFB29:
+  10              		.globl	_ZN6Thread13threadWrapperEv
+  12              	_ZN6Thread13threadWrapperEv:
+  13              	.LFB35:
   14              		.file 1 "src/Thread.cpp"
    1:src/Thread.cpp **** #include "../h/Thread.h"
    2:src/Thread.cpp **** 
    3:src/Thread.cpp **** 
-   4:src/Thread.cpp **** #include "../h/riscv.h"
-   5:src/Thread.cpp **** #include "../h/Scheduler.h"
-   6:src/Thread.cpp **** 
-   7:src/Thread.cpp **** Thread* Thread::running = nullptr;
+   4:src/Thread.cpp **** 
+   5:src/Thread.cpp **** #include "../h/riscv.h"
+   6:src/Thread.cpp **** #include "../h/Scheduler.h"
+   7:src/Thread.cpp **** #include "../h/syscall_c.h"
    8:src/Thread.cpp **** 
-   9:src/Thread.cpp **** uint64 Thread::timeSliceCounter = 0;
+   9:src/Thread.cpp **** Thread* Thread::running = nullptr;
   10:src/Thread.cpp **** 
-  11:src/Thread.cpp **** 
-  12:src/Thread.cpp **** Thread* Thread::createThread(Body body) {
-  15              		.loc 1 12 41
+  11:src/Thread.cpp **** uint64 Thread::timeSliceCounter = 0;
+  12:src/Thread.cpp **** 
+  13:src/Thread.cpp **** Thread* Thread::sleepingHead = nullptr;
+  14:src/Thread.cpp **** 
+  15:src/Thread.cpp **** Thread* Thread::createThread(Body body, void* args, void* stack) {
+  16:src/Thread.cpp ****     return new Thread(body, args, stack, DEFAULT_TIME_SLICE);
+  17:src/Thread.cpp **** }
+  18:src/Thread.cpp **** 
+  19:src/Thread.cpp **** 
+  20:src/Thread.cpp **** void Thread::dispatch() {
+  21:src/Thread.cpp ****     Thread* old = running;
+  22:src/Thread.cpp **** 
+  23:src/Thread.cpp ****     // Ako nije gotova, vrati je u Scheduler
+  24:src/Thread.cpp ****     if (old && !old->finished && old ->isReady) {
+  25:src/Thread.cpp ****         Scheduler::instance().put(old);
+  26:src/Thread.cpp ****     }
+  27:src/Thread.cpp **** 
+  28:src/Thread.cpp ****     // Uzmi sledeću
+  29:src/Thread.cpp ****     running = Scheduler::instance().get();
+  30:src/Thread.cpp **** 
+  31:src/Thread.cpp ****     // Ako smo zapravo promenili nit, uradi switch
+  32:src/Thread.cpp ****     if (old != running) {
+  33:src/Thread.cpp ****         switchContext(&old->context, &running->context);
+  34:src/Thread.cpp ****     }
+  35:src/Thread.cpp **** }
+  36:src/Thread.cpp **** 
+  37:src/Thread.cpp **** 
+  38:src/Thread.cpp **** void Thread::time_sleep(time_t n) {
+  39:src/Thread.cpp ****     if (n == 0) return;
+  40:src/Thread.cpp **** 
+  41:src/Thread.cpp ****     Thread* curr = sleepingHead;
+  42:src/Thread.cpp ****     Thread* prev = nullptr;
+  43:src/Thread.cpp **** 
+  44:src/Thread.cpp ****     while (curr && n >= curr->timeSleeping) {
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 2
+
+
+  45:src/Thread.cpp ****         n -= curr->timeSleeping;
+  46:src/Thread.cpp ****         prev = curr;
+  47:src/Thread.cpp ****         curr = curr->waitnext;
+  48:src/Thread.cpp ****     }
+  49:src/Thread.cpp **** 
+  50:src/Thread.cpp ****     Thread::running->timeSleeping = n;
+  51:src/Thread.cpp ****     Thread::running->waitnext = curr;
+  52:src/Thread.cpp **** 
+  53:src/Thread.cpp ****     if (!prev) {
+  54:src/Thread.cpp ****         sleepingHead = Thread::running;
+  55:src/Thread.cpp ****     } else {
+  56:src/Thread.cpp ****         prev->waitnext = Thread::running;
+  57:src/Thread.cpp ****     }
+  58:src/Thread.cpp **** 
+  59:src/Thread.cpp ****     if (curr) {
+  60:src/Thread.cpp ****         curr->timeSleeping -= n;
+  61:src/Thread.cpp ****     }
+  62:src/Thread.cpp **** 
+  63:src/Thread.cpp ****     Thread::running->isReady = false;
+  64:src/Thread.cpp ****     Thread::dispatch();
+  65:src/Thread.cpp **** }
+  66:src/Thread.cpp **** 
+  67:src/Thread.cpp **** Thread::Thread(Body body, void* args, void* stack_space ,uint64 time): next(nullptr), waitnext(null
+  68:src/Thread.cpp ****                                                                        timeSlice(time), isReady(tru
+  69:src/Thread.cpp ****     if (body != nullptr) {
+  70:src/Thread.cpp ****         context.ra = (uint64)&threadWrapper;
+  71:src/Thread.cpp ****         context.sp = ((uint64)stack_space + DEFAULT_STACK_SIZE) & ~0xFUL;
+  72:src/Thread.cpp ****     } else {
+  73:src/Thread.cpp ****         context.ra = 0;
+  74:src/Thread.cpp ****         context.sp = 0;
+  75:src/Thread.cpp ****     }
+  76:src/Thread.cpp **** }
+  77:src/Thread.cpp **** 
+  78:src/Thread.cpp **** void Thread::threadWrapper(){
+  15              		.loc 1 78 29
   16              		.cfi_startproc
-  17              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
-  18              		.cfi_lsda 0x1b,.LLSDA29
-  19              	.LVL0:
-  20 0000 130101FE 		addi	sp,sp,-32
-  21              		.cfi_def_cfa_offset 32
-  22 0004 233C1100 		sd	ra,24(sp)
-  23 0008 23388100 		sd	s0,16(sp)
-  24 000c 23349100 		sd	s1,8(sp)
-  25 0010 23302101 		sd	s2,0(sp)
-  26              		.cfi_offset 1, -8
-  27              		.cfi_offset 8, -16
-  28              		.cfi_offset 9, -24
-  29              		.cfi_offset 18, -32
-  30 0014 13040102 		addi	s0,sp,32
-  31              		.cfi_def_cfa 8, 0
-  32 0018 13090500 		mv	s2,a0
-  13:src/Thread.cpp ****     return new Thread(body, TIME_SLICE);
-  33              		.loc 1 13 5
-  34              		.loc 1 13 39 is_stmt 0
-  35 001c 13058003 		li	a0,56
-  36              	.LVL1:
-  37              	.LEHB0:
-  38 0020 97000000 		call	_Znwm
-  38      E7800000 
-  39              	.LVL2:
-  40              	.LEHE0:
-  41 0028 93040500 		mv	s1,a0
-  42              	.LVL3:
-  43              	.LBB31:
-  44              	.LBB32:
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 2
+  17 0000 130101FF 		addi	sp,sp,-16
+  18              		.cfi_def_cfa_offset 16
+  19 0004 23341100 		sd	ra,8(sp)
+  20 0008 23308100 		sd	s0,0(sp)
+  21              		.cfi_offset 1, -8
+  22              		.cfi_offset 8, -16
+  23 000c 13040101 		addi	s0,sp,16
+  24              		.cfi_def_cfa 8, 0
+  79:src/Thread.cpp **** 
+  80:src/Thread.cpp **** Riscv::popSppSpie();
+  25              		.loc 1 80 1
+  26              		.loc 1 80 18 is_stmt 0
+  27 0010 97000000 		call	_ZN5Riscv10popSppSpieEv
+  27      E7800000 
+  28              	.LVL0:
+  81:src/Thread.cpp **** if (running->body)running -> body(running->args);
+  29              		.loc 1 81 1 is_stmt 1
+  30              		.loc 1 81 14 is_stmt 0
+  31 0018 17070000 		ld	a4,_ZN6Thread7runningE
+  31      03370700 
+  32 0020 83370701 		ld	a5,16(a4)
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 3
 
 
-  45              		.file 2 "src/../h/Thread.h"
+  33              		.loc 1 81 1
+  34 0024 63860700 		beq	a5,zero,.L2
+  35              		.loc 1 81 19 is_stmt 1 discriminator 1
+  36              		.loc 1 81 34 is_stmt 0 discriminator 1
+  37 0028 03358701 		ld	a0,24(a4)
+  38 002c E7800700 		jalr	a5
+  39              	.LVL1:
+  40              	.L2:
+  82:src/Thread.cpp **** 
+  83:src/Thread.cpp **** running -> setFinished(true);
+  41              		.loc 1 83 1 is_stmt 1
+  42              	.LBB19:
+  43              	.LBB20:
+  44              		.file 2 "src/../h/Thread.h"
    1:src/../h/Thread.h ****  #ifndef PROJEKAT_THREAD_H
    2:src/../h/Thread.h **** #define PROJEKAT_THREAD_H
    3:src/../h/Thread.h **** 
@@ -69,81 +142,109 @@ GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 1
    5:src/../h/Thread.h **** #include "MemoryAllocator.h"
    6:src/../h/Thread.h **** #include "Scheduler.h"
    7:src/../h/Thread.h **** 
-   8:src/../h/Thread.h **** class Thread {
-   9:src/../h/Thread.h **** public:
-  10:src/../h/Thread.h ****     ~Thread() {delete[] stack;};
-  11:src/../h/Thread.h ****     using Body = void (*)();
-  12:src/../h/Thread.h **** 
-  13:src/../h/Thread.h ****     static Thread* createThread(Body body);
-  14:src/../h/Thread.h ****     
-  15:src/../h/Thread.h ****     static Thread* running;
-  16:src/../h/Thread.h **** 
-  17:src/../h/Thread.h ****     static void yield();
+   8:src/../h/Thread.h **** typedef unsigned long time_t;
+   9:src/../h/Thread.h **** class Thread {
+  10:src/../h/Thread.h **** public:
+  11:src/../h/Thread.h **** 
+  12:src/../h/Thread.h **** 	void* operator new(size_t size){
+  13:src/../h/Thread.h **** 		void* ptr = MemoryAllocator::kmalloc(size);
+  14:src/../h/Thread.h **** 		return ptr;
+  15:src/../h/Thread.h **** 	}
+  16:src/../h/Thread.h ****     ~Thread() {delete stack;};
+  17:src/../h/Thread.h ****     using Body = void (*)(void*);
   18:src/../h/Thread.h **** 
-  19:src/../h/Thread.h **** 
-  20:src/../h/Thread.h ****     static void dispatch();
-  21:src/../h/Thread.h **** 
-  22:src/../h/Thread.h ****     bool isFinished(){return finished;};
-  23:src/../h/Thread.h **** 	
-  24:src/../h/Thread.h **** 	uint64 getTimeSlice() const {
-  25:src/../h/Thread.h **** 	return timeSlice;
-  26:src/../h/Thread.h **** 	}
-  27:src/../h/Thread.h ****     void setFinished(bool finished){Thread::finished = finished;};
-  28:src/../h/Thread.h **** private:
-  29:src/../h/Thread.h ****     // Konstruktor je privatan
-  30:src/../h/Thread.h ****     friend class Scheduler;
-  31:src/../h/Thread.h ****     friend class Riscv;
-  32:src/../h/Thread.h **** 
-  33:src/../h/Thread.h ****     Thread(Body body, uint64 timeSlice): next(nullptr), body(body),stack(body!=nullptr ? new uint64
-  34:src/../h/Thread.h ****     (uint64)&threadWrapper, stack!= nullptr ? (uint64)& stack[STACK_SIZE] : 0}),
-  35:src/../h/Thread.h ****     timeSlice(timeSlice), finished(false) {
-  46              		.loc 2 35 41
-  47 002c 23300500 		sd	zero,0(a0)
-  48 0030 23342501 		sd	s2,8(a0)
-  33:src/../h/Thread.h ****     (uint64)&threadWrapper, stack!= nullptr ? (uint64)& stack[STACK_SIZE] : 0}),
-  49              		.loc 2 33 88
-  50 0034 630A0900 		beq	s2,zero,.L7
-  33:src/../h/Thread.h ****     (uint64)&threadWrapper, stack!= nullptr ? (uint64)& stack[STACK_SIZE] : 0}),
-  51              		.loc 2 33 111
-  52 0038 37250000 		li	a0,8192
-  53              	.LEHB1:
-  54 003c 97000000 		call	_Znam
-  54      E7800000 
-  55              	.LVL4:
-  56 0044 6F008000 		j	.L2
-  57              	.L7:
-  33:src/../h/Thread.h ****     (uint64)&threadWrapper, stack!= nullptr ? (uint64)& stack[STACK_SIZE] : 0}),
-  58              		.loc 2 33 88
-  59 0048 13050000 		li	a0,0
-  60              	.L2:
-  61              		.loc 2 35 41
-  62 004c 23B8A400 		sd	a0,16(s1)
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 3
+  19:src/../h/Thread.h ****     static Thread* createThread(Body body, void* args, void* stack);
+  20:src/../h/Thread.h ****     
+  21:src/../h/Thread.h ****     static Thread* running;
+  22:src/../h/Thread.h **** 
+  23:src/../h/Thread.h **** 
+  24:src/../h/Thread.h **** 
+  25:src/../h/Thread.h ****     static void dispatch();
+  26:src/../h/Thread.h **** 
+  27:src/../h/Thread.h ****     bool isFinished(){return finished;};
+  28:src/../h/Thread.h **** 	
+  29:src/../h/Thread.h **** 	uint64 getTimeSlice() const {
+  30:src/../h/Thread.h **** 		return timeSlice;
+  31:src/../h/Thread.h **** 	}
+  32:src/../h/Thread.h ****     void setFinished(bool finished){Thread::finished = finished;};
+  45              		.loc 2 32 37
+  46              		.loc 2 32 54 is_stmt 0
+  47 0030 97070000 		ld	a5,_ZN6Thread7runningE
+  47      83B70700 
+  48 0038 13071000 		li	a4,1
+  49 003c A380E704 		sb	a4,65(a5)
+  50              	.LVL2:
+  51              	.LBE20:
+  52              	.LBE19:
+  84:src/Thread.cpp **** 
+  85:src/Thread.cpp **** thread_dispatch();
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 4
 
 
-  63 0050 97070000 		lla	a5,_ZN6Thread13threadWrapperEv
-  63      93870700 
-  64 0058 23BCF400 		sd	a5,24(s1)
-  34:src/../h/Thread.h ****     timeSlice(timeSlice), finished(false) {
-  65              		.loc 2 34 45
-  66 005c 63000506 		beq	a0,zero,.L8
-  34:src/../h/Thread.h ****     timeSlice(timeSlice), finished(false) {
-  67              		.loc 2 34 55
-  68 0060 B7270000 		li	a5,8192
-  69 0064 B307F500 		add	a5,a0,a5
-  70              	.L3:
-  71              		.loc 2 35 41
-  72 0068 23B0F402 		sd	a5,32(s1)
-  73 006c 93072000 		li	a5,2
-  74 0070 23B4F402 		sd	a5,40(s1)
-  75 0074 23880402 		sb	zero,48(s1)
-  36:src/../h/Thread.h ****         if (body!=nullptr) Scheduler::instance().put(this);
-  76              		.loc 2 36 9 is_stmt 1
-  77 0078 63040906 		beq	s2,zero,.L1
-  78              		.loc 2 36 28
-  79              	.LBB33:
-  80              	.LBB34:
-  81              		.file 3 "src/../h/Scheduler.h"
+  53              		.loc 1 85 1 is_stmt 1
+  54              		.loc 1 85 16 is_stmt 0
+  55 0040 97000000 		call	_Z15thread_dispatchv
+  55      E7800000 
+  56              	.LVL3:
+  86:src/Thread.cpp **** }
+  57              		.loc 1 86 1
+  58 0048 83308100 		ld	ra,8(sp)
+  59              		.cfi_restore 1
+  60 004c 03340100 		ld	s0,0(sp)
+  61              		.cfi_restore 8
+  62              		.cfi_def_cfa 2, 16
+  63 0050 13010101 		addi	sp,sp,16
+  64              		.cfi_def_cfa_offset 0
+  65 0054 67800000 		jr	ra
+  66              		.cfi_endproc
+  67              	.LFE35:
+  69              		.align	2
+  70              		.globl	_ZN6Thread8dispatchEv
+  72              	_ZN6Thread8dispatchEv:
+  73              	.LFB30:
+  20:src/Thread.cpp ****     Thread* old = running;
+  74              		.loc 1 20 25 is_stmt 1
+  75              		.cfi_startproc
+  76 0058 130101FE 		addi	sp,sp,-32
+  77              		.cfi_def_cfa_offset 32
+  78 005c 233C1100 		sd	ra,24(sp)
+  79 0060 23388100 		sd	s0,16(sp)
+  80 0064 23349100 		sd	s1,8(sp)
+  81              		.cfi_offset 1, -8
+  82              		.cfi_offset 8, -16
+  83              		.cfi_offset 9, -24
+  84 0068 13040102 		addi	s0,sp,32
+  85              		.cfi_def_cfa 8, 0
+  21:src/Thread.cpp **** 
+  86              		.loc 1 21 5
+  21:src/Thread.cpp **** 
+  87              		.loc 1 21 13 is_stmt 0
+  88 006c 97040000 		ld	s1,_ZN6Thread7runningE
+  88      83B40400 
+  89              	.LVL4:
+  24:src/Thread.cpp ****         Scheduler::instance().put(old);
+  90              		.loc 1 24 5 is_stmt 1
+  91 0074 63880404 		beq	s1,zero,.L5
+  24:src/Thread.cpp ****         Scheduler::instance().put(old);
+  92              		.loc 1 24 22 is_stmt 0 discriminator 1
+  93 0078 83C71404 		lbu	a5,65(s1)
+  24:src/Thread.cpp ****         Scheduler::instance().put(old);
+  94              		.loc 1 24 13 discriminator 1
+  95 007c 63940704 		bne	a5,zero,.L5
+  24:src/Thread.cpp ****         Scheduler::instance().put(old);
+  96              		.loc 1 24 40 discriminator 2
+  97 0080 83C70404 		lbu	a5,64(s1)
+  24:src/Thread.cpp ****         Scheduler::instance().put(old);
+  98              		.loc 1 24 31 discriminator 2
+  99 0084 63800704 		beq	a5,zero,.L5
+  25:src/Thread.cpp ****     }
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 5
+
+
+ 100              		.loc 1 25 9 is_stmt 1
+ 101              	.LBB21:
+ 102              	.LBB22:
+ 103              		.file 3 "src/../h/Scheduler.h"
    1:src/../h/Scheduler.h **** //
    2:src/../h/Scheduler.h **** // Created by os on 4/1/26.
    3:src/../h/Scheduler.h **** //
@@ -156,15 +257,15 @@ GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 1
   10:src/../h/Scheduler.h **** class Scheduler {
   11:src/../h/Scheduler.h **** public:
   12:src/../h/Scheduler.h ****     static Scheduler& instance(){static Scheduler instance; return instance;}
-  82              		.loc 3 12 34
-  83              		.loc 3 12 51 is_stmt 0
-  84 007c 97070000 		lbu	a5,_ZGVZN9Scheduler8instanceEvE8instance
-  84      83C70700 
-  85 0084 63900702 		bne	a5,zero,.L5
-  86              	.LVL5:
-  87              	.LBB35:
-  88              	.LBB36:
-  89              	.LBB37:
+ 104              		.loc 3 12 34
+ 105              		.loc 3 12 51 is_stmt 0
+ 106 0088 97070000 		lbu	a5,_ZGVZN9Scheduler8instanceEvE8instance
+ 106      83C70700 
+ 107 0090 63900702 		bne	a5,zero,.L6
+ 108              	.LVL5:
+ 109              	.LBB23:
+ 110              	.LBB24:
+ 111              	.LBB25:
   13:src/../h/Scheduler.h **** 
   14:src/../h/Scheduler.h ****     Scheduler(const Scheduler&) = delete;
   15:src/../h/Scheduler.h ****     Scheduler& operator=(const Scheduler&) = delete;
@@ -175,781 +276,927 @@ GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 1
   20:src/../h/Scheduler.h ****     Thread* get();
   21:src/../h/Scheduler.h **** private:
   22:src/../h/Scheduler.h ****     Scheduler():head(nullptr), tail(nullptr){};
-  90              		.loc 3 22 44
-  91 0088 97070000 		lla	a5,_ZZN9Scheduler8instanceEvE8instance
-  91      93870700 
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 4
-
-
-  92 0090 23B00700 		sd	zero,0(a5)
-  93 0094 23B40700 		sd	zero,8(a5)
-  94              	.LVL6:
-  95              	.LBE37:
-  96              	.LBE36:
-  97              	.LBE35:
+ 112              		.loc 3 22 44
+ 113 0094 97070000 		lla	a5,_ZZN9Scheduler8instanceEvE8instance
+ 113      93870700 
+ 114 009c 23B00700 		sd	zero,0(a5)
+ 115 00a0 23B40700 		sd	zero,8(a5)
+ 116              	.LVL6:
+ 117              	.LBE25:
+ 118              	.LBE24:
+ 119              	.LBE23:
   12:src/../h/Scheduler.h **** 
-  98              		.loc 3 12 51
-  99 0098 93071000 		li	a5,1
- 100 009c 17070000 		sb	a5,_ZGVZN9Scheduler8instanceEvE8instance,a4
- 100      2300F700 
- 101              	.L5:
+ 120              		.loc 3 12 51
+ 121 00a4 93071000 		li	a5,1
+ 122 00a8 17070000 		sb	a5,_ZGVZN9Scheduler8instanceEvE8instance,a4
+ 122      2300F700 
+ 123              	.L6:
   12:src/../h/Scheduler.h **** 
- 102              		.loc 3 12 61 is_stmt 1
- 103              	.LBE34:
- 104              	.LBE33:
- 105              		.loc 2 36 53 is_stmt 0
- 106 00a4 93850400 		mv	a1,s1
- 107 00a8 17050000 		lla	a0,_ZZN9Scheduler8instanceEvE8instance
- 107      13050500 
- 108 00b0 97000000 		call	_ZN9Scheduler3putEP6Thread
- 108      E7800000 
- 109              	.LVL7:
- 110              	.LEHE1:
- 111 00b8 6F008002 		j	.L1
- 112              	.L8:
-  34:src/../h/Thread.h ****     timeSlice(timeSlice), finished(false) {
- 113              		.loc 2 34 45
- 114 00bc 93070000 		li	a5,0
- 115 00c0 6FF09FFA 		j	.L3
- 116              	.L9:
- 117              	.LBE32:
- 118              	.LBE31:
- 119              		.loc 1 13 39
- 120 00c4 13090500 		mv	s2,a0
- 121              	.LVL8:
- 122 00c8 13850400 		mv	a0,s1
- 123 00cc 97000000 		call	_ZdlPv
- 123      E7800000 
- 124              	.LVL9:
- 125 00d4 13050900 		mv	a0,s2
- 126              	.LEHB2:
- 127 00d8 97000000 		call	_Unwind_Resume
- 127      E7800000 
- 128              	.LVL10:
- 129              	.LEHE2:
- 130              	.L1:
-  14:src/Thread.cpp **** }
- 131              		.loc 1 14 1
- 132 00e0 13850400 		mv	a0,s1
- 133 00e4 83308101 		ld	ra,24(sp)
- 134              		.cfi_restore 1
- 135 00e8 03340101 		ld	s0,16(sp)
- 136              		.cfi_restore 8
- 137              		.cfi_def_cfa 2, 32
- 138 00ec 83348100 		ld	s1,8(sp)
- 139              		.cfi_restore 9
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 5
+ 124              		.loc 3 12 61 is_stmt 1
+ 125              	.LBE22:
+ 126              	.LBE21:
+  25:src/Thread.cpp ****     }
+ 127              		.loc 1 25 34 is_stmt 0
+ 128 00b0 93850400 		mv	a1,s1
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 6
 
 
- 140              	.LVL11:
- 141 00f0 03390100 		ld	s2,0(sp)
- 142              		.cfi_restore 18
- 143              	.LVL12:
- 144 00f4 13010102 		addi	sp,sp,32
- 145              		.cfi_def_cfa_offset 0
- 146 00f8 67800000 		jr	ra
- 147              		.cfi_endproc
- 148              	.LFE29:
- 149              		.globl	__gxx_personality_v0
- 150              		.section	.gcc_except_table,"aw",@progbits
- 151              	.LLSDA29:
- 152 0000 FF       		.byte	0xff
- 153 0001 FF       		.byte	0xff
- 154 0002 03       		.byte	0x3
- 155 0003 27       		.byte	0x27
- 156 0004 00000000 		.4byte	.LEHB0-.LFB29
- 157 0008 00000000 		.4byte	.LEHE0-.LEHB0
- 158 000c 00000000 		.4byte	0
- 159 0010 00       		.byte	0
- 160 0011 00000000 		.4byte	.LEHB1-.LFB29
- 161 0015 00000000 		.4byte	.LEHE1-.LEHB1
- 162 0019 00000000 		.4byte	.L9-.LFB29
- 163 001d 00       		.byte	0
- 164 001e 00000000 		.4byte	.LEHB2-.LFB29
- 165 0022 00000000 		.4byte	.LEHE2-.LEHB2
- 166 0026 00000000 		.4byte	0
- 167 002a 00       		.byte	0
- 168              		.text
- 170              		.align	2
- 171              		.globl	_ZN6Thread5yieldEv
- 173              	_ZN6Thread5yieldEv:
- 174              	.LFB30:
-  15:src/Thread.cpp **** 
-  16:src/Thread.cpp **** void Thread::yield() {
- 175              		.loc 1 16 22 is_stmt 1
- 176              		.cfi_startproc
- 177 00fc 130101FF 		addi	sp,sp,-16
- 178              		.cfi_def_cfa_offset 16
- 179 0100 23348100 		sd	s0,8(sp)
- 180              		.cfi_offset 8, -8
- 181 0104 13040101 		addi	s0,sp,16
- 182              		.cfi_def_cfa 8, 0
-  17:src/Thread.cpp ****     
-  18:src/Thread.cpp ****     __asm__ volatile ("ecall");
- 183              		.loc 1 18 5
- 184              	 #APP
- 185              	# 18 "src/Thread.cpp" 1
-  19              	}
- 186              		ecall
- 187              	# 0 "" 2
- 188              		.loc 1 19 1 is_stmt 0
- 189              	 #NO_APP
- 190 010c 03348100 		ld	s0,8(sp)
- 191              		.cfi_restore 8
- 192              		.cfi_def_cfa 2, 16
- 193 0110 13010101 		addi	sp,sp,16
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 6
-
-
- 194              		.cfi_def_cfa_offset 0
- 195 0114 67800000 		jr	ra
- 196              		.cfi_endproc
- 197              	.LFE30:
- 199              		.align	2
- 200              		.globl	_ZN6Thread13threadWrapperEv
- 202              	_ZN6Thread13threadWrapperEv:
- 203              	.LFB32:
-  20:src/Thread.cpp **** 
-  21:src/Thread.cpp **** void Thread::dispatch() {
-  22:src/Thread.cpp ****     Thread* old = running;
-  23:src/Thread.cpp **** 
-  24:src/Thread.cpp ****     // Ako nije gotova, vrati je u Scheduler
-  25:src/Thread.cpp ****     if (old && !old->finished) {
-  26:src/Thread.cpp ****         Scheduler::instance().put(old);
-  27:src/Thread.cpp ****     }
-  28:src/Thread.cpp **** 
-  29:src/Thread.cpp ****     // Uzmi sledeću
-  30:src/Thread.cpp ****     running = Scheduler::instance().get();
-  31:src/Thread.cpp **** 
-  32:src/Thread.cpp ****     // Ako smo zapravo promenili nit, uradi switch
-  33:src/Thread.cpp ****     if (old != running) {
-  34:src/Thread.cpp ****         switchContext(&old->context, &running->context);
-  35:src/Thread.cpp ****     }
-  36:src/Thread.cpp **** }
-  37:src/Thread.cpp **** 
-  38:src/Thread.cpp **** 
-  39:src/Thread.cpp **** void Thread::threadWrapper(){
- 204              		.loc 1 39 29 is_stmt 1
- 205              		.cfi_startproc
- 206 0118 130101FE 		addi	sp,sp,-32
- 207              		.cfi_def_cfa_offset 32
- 208 011c 233C1100 		sd	ra,24(sp)
- 209 0120 23388100 		sd	s0,16(sp)
- 210 0124 23349100 		sd	s1,8(sp)
- 211              		.cfi_offset 1, -8
- 212              		.cfi_offset 8, -16
- 213              		.cfi_offset 9, -24
- 214 0128 13040102 		addi	s0,sp,32
- 215              		.cfi_def_cfa 8, 0
-  40:src/Thread.cpp **** 
-  41:src/Thread.cpp **** Riscv::popSppSpie();
- 216              		.loc 1 41 1
- 217              		.loc 1 41 18 is_stmt 0
- 218 012c 97000000 		call	_ZN5Riscv10popSppSpieEv
- 218      E7800000 
- 219              	.LVL13:
-  42:src/Thread.cpp **** running -> body();
- 220              		.loc 1 42 1 is_stmt 1
- 221              		.loc 1 42 12 is_stmt 0
- 222 0134 97040000 		lla	s1,_ZN6Thread7runningE
- 222      93840400 
- 223 013c 83B70400 		ld	a5,0(s1)
- 224 0140 83B78700 		ld	a5,8(a5)
- 225              		.loc 1 42 16
- 226 0144 E7800700 		jalr	a5
- 227              	.LVL14:
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 7
-
-
-  43:src/Thread.cpp **** 
-  44:src/Thread.cpp **** running -> setFinished(true);
- 228              		.loc 1 44 1 is_stmt 1
- 229              		.loc 1 44 23 is_stmt 0
- 230 0148 83B70400 		ld	a5,0(s1)
- 231              	.LVL15:
- 232              	.LBB38:
- 233              	.LBB39:
-  27:src/../h/Thread.h **** private:
- 234              		.loc 2 27 37 is_stmt 1
-  27:src/../h/Thread.h **** private:
- 235              		.loc 2 27 54 is_stmt 0
- 236 014c 13071000 		li	a4,1
- 237 0150 2388E702 		sb	a4,48(a5)
- 238              	.LVL16:
- 239              	.LBE39:
- 240              	.LBE38:
-  45:src/Thread.cpp **** 
-  46:src/Thread.cpp **** Thread::yield();
- 241              		.loc 1 46 1 is_stmt 1
- 242              		.loc 1 46 14 is_stmt 0
- 243 0154 97000000 		call	_ZN6Thread5yieldEv
- 243      E7800000 
- 244              	.LVL17:
-  47:src/Thread.cpp **** }
- 245              		.loc 1 47 1
- 246 015c 83308101 		ld	ra,24(sp)
- 247              		.cfi_restore 1
- 248 0160 03340101 		ld	s0,16(sp)
- 249              		.cfi_restore 8
- 250              		.cfi_def_cfa 2, 32
- 251 0164 83348100 		ld	s1,8(sp)
- 252              		.cfi_restore 9
- 253 0168 13010102 		addi	sp,sp,32
- 254              		.cfi_def_cfa_offset 0
- 255 016c 67800000 		jr	ra
- 256              		.cfi_endproc
- 257              	.LFE32:
- 259              		.align	2
- 260              		.globl	_ZN6Thread8dispatchEv
- 262              	_ZN6Thread8dispatchEv:
- 263              	.LFB31:
-  21:src/Thread.cpp ****     Thread* old = running;
- 264              		.loc 1 21 25 is_stmt 1
- 265              		.cfi_startproc
- 266 0170 130101FE 		addi	sp,sp,-32
- 267              		.cfi_def_cfa_offset 32
- 268 0174 233C1100 		sd	ra,24(sp)
- 269 0178 23388100 		sd	s0,16(sp)
- 270 017c 23349100 		sd	s1,8(sp)
- 271              		.cfi_offset 1, -8
- 272              		.cfi_offset 8, -16
- 273              		.cfi_offset 9, -24
- 274 0180 13040102 		addi	s0,sp,32
- 275              		.cfi_def_cfa 8, 0
-  22:src/Thread.cpp **** 
- 276              		.loc 1 22 5
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 8
-
-
-  22:src/Thread.cpp **** 
- 277              		.loc 1 22 13 is_stmt 0
- 278 0184 97040000 		ld	s1,_ZN6Thread7runningE
- 278      83B40400 
- 279              	.LVL18:
-  25:src/Thread.cpp ****         Scheduler::instance().put(old);
- 280              		.loc 1 25 5 is_stmt 1
- 281 018c 63840404 		beq	s1,zero,.L16
-  25:src/Thread.cpp ****         Scheduler::instance().put(old);
- 282              		.loc 1 25 22 is_stmt 0 discriminator 1
- 283 0190 83C70403 		lbu	a5,48(s1)
-  25:src/Thread.cpp ****         Scheduler::instance().put(old);
- 284              		.loc 1 25 13 discriminator 1
- 285 0194 63900704 		bne	a5,zero,.L16
-  26:src/Thread.cpp ****     }
- 286              		.loc 1 26 9 is_stmt 1
- 287              	.LBB40:
- 288              	.LBB41:
+ 129 00b4 17050000 		lla	a0,_ZZN9Scheduler8instanceEvE8instance
+ 129      13050500 
+ 130 00bc 97000000 		call	_ZN9Scheduler3putEP6Thread
+ 130      E7800000 
+ 131              	.LVL7:
+ 132              	.L5:
+  29:src/Thread.cpp **** 
+ 133              		.loc 1 29 5 is_stmt 1
+ 134              	.LBB26:
+ 135              	.LBB27:
   12:src/../h/Scheduler.h **** 
- 289              		.loc 3 12 34
+ 136              		.loc 3 12 34
   12:src/../h/Scheduler.h **** 
- 290              		.loc 3 12 51 is_stmt 0
- 291 0198 97070000 		lbu	a5,_ZGVZN9Scheduler8instanceEvE8instance
- 291      83C70700 
- 292 01a0 63900702 		bne	a5,zero,.L17
- 293              	.LVL19:
- 294              	.LBB42:
- 295              	.LBB43:
- 296              	.LBB44:
- 297              		.loc 3 22 44
- 298 01a4 97070000 		lla	a5,_ZZN9Scheduler8instanceEvE8instance
- 298      93870700 
- 299 01ac 23B00700 		sd	zero,0(a5)
- 300 01b0 23B40700 		sd	zero,8(a5)
- 301              	.LVL20:
- 302              	.LBE44:
- 303              	.LBE43:
- 304              	.LBE42:
+ 137              		.loc 3 12 51 is_stmt 0
+ 138 00c4 97070000 		lbu	a5,_ZGVZN9Scheduler8instanceEvE8instance
+ 138      83C70700 
+ 139 00cc 63900702 		bne	a5,zero,.L7
+ 140              	.LVL8:
+ 141              	.LBB28:
+ 142              	.LBB29:
+ 143              	.LBB30:
+ 144              		.loc 3 22 44
+ 145 00d0 97070000 		lla	a5,_ZZN9Scheduler8instanceEvE8instance
+ 145      93870700 
+ 146 00d8 23B00700 		sd	zero,0(a5)
+ 147 00dc 23B40700 		sd	zero,8(a5)
+ 148              	.LVL9:
+ 149              	.LBE30:
+ 150              	.LBE29:
+ 151              	.LBE28:
   12:src/../h/Scheduler.h **** 
- 305              		.loc 3 12 51
- 306 01b4 93071000 		li	a5,1
- 307 01b8 17070000 		sb	a5,_ZGVZN9Scheduler8instanceEvE8instance,a4
- 307      2300F700 
- 308              	.L17:
+ 152              		.loc 3 12 51
+ 153 00e0 93071000 		li	a5,1
+ 154 00e4 17070000 		sb	a5,_ZGVZN9Scheduler8instanceEvE8instance,a4
+ 154      2300F700 
+ 155              	.L7:
   12:src/../h/Scheduler.h **** 
- 309              		.loc 3 12 61 is_stmt 1
- 310              	.LBE41:
- 311              	.LBE40:
-  26:src/Thread.cpp ****     }
- 312              		.loc 1 26 34 is_stmt 0
- 313 01c0 93850400 		mv	a1,s1
- 314 01c4 17050000 		lla	a0,_ZZN9Scheduler8instanceEvE8instance
- 314      13050500 
- 315 01cc 97000000 		call	_ZN9Scheduler3putEP6Thread
- 315      E7800000 
- 316              	.LVL21:
- 317              	.L16:
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 9
+ 156              		.loc 3 12 61 is_stmt 1
+ 157              	.LBE27:
+ 158              	.LBE26:
+  29:src/Thread.cpp **** 
+ 159              		.loc 1 29 40 is_stmt 0
+ 160 00ec 17050000 		lla	a0,_ZZN9Scheduler8instanceEvE8instance
+ 160      13050500 
+ 161 00f4 97000000 		call	_ZN9Scheduler3getEv
+ 161      E7800000 
+ 162              	.LVL10:
+  29:src/Thread.cpp **** 
+ 163              		.loc 1 29 13
+ 164 00fc 97070000 		sd	a0,_ZN6Thread7runningE,a5
+ 164      23B0A700 
+  32:src/Thread.cpp ****         switchContext(&old->context, &running->context);
+ 165              		.loc 1 32 5 is_stmt 1
+ 166 0104 638AA400 		beq	s1,a0,.L4
+  33:src/Thread.cpp ****     }
+ 167              		.loc 1 33 9
+  33:src/Thread.cpp ****     }
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 7
 
 
-  30:src/Thread.cpp **** 
- 318              		.loc 1 30 5 is_stmt 1
- 319              	.LBB45:
- 320              	.LBB46:
-  12:src/../h/Scheduler.h **** 
- 321              		.loc 3 12 34
-  12:src/../h/Scheduler.h **** 
- 322              		.loc 3 12 51 is_stmt 0
- 323 01d4 97070000 		lbu	a5,_ZGVZN9Scheduler8instanceEvE8instance
- 323      83C70700 
- 324 01dc 63900702 		bne	a5,zero,.L18
- 325              	.LVL22:
- 326              	.LBB47:
- 327              	.LBB48:
- 328              	.LBB49:
- 329              		.loc 3 22 44
- 330 01e0 97070000 		lla	a5,_ZZN9Scheduler8instanceEvE8instance
- 330      93870700 
- 331 01e8 23B00700 		sd	zero,0(a5)
- 332 01ec 23B40700 		sd	zero,8(a5)
- 333              	.LVL23:
- 334              	.LBE49:
- 335              	.LBE48:
- 336              	.LBE47:
-  12:src/../h/Scheduler.h **** 
- 337              		.loc 3 12 51
- 338 01f0 93071000 		li	a5,1
- 339 01f4 17070000 		sb	a5,_ZGVZN9Scheduler8instanceEvE8instance,a4
- 339      2300F700 
- 340              	.L18:
-  12:src/../h/Scheduler.h **** 
- 341              		.loc 3 12 61 is_stmt 1
- 342              	.LBE46:
- 343              	.LBE45:
-  30:src/Thread.cpp **** 
- 344              		.loc 1 30 40 is_stmt 0
- 345 01fc 17050000 		lla	a0,_ZZN9Scheduler8instanceEvE8instance
- 345      13050500 
- 346 0204 97000000 		call	_ZN9Scheduler3getEv
- 346      E7800000 
- 347              	.LVL24:
-  30:src/Thread.cpp **** 
- 348              		.loc 1 30 13
- 349 020c 97070000 		sd	a0,_ZN6Thread7runningE,a5
- 349      23B0A700 
-  33:src/Thread.cpp ****         switchContext(&old->context, &running->context);
- 350              		.loc 1 33 5 is_stmt 1
- 351 0214 638AA400 		beq	s1,a0,.L15
-  34:src/Thread.cpp ****     }
- 352              		.loc 1 34 9
-  34:src/Thread.cpp ****     }
- 353              		.loc 1 34 22 is_stmt 0
- 354 0218 93058501 		addi	a1,a0,24
- 355 021c 13858401 		addi	a0,s1,24
- 356 0220 97000000 		call	_ZN6Thread13switchContextEPNS_7ContextES1_
- 356      E7800000 
- 357              	.LVL25:
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 10
+ 168              		.loc 1 33 22 is_stmt 0
+ 169 0108 93058502 		addi	a1,a0,40
+ 170 010c 13858402 		addi	a0,s1,40
+ 171 0110 97000000 		call	_ZN6Thread13switchContextEPNS_7ContextES1_
+ 171      E7800000 
+ 172              	.LVL11:
+ 173              	.L4:
+  35:src/Thread.cpp **** 
+ 174              		.loc 1 35 1
+ 175 0118 83308101 		ld	ra,24(sp)
+ 176              		.cfi_restore 1
+ 177 011c 03340101 		ld	s0,16(sp)
+ 178              		.cfi_restore 8
+ 179              		.cfi_def_cfa 2, 32
+ 180 0120 83348100 		ld	s1,8(sp)
+ 181              		.cfi_restore 9
+ 182              	.LVL12:
+ 183 0124 13010102 		addi	sp,sp,32
+ 184              		.cfi_def_cfa_offset 0
+ 185 0128 67800000 		jr	ra
+ 186              		.cfi_endproc
+ 187              	.LFE30:
+ 189              		.align	2
+ 190              		.globl	_ZN6Thread10time_sleepEm
+ 192              	_ZN6Thread10time_sleepEm:
+ 193              	.LFB31:
+  38:src/Thread.cpp ****     if (n == 0) return;
+ 194              		.loc 1 38 35 is_stmt 1
+ 195              		.cfi_startproc
+ 196              	.LVL13:
+  39:src/Thread.cpp **** 
+ 197              		.loc 1 39 5
+ 198 012c 63860508 		beq	a1,zero,.L18
+  38:src/Thread.cpp ****     if (n == 0) return;
+ 199              		.loc 1 38 35 is_stmt 0
+ 200 0130 130101FF 		addi	sp,sp,-16
+ 201              		.cfi_def_cfa_offset 16
+ 202 0134 23341100 		sd	ra,8(sp)
+ 203 0138 23308100 		sd	s0,0(sp)
+ 204              		.cfi_offset 1, -8
+ 205              		.cfi_offset 8, -16
+ 206 013c 13040101 		addi	s0,sp,16
+ 207              		.cfi_def_cfa 8, 0
+  41:src/Thread.cpp ****     Thread* prev = nullptr;
+ 208              		.loc 1 41 5 is_stmt 1
+  41:src/Thread.cpp ****     Thread* prev = nullptr;
+ 209              		.loc 1 41 13 is_stmt 0
+ 210 0140 97070000 		ld	a5,_ZN6Thread12sleepingHeadE
+ 210      83B70700 
+ 211              	.LVL14:
+  42:src/Thread.cpp **** 
+ 212              		.loc 1 42 5 is_stmt 1
+  42:src/Thread.cpp **** 
+ 213              		.loc 1 42 13 is_stmt 0
+ 214 0148 93060000 		li	a3,0
+ 215              	.LVL15:
+ 216              	.L13:
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 8
 
 
- 358              	.L15:
-  36:src/Thread.cpp **** 
- 359              		.loc 1 36 1
- 360 0228 83308101 		ld	ra,24(sp)
- 361              		.cfi_restore 1
- 362 022c 03340101 		ld	s0,16(sp)
- 363              		.cfi_restore 8
- 364              		.cfi_def_cfa 2, 32
- 365 0230 83348100 		ld	s1,8(sp)
- 366              		.cfi_restore 9
- 367              	.LVL26:
- 368 0234 13010102 		addi	sp,sp,32
- 369              		.cfi_def_cfa_offset 0
- 370 0238 67800000 		jr	ra
- 371              		.cfi_endproc
- 372              	.LFE31:
- 374              		.globl	_ZN6Thread16timeSliceCounterE
- 375              		.globl	_ZN6Thread7runningE
- 376              		.weak	_ZGVZN9Scheduler8instanceEvE8instance
- 377              		.section	.sbss._ZGVZN9Scheduler8instanceEvE8instance,"awG",@nobits,_ZGVZN9Scheduler8instanceEvE8in
- 378              		.align	3
- 381              	_ZGVZN9Scheduler8instanceEvE8instance:
- 382 0000 00000000 		.zero	8
- 382      00000000 
- 383              		.weak	_ZZN9Scheduler8instanceEvE8instance
- 384              		.section	.bss._ZZN9Scheduler8instanceEvE8instance,"awG",@nobits,_ZZN9Scheduler8instanceEvE8instanc
- 385              		.align	3
- 388              	_ZZN9Scheduler8instanceEvE8instance:
- 389 0000 00000000 		.zero	16
- 389      00000000 
- 389      00000000 
- 389      00000000 
- 390              		.section	.sbss,"aw",@nobits
- 391              		.align	3
- 394              	_ZN6Thread16timeSliceCounterE:
- 395 0000 00000000 		.zero	8
- 395      00000000 
- 398              	_ZN6Thread7runningE:
- 399 0008 00000000 		.zero	8
- 399      00000000 
- 400              		.text
- 401              	.Letext0:
- 402              		.file 4 "src/../h/../lib/hw.h"
- 403              		.file 5 "src/../h/riscv.h"
- 2717              		.align	3
- 2720              	DW.ref.__gxx_personality_v0:
- 2721 0000 00000000 		.dword	__gxx_personality_v0
- 2721      00000000 
- 2722              		.ident	"GCC: (GNU) 10.1.0"
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 11
+  44:src/Thread.cpp ****         n -= curr->timeSleeping;
+ 217              		.loc 1 44 5 is_stmt 1
+  44:src/Thread.cpp ****         n -= curr->timeSleeping;
+ 218              		.loc 1 44 17
+ 219 014c 638E0700 		beq	a5,zero,.L12
+  44:src/Thread.cpp ****         n -= curr->timeSleeping;
+ 220              		.loc 1 44 31 is_stmt 0 discriminator 1
+ 221 0150 03B78704 		ld	a4,72(a5)
+  44:src/Thread.cpp ****         n -= curr->timeSleeping;
+ 222              		.loc 1 44 17 discriminator 1
+ 223 0154 63EAE500 		bgtu	a4,a1,.L12
+  45:src/Thread.cpp ****         prev = curr;
+ 224              		.loc 1 45 9 is_stmt 1
+  45:src/Thread.cpp ****         prev = curr;
+ 225              		.loc 1 45 11 is_stmt 0
+ 226 0158 B385E540 		sub	a1,a1,a4
+ 227              	.LVL16:
+  46:src/Thread.cpp ****         curr = curr->waitnext;
+ 228              		.loc 1 46 9 is_stmt 1
+  47:src/Thread.cpp ****     }
+ 229              		.loc 1 47 9
+  46:src/Thread.cpp ****         curr = curr->waitnext;
+ 230              		.loc 1 46 14 is_stmt 0
+ 231 015c 93860700 		mv	a3,a5
+  47:src/Thread.cpp ****     }
+ 232              		.loc 1 47 14
+ 233 0160 83B78700 		ld	a5,8(a5)
+ 234              	.LVL17:
+  44:src/Thread.cpp ****         n -= curr->timeSleeping;
+ 235              		.loc 1 44 5
+ 236 0164 6FF09FFE 		j	.L13
+ 237              	.L12:
+  50:src/Thread.cpp ****     Thread::running->waitnext = curr;
+ 238              		.loc 1 50 5 is_stmt 1
+  50:src/Thread.cpp ****     Thread::running->waitnext = curr;
+ 239              		.loc 1 50 22 is_stmt 0
+ 240 0168 17070000 		ld	a4,_ZN6Thread7runningE
+ 240      03370700 
+  50:src/Thread.cpp ****     Thread::running->waitnext = curr;
+ 241              		.loc 1 50 35
+ 242 0170 2334B704 		sd	a1,72(a4)
+  51:src/Thread.cpp **** 
+ 243              		.loc 1 51 5 is_stmt 1
+  51:src/Thread.cpp **** 
+ 244              		.loc 1 51 31 is_stmt 0
+ 245 0174 2334F700 		sd	a5,8(a4)
+  53:src/Thread.cpp ****         sleepingHead = Thread::running;
+ 246              		.loc 1 53 5 is_stmt 1
+ 247 0178 638A0602 		beq	a3,zero,.L21
+  56:src/Thread.cpp ****     }
+ 248              		.loc 1 56 9
+  56:src/Thread.cpp ****     }
+ 249              		.loc 1 56 24 is_stmt 0
+ 250 017c 23B4E600 		sd	a4,8(a3)
+ 251              	.LVL18:
+ 252              	.L15:
+  59:src/Thread.cpp ****         curr->timeSleeping -= n;
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 9
+
+
+ 253              		.loc 1 59 5 is_stmt 1
+ 254 0180 63880700 		beq	a5,zero,.L16
+  60:src/Thread.cpp ****     }
+ 255              		.loc 1 60 9
+  60:src/Thread.cpp ****     }
+ 256              		.loc 1 60 28 is_stmt 0
+ 257 0184 83B68704 		ld	a3,72(a5)
+ 258 0188 B385B640 		sub	a1,a3,a1
+ 259              	.LVL19:
+ 260 018c 23B4B704 		sd	a1,72(a5)
+ 261              	.L16:
+  63:src/Thread.cpp ****     Thread::dispatch();
+ 262              		.loc 1 63 5 is_stmt 1
+  63:src/Thread.cpp ****     Thread::dispatch();
+ 263              		.loc 1 63 30 is_stmt 0
+ 264 0190 23000704 		sb	zero,64(a4)
+  64:src/Thread.cpp **** }
+ 265              		.loc 1 64 5 is_stmt 1
+  64:src/Thread.cpp **** }
+ 266              		.loc 1 64 21 is_stmt 0
+ 267 0194 97000000 		call	_ZN6Thread8dispatchEv
+ 267      E7800000 
+ 268              	.LVL20:
+  65:src/Thread.cpp **** 
+ 269              		.loc 1 65 1
+ 270 019c 83308100 		ld	ra,8(sp)
+ 271              		.cfi_remember_state
+ 272              		.cfi_restore 1
+ 273 01a0 03340100 		ld	s0,0(sp)
+ 274              		.cfi_restore 8
+ 275              		.cfi_def_cfa 2, 16
+ 276 01a4 13010101 		addi	sp,sp,16
+ 277              		.cfi_def_cfa_offset 0
+ 278 01a8 67800000 		jr	ra
+ 279              	.LVL21:
+ 280              	.L21:
+ 281              		.cfi_restore_state
+  54:src/Thread.cpp ****     } else {
+ 282              		.loc 1 54 9 is_stmt 1
+  54:src/Thread.cpp ****     } else {
+ 283              		.loc 1 54 22 is_stmt 0
+ 284 01ac 97060000 		sd	a4,_ZN6Thread12sleepingHeadE,a3
+ 284      23B0E600 
+ 285              	.LVL22:
+ 286 01b4 6FF0DFFC 		j	.L15
+ 287              	.LVL23:
+ 288              	.L18:
+ 289              		.cfi_def_cfa_register 2
+ 290              		.cfi_restore 1
+ 291              		.cfi_restore 8
+ 292 01b8 67800000 		ret
+ 293              		.cfi_endproc
+ 294              	.LFE31:
+ 296              		.align	2
+ 297              		.globl	_ZN6ThreadC2EPFvPvES0_S0_m
+ 299              	_ZN6ThreadC2EPFvPvES0_S0_m:
+ 300              	.LFB33:
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 10
+
+
+  67:src/Thread.cpp ****                                                                        timeSlice(time), isReady(tru
+ 301              		.loc 1 67 1 is_stmt 1
+ 302              		.cfi_startproc
+ 303              	.LVL24:
+ 304 01bc 130101FF 		addi	sp,sp,-16
+ 305              		.cfi_def_cfa_offset 16
+ 306 01c0 23348100 		sd	s0,8(sp)
+ 307              		.cfi_offset 8, -8
+ 308 01c4 13040101 		addi	s0,sp,16
+ 309              		.cfi_def_cfa 8, 0
+ 310              	.LBB31:
+  68:src/Thread.cpp ****     if (body != nullptr) {
+ 311              		.loc 1 68 149 is_stmt 0
+ 312 01c8 23300500 		sd	zero,0(a0)
+ 313 01cc 23340500 		sd	zero,8(a0)
+ 314 01d0 2338B500 		sd	a1,16(a0)
+ 315 01d4 233CC500 		sd	a2,24(a0)
+ 316 01d8 2330D502 		sd	a3,32(a0)
+ 317 01dc 233CE502 		sd	a4,56(a0)
+ 318 01e0 93071000 		li	a5,1
+ 319 01e4 2300F504 		sb	a5,64(a0)
+ 320 01e8 A3000504 		sb	zero,65(a0)
+ 321 01ec 23220504 		sw	zero,68(a0)
+ 322 01f0 23340504 		sd	zero,72(a0)
+  69:src/Thread.cpp ****         context.ra = (uint64)&threadWrapper;
+ 323              		.loc 1 69 5 is_stmt 1
+ 324 01f4 63860502 		beq	a1,zero,.L23
+  70:src/Thread.cpp ****         context.sp = ((uint64)stack_space + DEFAULT_STACK_SIZE) & ~0xFUL;
+ 325              		.loc 1 70 9
+  70:src/Thread.cpp ****         context.sp = ((uint64)stack_space + DEFAULT_STACK_SIZE) & ~0xFUL;
+ 326              		.loc 1 70 20 is_stmt 0
+ 327 01f8 97070000 		lla	a5,_ZN6Thread13threadWrapperEv
+ 327      93870700 
+ 328 0200 2334F502 		sd	a5,40(a0)
+  71:src/Thread.cpp ****     } else {
+ 329              		.loc 1 71 9 is_stmt 1
+  71:src/Thread.cpp ****     } else {
+ 330              		.loc 1 71 43 is_stmt 0
+ 331 0204 B7170000 		li	a5,4096
+ 332 0208 B386F600 		add	a3,a3,a5
+ 333              	.LVL25:
+  71:src/Thread.cpp ****     } else {
+ 334              		.loc 1 71 65
+ 335 020c 93F606FF 		andi	a3,a3,-16
+  71:src/Thread.cpp ****     } else {
+ 336              		.loc 1 71 20
+ 337 0210 2338D502 		sd	a3,48(a0)
+ 338              	.L22:
+ 339              	.LBE31:
+  76:src/Thread.cpp **** 
+ 340              		.loc 1 76 1
+ 341 0214 03348100 		ld	s0,8(sp)
+ 342              		.cfi_remember_state
+ 343              		.cfi_restore 8
+ 344              		.cfi_def_cfa 2, 16
+ 345 0218 13010101 		addi	sp,sp,16
+ 346              		.cfi_def_cfa_offset 0
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 11
+
+
+ 347 021c 67800000 		jr	ra
+ 348              	.LVL26:
+ 349              	.L23:
+ 350              		.cfi_restore_state
+ 351              	.LBB32:
+  73:src/Thread.cpp ****         context.sp = 0;
+ 352              		.loc 1 73 9 is_stmt 1
+  73:src/Thread.cpp ****         context.sp = 0;
+ 353              		.loc 1 73 20 is_stmt 0
+ 354 0220 23340502 		sd	zero,40(a0)
+  74:src/Thread.cpp ****     }
+ 355              		.loc 1 74 9 is_stmt 1
+  74:src/Thread.cpp ****     }
+ 356              		.loc 1 74 20 is_stmt 0
+ 357 0224 23380502 		sd	zero,48(a0)
+ 358              	.LBE32:
+  76:src/Thread.cpp **** 
+ 359              		.loc 1 76 1
+ 360 0228 6FF0DFFE 		j	.L22
+ 361              		.cfi_endproc
+ 362              	.LFE33:
+ 364              		.globl	_ZN6ThreadC1EPFvPvES0_S0_m
+ 365              		.set	_ZN6ThreadC1EPFvPvES0_S0_m,_ZN6ThreadC2EPFvPvES0_S0_m
+ 366              		.align	2
+ 367              		.globl	_ZN6Thread12createThreadEPFvPvES0_S0_
+ 369              	_ZN6Thread12createThreadEPFvPvES0_S0_:
+ 370              	.LFB29:
+  15:src/Thread.cpp ****     return new Thread(body, args, stack, DEFAULT_TIME_SLICE);
+ 371              		.loc 1 15 66 is_stmt 1
+ 372              		.cfi_startproc
+ 373              	.LVL27:
+ 374 022c 130101FD 		addi	sp,sp,-48
+ 375              		.cfi_def_cfa_offset 48
+ 376 0230 23341102 		sd	ra,40(sp)
+ 377 0234 23308102 		sd	s0,32(sp)
+ 378 0238 233C9100 		sd	s1,24(sp)
+ 379 023c 23382101 		sd	s2,16(sp)
+ 380 0240 23343101 		sd	s3,8(sp)
+ 381 0244 23304101 		sd	s4,0(sp)
+ 382              		.cfi_offset 1, -8
+ 383              		.cfi_offset 8, -16
+ 384              		.cfi_offset 9, -24
+ 385              		.cfi_offset 18, -32
+ 386              		.cfi_offset 19, -40
+ 387              		.cfi_offset 20, -48
+ 388 0248 13040103 		addi	s0,sp,48
+ 389              		.cfi_def_cfa 8, 0
+ 390 024c 13090500 		mv	s2,a0
+ 391 0250 93890500 		mv	s3,a1
+ 392 0254 130A0600 		mv	s4,a2
+  16:src/Thread.cpp **** }
+ 393              		.loc 1 16 5
+ 394              	.LVL28:
+ 395              	.LBB33:
+ 396              	.LBB34:
+  13:src/../h/Thread.h **** 		return ptr;
+ 397              		.loc 2 13 3
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 12
+
+
+  13:src/../h/Thread.h **** 		return ptr;
+ 398              		.loc 2 13 39 is_stmt 0
+ 399 0258 13050005 		li	a0,80
+ 400              	.LVL29:
+ 401 025c 97000000 		call	_ZN15MemoryAllocator7kmallocEm
+ 401      E7800000 
+ 402              	.LVL30:
+ 403 0264 93040500 		mv	s1,a0
+ 404              	.LVL31:
+  14:src/../h/Thread.h **** 	}
+ 405              		.loc 2 14 3 is_stmt 1
+ 406              	.LBE34:
+ 407              	.LBE33:
+  16:src/Thread.cpp **** }
+ 408              		.loc 1 16 60 is_stmt 0
+ 409 0268 13072000 		li	a4,2
+ 410 026c 93060A00 		mv	a3,s4
+ 411 0270 13860900 		mv	a2,s3
+ 412 0274 93050900 		mv	a1,s2
+ 413 0278 97000000 		call	_ZN6ThreadC1EPFvPvES0_S0_m
+ 413      E7800000 
+ 414              	.LVL32:
+  17:src/Thread.cpp **** 
+ 415              		.loc 1 17 1
+ 416 0280 13850400 		mv	a0,s1
+ 417 0284 83308102 		ld	ra,40(sp)
+ 418              		.cfi_restore 1
+ 419 0288 03340102 		ld	s0,32(sp)
+ 420              		.cfi_restore 8
+ 421              		.cfi_def_cfa 2, 48
+ 422 028c 83348101 		ld	s1,24(sp)
+ 423              		.cfi_restore 9
+ 424              	.LVL33:
+ 425 0290 03390101 		ld	s2,16(sp)
+ 426              		.cfi_restore 18
+ 427              	.LVL34:
+ 428 0294 83398100 		ld	s3,8(sp)
+ 429              		.cfi_restore 19
+ 430              	.LVL35:
+ 431 0298 033A0100 		ld	s4,0(sp)
+ 432              		.cfi_restore 20
+ 433              	.LVL36:
+ 434 029c 13010103 		addi	sp,sp,48
+ 435              		.cfi_def_cfa_offset 0
+ 436 02a0 67800000 		jr	ra
+ 437              		.cfi_endproc
+ 438              	.LFE29:
+ 440              		.globl	_ZN6Thread12sleepingHeadE
+ 441              		.globl	_ZN6Thread16timeSliceCounterE
+ 442              		.globl	_ZN6Thread7runningE
+ 443              		.weak	_ZGVZN9Scheduler8instanceEvE8instance
+ 444              		.section	.sbss._ZGVZN9Scheduler8instanceEvE8instance,"awG",@nobits,_ZGVZN9Scheduler8instanceEvE8in
+ 445              		.align	3
+ 448              	_ZGVZN9Scheduler8instanceEvE8instance:
+ 449 0000 00000000 		.zero	8
+ 449      00000000 
+ 450              		.weak	_ZZN9Scheduler8instanceEvE8instance
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 13
+
+
+ 451              		.section	.bss._ZZN9Scheduler8instanceEvE8instance,"awG",@nobits,_ZZN9Scheduler8instanceEvE8instanc
+ 452              		.align	3
+ 455              	_ZZN9Scheduler8instanceEvE8instance:
+ 456 0000 00000000 		.zero	16
+ 456      00000000 
+ 456      00000000 
+ 456      00000000 
+ 457              		.section	.sbss,"aw",@nobits
+ 458              		.align	3
+ 461              	_ZN6Thread12sleepingHeadE:
+ 462 0000 00000000 		.zero	8
+ 462      00000000 
+ 465              	_ZN6Thread16timeSliceCounterE:
+ 466 0008 00000000 		.zero	8
+ 466      00000000 
+ 469              	_ZN6Thread7runningE:
+ 470 0010 00000000 		.zero	8
+ 470      00000000 
+ 471              		.text
+ 472              	.Letext0:
+ 473              		.file 4 "src/../h/../lib/hw.h"
+ 474              		.file 5 "src/../h/MemoryAllocator.h"
+ 475              		.file 6 "src/../h/riscv.h"
+ 476              		.file 7 "src/../h/syscall_c.h"
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 14
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 Thread.cpp
-C:\msys64\tmp\ccyhjTSP.s:12     .text:0000000000000000 _ZN6Thread12createThreadEPFvvE
-C:\msys64\tmp\ccyhjTSP.s:16     .text:0000000000000000 .L0 
-C:\msys64\tmp\ccyhjTSP.s:2720   .sdata.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
-C:\msys64\tmp\ccyhjTSP.s:20     .text:0000000000000000 .L0 
-C:\msys64\tmp\ccyhjTSP.s:21     .text:0000000000000004 .L0 
-C:\msys64\tmp\ccyhjTSP.s:26     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccyhjTSP.s:27     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccyhjTSP.s:28     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccyhjTSP.s:29     .text:0000000000000014 .L0 
-C:\msys64\tmp\ccyhjTSP.s:31     .text:0000000000000018 .L0 
-C:\msys64\tmp\ccyhjTSP.s:34     .text:000000000000001c .L0 
-C:\msys64\tmp\ccyhjTSP.s:35     .text:000000000000001c .L0 
-C:\msys64\tmp\ccyhjTSP.s:47     .text:000000000000002c .L0 
-C:\msys64\tmp\ccyhjTSP.s:50     .text:0000000000000034 .L0 
-C:\msys64\tmp\ccyhjTSP.s:52     .text:0000000000000038 .L0 
-C:\msys64\tmp\ccyhjTSP.s:59     .text:0000000000000048 .L0 
-C:\msys64\tmp\ccyhjTSP.s:62     .text:000000000000004c .L0 
-C:\msys64\tmp\ccyhjTSP.s:202    .text:0000000000000118 _ZN6Thread13threadWrapperEv
-C:\msys64\tmp\ccyhjTSP.s:66     .text:000000000000005c .L0 
-C:\msys64\tmp\ccyhjTSP.s:68     .text:0000000000000060 .L0 
-C:\msys64\tmp\ccyhjTSP.s:72     .text:0000000000000068 .L0 
-C:\msys64\tmp\ccyhjTSP.s:77     .text:0000000000000078 .L0 
-C:\msys64\tmp\ccyhjTSP.s:82     .text:000000000000007c .L0 
-C:\msys64\tmp\ccyhjTSP.s:83     .text:000000000000007c .L0 
-C:\msys64\tmp\ccyhjTSP.s:381    .sbss._ZGVZN9Scheduler8instanceEvE8instance:0000000000000000 _ZGVZN9Scheduler8instanceEvE8instance
-C:\msys64\tmp\ccyhjTSP.s:84     .text:000000000000007c .L0 
-C:\msys64\tmp\ccyhjTSP.s:388    .bss._ZZN9Scheduler8instanceEvE8instance:0000000000000000 _ZZN9Scheduler8instanceEvE8instance
-C:\msys64\tmp\ccyhjTSP.s:91     .text:0000000000000088 .L0 
-C:\msys64\tmp\ccyhjTSP.s:99     .text:0000000000000098 .L0 
-C:\msys64\tmp\ccyhjTSP.s:105    .text:00000000000000a4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:106    .text:00000000000000a4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:114    .text:00000000000000bc .L0 
-C:\msys64\tmp\ccyhjTSP.s:120    .text:00000000000000c4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:132    .text:00000000000000e0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:134    .text:00000000000000e8 .L0 
-C:\msys64\tmp\ccyhjTSP.s:136    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccyhjTSP.s:137    .text:00000000000000ec .L0 
-C:\msys64\tmp\ccyhjTSP.s:139    .text:00000000000000f0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:142    .text:00000000000000f4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:145    .text:00000000000000f8 .L0 
-C:\msys64\tmp\ccyhjTSP.s:147    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccyhjTSP.s:173    .text:00000000000000fc _ZN6Thread5yieldEv
-C:\msys64\tmp\ccyhjTSP.s:176    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccyhjTSP.s:177    .text:00000000000000fc .L0 
-C:\msys64\tmp\ccyhjTSP.s:178    .text:0000000000000100 .L0 
-C:\msys64\tmp\ccyhjTSP.s:180    .text:0000000000000104 .L0 
-C:\msys64\tmp\ccyhjTSP.s:182    .text:0000000000000108 .L0 
-      src/Thread.cpp:18     .text:0000000000000108 .L0 
-C:\msys64\tmp\ccyhjTSP.s:190    .text:000000000000010c .L0 
-C:\msys64\tmp\ccyhjTSP.s:191    .text:0000000000000110 .L0 
-C:\msys64\tmp\ccyhjTSP.s:192    .text:0000000000000110 .L0 
-C:\msys64\tmp\ccyhjTSP.s:194    .text:0000000000000114 .L0 
-C:\msys64\tmp\ccyhjTSP.s:196    .text:0000000000000118 .L0 
-C:\msys64\tmp\ccyhjTSP.s:205    .text:0000000000000118 .L0 
-C:\msys64\tmp\ccyhjTSP.s:206    .text:0000000000000118 .L0 
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 12
+C:\msys64\tmp\ccBNnzDK.s:12     .text:0000000000000000 _ZN6Thread13threadWrapperEv
+C:\msys64\tmp\ccBNnzDK.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccBNnzDK.s:17     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccBNnzDK.s:18     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccBNnzDK.s:21     .text:000000000000000c .L0 
+C:\msys64\tmp\ccBNnzDK.s:22     .text:000000000000000c .L0 
+C:\msys64\tmp\ccBNnzDK.s:24     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccBNnzDK.s:26     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccBNnzDK.s:27     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccBNnzDK.s:30     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccBNnzDK.s:469    .sbss:0000000000000010 _ZN6Thread7runningE
+C:\msys64\tmp\ccBNnzDK.s:31     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccBNnzDK.s:34     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccBNnzDK.s:36     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccBNnzDK.s:37     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccBNnzDK.s:45     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccBNnzDK.s:46     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccBNnzDK.s:47     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccBNnzDK.s:54     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccBNnzDK.s:55     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccBNnzDK.s:58     .text:0000000000000048 .L0 
+C:\msys64\tmp\ccBNnzDK.s:59     .text:000000000000004c .L0 
+C:\msys64\tmp\ccBNnzDK.s:61     .text:0000000000000050 .L0 
+C:\msys64\tmp\ccBNnzDK.s:62     .text:0000000000000050 .L0 
+C:\msys64\tmp\ccBNnzDK.s:64     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccBNnzDK.s:66     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccBNnzDK.s:72     .text:0000000000000058 _ZN6Thread8dispatchEv
+C:\msys64\tmp\ccBNnzDK.s:75     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccBNnzDK.s:76     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccBNnzDK.s:77     .text:000000000000005c .L0 
+C:\msys64\tmp\ccBNnzDK.s:81     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccBNnzDK.s:82     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccBNnzDK.s:83     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccBNnzDK.s:85     .text:000000000000006c .L0 
+C:\msys64\tmp\ccBNnzDK.s:87     .text:000000000000006c .L0 
+C:\msys64\tmp\ccBNnzDK.s:88     .text:000000000000006c .L0 
+C:\msys64\tmp\ccBNnzDK.s:91     .text:0000000000000074 .L0 
+C:\msys64\tmp\ccBNnzDK.s:93     .text:0000000000000078 .L0 
+C:\msys64\tmp\ccBNnzDK.s:95     .text:000000000000007c .L0 
+C:\msys64\tmp\ccBNnzDK.s:97     .text:0000000000000080 .L0 
+C:\msys64\tmp\ccBNnzDK.s:99     .text:0000000000000084 .L0 
+C:\msys64\tmp\ccBNnzDK.s:104    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccBNnzDK.s:105    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccBNnzDK.s:448    .sbss._ZGVZN9Scheduler8instanceEvE8instance:0000000000000000 _ZGVZN9Scheduler8instanceEvE8instance
+C:\msys64\tmp\ccBNnzDK.s:106    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccBNnzDK.s:455    .bss._ZZN9Scheduler8instanceEvE8instance:0000000000000000 _ZZN9Scheduler8instanceEvE8instance
+C:\msys64\tmp\ccBNnzDK.s:113    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccBNnzDK.s:121    .text:00000000000000a4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:127    .text:00000000000000b0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:128    .text:00000000000000b0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:136    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:137    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:138    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:145    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:153    .text:00000000000000e0 .L0 
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 15
 
 
-C:\msys64\tmp\ccyhjTSP.s:207    .text:000000000000011c .L0 
-C:\msys64\tmp\ccyhjTSP.s:211    .text:0000000000000128 .L0 
-C:\msys64\tmp\ccyhjTSP.s:212    .text:0000000000000128 .L0 
-C:\msys64\tmp\ccyhjTSP.s:213    .text:0000000000000128 .L0 
-C:\msys64\tmp\ccyhjTSP.s:215    .text:000000000000012c .L0 
-C:\msys64\tmp\ccyhjTSP.s:217    .text:000000000000012c .L0 
-C:\msys64\tmp\ccyhjTSP.s:218    .text:000000000000012c .L0 
-C:\msys64\tmp\ccyhjTSP.s:221    .text:0000000000000134 .L0 
-C:\msys64\tmp\ccyhjTSP.s:398    .sbss:0000000000000008 _ZN6Thread7runningE
-C:\msys64\tmp\ccyhjTSP.s:222    .text:0000000000000134 .L0 
-C:\msys64\tmp\ccyhjTSP.s:226    .text:0000000000000144 .L0 
-C:\msys64\tmp\ccyhjTSP.s:229    .text:0000000000000148 .L0 
-C:\msys64\tmp\ccyhjTSP.s:230    .text:0000000000000148 .L0 
-C:\msys64\tmp\ccyhjTSP.s:235    .text:000000000000014c .L0 
-C:\msys64\tmp\ccyhjTSP.s:236    .text:000000000000014c .L0 
-C:\msys64\tmp\ccyhjTSP.s:242    .text:0000000000000154 .L0 
-C:\msys64\tmp\ccyhjTSP.s:243    .text:0000000000000154 .L0 
-C:\msys64\tmp\ccyhjTSP.s:246    .text:000000000000015c .L0 
-C:\msys64\tmp\ccyhjTSP.s:247    .text:0000000000000160 .L0 
-C:\msys64\tmp\ccyhjTSP.s:249    .text:0000000000000164 .L0 
-C:\msys64\tmp\ccyhjTSP.s:250    .text:0000000000000164 .L0 
-C:\msys64\tmp\ccyhjTSP.s:252    .text:0000000000000168 .L0 
-C:\msys64\tmp\ccyhjTSP.s:254    .text:000000000000016c .L0 
-C:\msys64\tmp\ccyhjTSP.s:256    .text:0000000000000170 .L0 
-C:\msys64\tmp\ccyhjTSP.s:262    .text:0000000000000170 _ZN6Thread8dispatchEv
-C:\msys64\tmp\ccyhjTSP.s:265    .text:0000000000000170 .L0 
-C:\msys64\tmp\ccyhjTSP.s:266    .text:0000000000000170 .L0 
-C:\msys64\tmp\ccyhjTSP.s:267    .text:0000000000000174 .L0 
-C:\msys64\tmp\ccyhjTSP.s:271    .text:0000000000000180 .L0 
-C:\msys64\tmp\ccyhjTSP.s:272    .text:0000000000000180 .L0 
-C:\msys64\tmp\ccyhjTSP.s:273    .text:0000000000000180 .L0 
-C:\msys64\tmp\ccyhjTSP.s:275    .text:0000000000000184 .L0 
-C:\msys64\tmp\ccyhjTSP.s:277    .text:0000000000000184 .L0 
-C:\msys64\tmp\ccyhjTSP.s:278    .text:0000000000000184 .L0 
-C:\msys64\tmp\ccyhjTSP.s:281    .text:000000000000018c .L0 
-C:\msys64\tmp\ccyhjTSP.s:283    .text:0000000000000190 .L0 
-C:\msys64\tmp\ccyhjTSP.s:285    .text:0000000000000194 .L0 
-C:\msys64\tmp\ccyhjTSP.s:289    .text:0000000000000198 .L0 
-C:\msys64\tmp\ccyhjTSP.s:290    .text:0000000000000198 .L0 
-C:\msys64\tmp\ccyhjTSP.s:291    .text:0000000000000198 .L0 
-C:\msys64\tmp\ccyhjTSP.s:298    .text:00000000000001a4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:306    .text:00000000000001b4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:312    .text:00000000000001c0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:313    .text:00000000000001c0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:321    .text:00000000000001d4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:322    .text:00000000000001d4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:323    .text:00000000000001d4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:330    .text:00000000000001e0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:338    .text:00000000000001f0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:344    .text:00000000000001fc .L0 
-C:\msys64\tmp\ccyhjTSP.s:345    .text:00000000000001fc .L0 
-C:\msys64\tmp\ccyhjTSP.s:349    .text:000000000000020c .L0 
-C:\msys64\tmp\ccyhjTSP.s:351    .text:0000000000000214 .L0 
-C:\msys64\tmp\ccyhjTSP.s:353    .text:0000000000000218 .L0 
-C:\msys64\tmp\ccyhjTSP.s:354    .text:0000000000000218 .L0 
-C:\msys64\tmp\ccyhjTSP.s:360    .text:0000000000000228 .L0 
-C:\msys64\tmp\ccyhjTSP.s:361    .text:000000000000022c .L0 
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 13
+C:\msys64\tmp\ccBNnzDK.s:159    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccBNnzDK.s:160    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccBNnzDK.s:164    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccBNnzDK.s:166    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccBNnzDK.s:168    .text:0000000000000108 .L0 
+C:\msys64\tmp\ccBNnzDK.s:169    .text:0000000000000108 .L0 
+C:\msys64\tmp\ccBNnzDK.s:175    .text:0000000000000118 .L0 
+C:\msys64\tmp\ccBNnzDK.s:176    .text:000000000000011c .L0 
+C:\msys64\tmp\ccBNnzDK.s:178    .text:0000000000000120 .L0 
+C:\msys64\tmp\ccBNnzDK.s:179    .text:0000000000000120 .L0 
+C:\msys64\tmp\ccBNnzDK.s:181    .text:0000000000000124 .L0 
+C:\msys64\tmp\ccBNnzDK.s:184    .text:0000000000000128 .L0 
+C:\msys64\tmp\ccBNnzDK.s:186    .text:000000000000012c .L0 
+C:\msys64\tmp\ccBNnzDK.s:192    .text:000000000000012c _ZN6Thread10time_sleepEm
+C:\msys64\tmp\ccBNnzDK.s:195    .text:000000000000012c .L0 
+C:\msys64\tmp\ccBNnzDK.s:197    .text:000000000000012c .L0 
+C:\msys64\tmp\ccBNnzDK.s:198    .text:000000000000012c .L0 
+C:\msys64\tmp\ccBNnzDK.s:200    .text:0000000000000130 .L0 
+C:\msys64\tmp\ccBNnzDK.s:201    .text:0000000000000134 .L0 
+C:\msys64\tmp\ccBNnzDK.s:204    .text:000000000000013c .L0 
+C:\msys64\tmp\ccBNnzDK.s:205    .text:000000000000013c .L0 
+C:\msys64\tmp\ccBNnzDK.s:207    .text:0000000000000140 .L0 
+C:\msys64\tmp\ccBNnzDK.s:209    .text:0000000000000140 .L0 
+C:\msys64\tmp\ccBNnzDK.s:461    .sbss:0000000000000000 _ZN6Thread12sleepingHeadE
+C:\msys64\tmp\ccBNnzDK.s:210    .text:0000000000000140 .L0 
+C:\msys64\tmp\ccBNnzDK.s:213    .text:0000000000000148 .L0 
+C:\msys64\tmp\ccBNnzDK.s:214    .text:0000000000000148 .L0 
+C:\msys64\tmp\ccBNnzDK.s:218    .text:000000000000014c .L0 
+C:\msys64\tmp\ccBNnzDK.s:219    .text:000000000000014c .L0 
+C:\msys64\tmp\ccBNnzDK.s:221    .text:0000000000000150 .L0 
+C:\msys64\tmp\ccBNnzDK.s:223    .text:0000000000000154 .L0 
+C:\msys64\tmp\ccBNnzDK.s:225    .text:0000000000000158 .L0 
+C:\msys64\tmp\ccBNnzDK.s:226    .text:0000000000000158 .L0 
+C:\msys64\tmp\ccBNnzDK.s:229    .text:000000000000015c .L0 
+C:\msys64\tmp\ccBNnzDK.s:230    .text:000000000000015c .L0 
+C:\msys64\tmp\ccBNnzDK.s:231    .text:000000000000015c .L0 
+C:\msys64\tmp\ccBNnzDK.s:233    .text:0000000000000160 .L0 
+C:\msys64\tmp\ccBNnzDK.s:236    .text:0000000000000164 .L0 
+C:\msys64\tmp\ccBNnzDK.s:239    .text:0000000000000168 .L0 
+C:\msys64\tmp\ccBNnzDK.s:240    .text:0000000000000168 .L0 
+C:\msys64\tmp\ccBNnzDK.s:242    .text:0000000000000170 .L0 
+C:\msys64\tmp\ccBNnzDK.s:244    .text:0000000000000174 .L0 
+C:\msys64\tmp\ccBNnzDK.s:245    .text:0000000000000174 .L0 
+C:\msys64\tmp\ccBNnzDK.s:247    .text:0000000000000178 .L0 
+C:\msys64\tmp\ccBNnzDK.s:249    .text:000000000000017c .L0 
+C:\msys64\tmp\ccBNnzDK.s:250    .text:000000000000017c .L0 
+C:\msys64\tmp\ccBNnzDK.s:254    .text:0000000000000180 .L0 
+C:\msys64\tmp\ccBNnzDK.s:256    .text:0000000000000184 .L0 
+C:\msys64\tmp\ccBNnzDK.s:257    .text:0000000000000184 .L0 
+C:\msys64\tmp\ccBNnzDK.s:263    .text:0000000000000190 .L0 
+C:\msys64\tmp\ccBNnzDK.s:264    .text:0000000000000190 .L0 
+C:\msys64\tmp\ccBNnzDK.s:266    .text:0000000000000194 .L0 
+C:\msys64\tmp\ccBNnzDK.s:267    .text:0000000000000194 .L0 
+C:\msys64\tmp\ccBNnzDK.s:270    .text:000000000000019c .L0 
+C:\msys64\tmp\ccBNnzDK.s:271    .text:00000000000001a0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:272    .text:00000000000001a0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:274    .text:00000000000001a4 .L0 
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 16
 
 
-C:\msys64\tmp\ccyhjTSP.s:363    .text:0000000000000230 .L0 
-C:\msys64\tmp\ccyhjTSP.s:364    .text:0000000000000230 .L0 
-C:\msys64\tmp\ccyhjTSP.s:366    .text:0000000000000234 .L0 
-C:\msys64\tmp\ccyhjTSP.s:369    .text:0000000000000238 .L0 
-C:\msys64\tmp\ccyhjTSP.s:371    .text:000000000000023c .L0 
-C:\msys64\tmp\ccyhjTSP.s:394    .sbss:0000000000000000 _ZN6Thread16timeSliceCounterE
-C:\msys64\tmp\ccyhjTSP.s:404    .text:000000000000023c .L0 
-C:\msys64\tmp\ccyhjTSP.s:63     .text:0000000000000050 .L0 
-C:\msys64\tmp\ccyhjTSP.s:84     .text:000000000000007c .L0 
-C:\msys64\tmp\ccyhjTSP.s:91     .text:0000000000000088 .L0 
-C:\msys64\tmp\ccyhjTSP.s:100    .text:000000000000009c .L0 
-C:\msys64\tmp\ccyhjTSP.s:107    .text:00000000000000a8 .L0 
-C:\msys64\tmp\ccyhjTSP.s:222    .text:0000000000000134 .L0 
-C:\msys64\tmp\ccyhjTSP.s:278    .text:0000000000000184 .L0 
-C:\msys64\tmp\ccyhjTSP.s:291    .text:0000000000000198 .L0 
-C:\msys64\tmp\ccyhjTSP.s:298    .text:00000000000001a4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:307    .text:00000000000001b8 .L0 
-C:\msys64\tmp\ccyhjTSP.s:314    .text:00000000000001c4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:323    .text:00000000000001d4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:330    .text:00000000000001e0 .L0 
-C:\msys64\tmp\ccyhjTSP.s:339    .text:00000000000001f4 .L0 
-C:\msys64\tmp\ccyhjTSP.s:345    .text:00000000000001fc .L0 
-C:\msys64\tmp\ccyhjTSP.s:349    .text:000000000000020c .L0 
-C:\msys64\tmp\ccyhjTSP.s:57     .text:0000000000000048 .L7
-C:\msys64\tmp\ccyhjTSP.s:60     .text:000000000000004c .L2
-C:\msys64\tmp\ccyhjTSP.s:112    .text:00000000000000bc .L8
-C:\msys64\tmp\ccyhjTSP.s:130    .text:00000000000000e0 .L1
-C:\msys64\tmp\ccyhjTSP.s:101    .text:00000000000000a4 .L5
-C:\msys64\tmp\ccyhjTSP.s:70     .text:0000000000000068 .L3
-C:\msys64\tmp\ccyhjTSP.s:317    .text:00000000000001d4 .L16
-C:\msys64\tmp\ccyhjTSP.s:308    .text:00000000000001c0 .L17
-C:\msys64\tmp\ccyhjTSP.s:340    .text:00000000000001fc .L18
-C:\msys64\tmp\ccyhjTSP.s:358    .text:0000000000000228 .L15
-C:\msys64\tmp\ccyhjTSP.s:37     .text:0000000000000020 .LEHB0
-C:\msys64\tmp\ccyhjTSP.s:13     .text:0000000000000000 .LFB29
-C:\msys64\tmp\ccyhjTSP.s:40     .text:0000000000000028 .LEHE0
-C:\msys64\tmp\ccyhjTSP.s:53     .text:000000000000003c .LEHB1
-C:\msys64\tmp\ccyhjTSP.s:110    .text:00000000000000b8 .LEHE1
-C:\msys64\tmp\ccyhjTSP.s:116    .text:00000000000000c4 .L9
-C:\msys64\tmp\ccyhjTSP.s:126    .text:00000000000000d8 .LEHB2
-C:\msys64\tmp\ccyhjTSP.s:129    .text:00000000000000e0 .LEHE2
-C:\msys64\tmp\ccyhjTSP.s:1402   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
-C:\msys64\tmp\ccyhjTSP.s:2518   .debug_str:00000000000000be .LASF94
-C:\msys64\tmp\ccyhjTSP.s:2664   .debug_str:00000000000005d4 .LASF95
-C:\msys64\tmp\ccyhjTSP.s:2632   .debug_str:00000000000004ce .LASF96
-C:\msys64\tmp\ccyhjTSP.s:8      .text:0000000000000000 .Ltext0
-C:\msys64\tmp\ccyhjTSP.s:401    .text:000000000000023c .Letext0
-C:\msys64\tmp\ccyhjTSP.s:2488   .debug_line:0000000000000000 .Ldebug_line0
-C:\msys64\tmp\ccyhjTSP.s:2604   .debug_str:0000000000000413 .LASF0
-C:\msys64\tmp\ccyhjTSP.s:2618   .debug_str:0000000000000454 .LASF1
-C:\msys64\tmp\ccyhjTSP.s:2590   .debug_str:00000000000003b2 .LASF2
-C:\msys64\tmp\ccyhjTSP.s:2564   .debug_str:000000000000031f .LASF4
-C:\msys64\tmp\ccyhjTSP.s:2650   .debug_str:0000000000000571 .LASF3
-C:\msys64\tmp\ccyhjTSP.s:2504   .debug_str:0000000000000048 .LASF5
-C:\msys64\tmp\ccyhjTSP.s:2620   .debug_str:0000000000000467 .LASF6
-C:\msys64\tmp\ccyhjTSP.s:2602   .debug_str:0000000000000400 .LASF7
-C:\msys64\tmp\ccyhjTSP.s:2630   .debug_str:00000000000004bf .LASF8
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 14
+C:\msys64\tmp\ccBNnzDK.s:275    .text:00000000000001a4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:277    .text:00000000000001a8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:281    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccBNnzDK.s:283    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccBNnzDK.s:284    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccBNnzDK.s:289    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:290    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:291    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:293    .text:00000000000001bc .L0 
+C:\msys64\tmp\ccBNnzDK.s:299    .text:00000000000001bc _ZN6ThreadC2EPFvPvES0_S0_m
+C:\msys64\tmp\ccBNnzDK.s:302    .text:00000000000001bc .L0 
+C:\msys64\tmp\ccBNnzDK.s:304    .text:00000000000001bc .L0 
+C:\msys64\tmp\ccBNnzDK.s:305    .text:00000000000001c0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:307    .text:00000000000001c4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:309    .text:00000000000001c8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:312    .text:00000000000001c8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:324    .text:00000000000001f4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:326    .text:00000000000001f8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:327    .text:00000000000001f8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:330    .text:0000000000000204 .L0 
+C:\msys64\tmp\ccBNnzDK.s:331    .text:0000000000000204 .L0 
+C:\msys64\tmp\ccBNnzDK.s:335    .text:000000000000020c .L0 
+C:\msys64\tmp\ccBNnzDK.s:337    .text:0000000000000210 .L0 
+C:\msys64\tmp\ccBNnzDK.s:341    .text:0000000000000214 .L0 
+C:\msys64\tmp\ccBNnzDK.s:342    .text:0000000000000218 .L0 
+C:\msys64\tmp\ccBNnzDK.s:343    .text:0000000000000218 .L0 
+C:\msys64\tmp\ccBNnzDK.s:344    .text:0000000000000218 .L0 
+C:\msys64\tmp\ccBNnzDK.s:346    .text:000000000000021c .L0 
+C:\msys64\tmp\ccBNnzDK.s:350    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccBNnzDK.s:353    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccBNnzDK.s:354    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccBNnzDK.s:356    .text:0000000000000224 .L0 
+C:\msys64\tmp\ccBNnzDK.s:357    .text:0000000000000224 .L0 
+C:\msys64\tmp\ccBNnzDK.s:360    .text:0000000000000228 .L0 
+C:\msys64\tmp\ccBNnzDK.s:361    .text:000000000000022c .L0 
+C:\msys64\tmp\ccBNnzDK.s:299    .text:00000000000001bc _ZN6ThreadC1EPFvPvES0_S0_m
+C:\msys64\tmp\ccBNnzDK.s:369    .text:000000000000022c _ZN6Thread12createThreadEPFvPvES0_S0_
+C:\msys64\tmp\ccBNnzDK.s:372    .text:000000000000022c .L0 
+C:\msys64\tmp\ccBNnzDK.s:374    .text:000000000000022c .L0 
+C:\msys64\tmp\ccBNnzDK.s:375    .text:0000000000000230 .L0 
+C:\msys64\tmp\ccBNnzDK.s:382    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccBNnzDK.s:383    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccBNnzDK.s:384    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccBNnzDK.s:385    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccBNnzDK.s:386    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccBNnzDK.s:387    .text:0000000000000248 .L0 
+C:\msys64\tmp\ccBNnzDK.s:389    .text:000000000000024c .L0 
+C:\msys64\tmp\ccBNnzDK.s:397    .text:0000000000000258 .L0 
+C:\msys64\tmp\ccBNnzDK.s:398    .text:0000000000000258 .L0 
+C:\msys64\tmp\ccBNnzDK.s:399    .text:0000000000000258 .L0 
+C:\msys64\tmp\ccBNnzDK.s:408    .text:0000000000000268 .L0 
+C:\msys64\tmp\ccBNnzDK.s:409    .text:0000000000000268 .L0 
+C:\msys64\tmp\ccBNnzDK.s:416    .text:0000000000000280 .L0 
+C:\msys64\tmp\ccBNnzDK.s:418    .text:0000000000000288 .L0 
+C:\msys64\tmp\ccBNnzDK.s:420    .text:000000000000028c .L0 
+C:\msys64\tmp\ccBNnzDK.s:421    .text:000000000000028c .L0 
+C:\msys64\tmp\ccBNnzDK.s:423    .text:0000000000000290 .L0 
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 17
 
 
-C:\msys64\tmp\ccyhjTSP.s:2516   .debug_str:00000000000000b2 .LASF9
-C:\msys64\tmp\ccyhjTSP.s:2640   .debug_str:000000000000052d .LASF10
-C:\msys64\tmp\ccyhjTSP.s:2526   .debug_str:00000000000001dd .LASF11
-C:\msys64\tmp\ccyhjTSP.s:2544   .debug_str:0000000000000274 .LASF12
-C:\msys64\tmp\ccyhjTSP.s:2626   .debug_str:000000000000049b .LASF13
-C:\msys64\tmp\ccyhjTSP.s:2612   .debug_str:0000000000000436 .LASF45
-C:\msys64\tmp\ccyhjTSP.s:2586   .debug_str:0000000000000392 .LASF47
-C:\msys64\tmp\ccyhjTSP.s:2682   .debug_str:0000000000000678 .LASF26
-C:\msys64\tmp\ccyhjTSP.s:2598   .debug_str:00000000000003db .LASF97
-C:\msys64\tmp\ccyhjTSP.s:2692   .debug_str:00000000000006d6 .LASF98
-C:\msys64\tmp\ccyhjTSP.s:2600   .debug_str:00000000000003e5 .LASF99
-C:\msys64\tmp\ccyhjTSP.s:2562   .debug_str:000000000000030b .LASF100
-C:\msys64\tmp\ccyhjTSP.s:2584   .debug_str:0000000000000380 .LASF32
-C:\msys64\tmp\ccyhjTSP.s:2530   .debug_str:000000000000020c .LASF14
-C:\msys64\tmp\ccyhjTSP.s:2594   .debug_str:00000000000003cc .LASF15
-C:\msys64\tmp\ccyhjTSP.s:2686   .debug_str:0000000000000694 .LASF16
-C:\msys64\tmp\ccyhjTSP.s:2496   .debug_str:0000000000000025 .LASF101
-C:\msys64\tmp\ccyhjTSP.s:2646   .debug_str:0000000000000551 .LASF17
-C:\msys64\tmp\ccyhjTSP.s:2614   .debug_str:000000000000043f .LASF19
-C:\msys64\tmp\ccyhjTSP.s:2574   .debug_str:0000000000000347 .LASF18
-C:\msys64\tmp\ccyhjTSP.s:2674   .debug_str:0000000000000634 .LASF20
-C:\msys64\tmp\ccyhjTSP.s:2508   .debug_str:0000000000000073 .LASF102
-C:\msys64\tmp\ccyhjTSP.s:2538   .debug_str:0000000000000243 .LASF103
-C:\msys64\tmp\ccyhjTSP.s:2642   .debug_str:0000000000000543 .LASF21
-C:\msys64\tmp\ccyhjTSP.s:2556   .debug_str:00000000000002de .LASF23
-C:\msys64\tmp\ccyhjTSP.s:2608   .debug_str:0000000000000427 .LASF22
-C:\msys64\tmp\ccyhjTSP.s:2550   .debug_str:00000000000002ac .LASF24
-C:\msys64\tmp\ccyhjTSP.s:2622   .debug_str:000000000000047a .LASF25
-C:\msys64\tmp\ccyhjTSP.s:2528   .debug_str:00000000000001f3 .LASF27
-C:\msys64\tmp\ccyhjTSP.s:2582   .debug_str:0000000000000373 .LASF28
-C:\msys64\tmp\ccyhjTSP.s:2522   .debug_str:00000000000001ad .LASF29
-C:\msys64\tmp\ccyhjTSP.s:2592   .debug_str:00000000000003c0 .LASF30
-C:\msys64\tmp\ccyhjTSP.s:2628   .debug_str:00000000000004a5 .LASF31
-C:\msys64\tmp\ccyhjTSP.s:2492   .debug_str:0000000000000008 .LASF33
-C:\msys64\tmp\ccyhjTSP.s:2578   .debug_str:000000000000035f .LASF104
-C:\msys64\tmp\ccyhjTSP.s:2520   .debug_str:0000000000000191 .LASF105
-C:\msys64\tmp\ccyhjTSP.s:2498   .debug_str:000000000000002d .LASF106
-C:\msys64\tmp\ccyhjTSP.s:2546   .debug_str:0000000000000279 .LASF107
-C:\msys64\tmp\ccyhjTSP.s:2708   .debug_str:0000000000000766 .LASF34
-C:\msys64\tmp\ccyhjTSP.s:2568   .debug_str:000000000000032f .LASF35
-C:\msys64\tmp\ccyhjTSP.s:2610   .debug_str:0000000000000430 .LASF36
-C:\msys64\tmp\ccyhjTSP.s:2572   .debug_str:000000000000033f .LASF37
-C:\msys64\tmp\ccyhjTSP.s:2678   .debug_str:000000000000065b .LASF38
-C:\msys64\tmp\ccyhjTSP.s:2566   .debug_str:0000000000000326 .LASF39
-C:\msys64\tmp\ccyhjTSP.s:2652   .debug_str:0000000000000583 .LASF108
-C:\msys64\tmp\ccyhjTSP.s:2576   .debug_str:0000000000000354 .LASF40
-C:\msys64\tmp\ccyhjTSP.s:2558   .debug_str:00000000000002f1 .LASF41
-C:\msys64\tmp\ccyhjTSP.s:2616   .debug_str:000000000000044e .LASF42
-C:\msys64\tmp\ccyhjTSP.s:2638   .debug_str:0000000000000522 .LASF43
-C:\msys64\tmp\ccyhjTSP.s:2704   .debug_str:0000000000000743 .LASF44
-C:\msys64\tmp\ccyhjTSP.s:2494   .debug_str:000000000000001c .LASF46
-C:\msys64\tmp\ccyhjTSP.s:2540   .debug_str:000000000000024b .LASF48
-C:\msys64\tmp\ccyhjTSP.s:2536   .debug_str:000000000000023a .LASF49
-C:\msys64\tmp\ccyhjTSP.s:2534   .debug_str:0000000000000225 .LASF50
-C:\msys64\tmp\ccyhjTSP.s:2654   .debug_str:0000000000000594 .LASF51
-C:\msys64\tmp\ccyhjTSP.s:2634   .debug_str:00000000000004fd .LASF52
-C:\msys64\tmp\ccyhjTSP.s:2684   .debug_str:000000000000068d .LASF53
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 15
+C:\msys64\tmp\ccBNnzDK.s:426    .text:0000000000000294 .L0 
+C:\msys64\tmp\ccBNnzDK.s:429    .text:0000000000000298 .L0 
+C:\msys64\tmp\ccBNnzDK.s:432    .text:000000000000029c .L0 
+C:\msys64\tmp\ccBNnzDK.s:435    .text:00000000000002a0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:437    .text:00000000000002a4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:465    .sbss:0000000000000008 _ZN6Thread16timeSliceCounterE
+C:\msys64\tmp\ccBNnzDK.s:477    .text:00000000000002a4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:31     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccBNnzDK.s:47     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccBNnzDK.s:88     .text:000000000000006c .L0 
+C:\msys64\tmp\ccBNnzDK.s:106    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccBNnzDK.s:113    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccBNnzDK.s:122    .text:00000000000000a8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:129    .text:00000000000000b4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:138    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:145    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccBNnzDK.s:154    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccBNnzDK.s:160    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccBNnzDK.s:164    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccBNnzDK.s:210    .text:0000000000000140 .L0 
+C:\msys64\tmp\ccBNnzDK.s:240    .text:0000000000000168 .L0 
+C:\msys64\tmp\ccBNnzDK.s:284    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccBNnzDK.s:327    .text:00000000000001f8 .L0 
+C:\msys64\tmp\ccBNnzDK.s:40     .text:0000000000000030 .L2
+C:\msys64\tmp\ccBNnzDK.s:132    .text:00000000000000c4 .L5
+C:\msys64\tmp\ccBNnzDK.s:123    .text:00000000000000b0 .L6
+C:\msys64\tmp\ccBNnzDK.s:155    .text:00000000000000ec .L7
+C:\msys64\tmp\ccBNnzDK.s:173    .text:0000000000000118 .L4
+C:\msys64\tmp\ccBNnzDK.s:288    .text:00000000000001b8 .L18
+C:\msys64\tmp\ccBNnzDK.s:237    .text:0000000000000168 .L12
+C:\msys64\tmp\ccBNnzDK.s:216    .text:000000000000014c .L13
+C:\msys64\tmp\ccBNnzDK.s:280    .text:00000000000001ac .L21
+C:\msys64\tmp\ccBNnzDK.s:261    .text:0000000000000190 .L16
+C:\msys64\tmp\ccBNnzDK.s:252    .text:0000000000000180 .L15
+C:\msys64\tmp\ccBNnzDK.s:349    .text:0000000000000220 .L23
+C:\msys64\tmp\ccBNnzDK.s:338    .text:0000000000000214 .L22
+C:\msys64\tmp\ccBNnzDK.s:1783   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccBNnzDK.s:3120   .debug_str:00000000000000ed .LASF123
+C:\msys64\tmp\ccBNnzDK.s:3294   .debug_str:000000000000078d .LASF124
+C:\msys64\tmp\ccBNnzDK.s:3264   .debug_str:0000000000000647 .LASF125
+C:\msys64\tmp\ccBNnzDK.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccBNnzDK.s:472    .text:00000000000002a4 .Letext0
+C:\msys64\tmp\ccBNnzDK.s:3084   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccBNnzDK.s:3228   .debug_str:000000000000055f .LASF0
+C:\msys64\tmp\ccBNnzDK.s:3246   .debug_str:00000000000005be .LASF1
+C:\msys64\tmp\ccBNnzDK.s:3212   .debug_str:00000000000004e6 .LASF2
+C:\msys64\tmp\ccBNnzDK.s:3182   .debug_str:00000000000003f9 .LASF4
+C:\msys64\tmp\ccBNnzDK.s:3284   .debug_str:000000000000072f .LASF3
+C:\msys64\tmp\ccBNnzDK.s:3106   .debug_str:0000000000000077 .LASF5
+C:\msys64\tmp\ccBNnzDK.s:3140   .debug_str:0000000000000286 .LASF6
+C:\msys64\tmp\ccBNnzDK.s:3248   .debug_str:00000000000005d1 .LASF7
+C:\msys64\tmp\ccBNnzDK.s:3226   .debug_str:000000000000054c .LASF8
+C:\msys64\tmp\ccBNnzDK.s:3262   .debug_str:0000000000000638 .LASF9
+C:\msys64\tmp\ccBNnzDK.s:3118   .debug_str:00000000000000e1 .LASF10
+C:\msys64\tmp\ccBNnzDK.s:3276   .debug_str:00000000000006ee .LASF11
+C:\msys64\tmp\ccBNnzDK.s:3134   .debug_str:0000000000000252 .LASF12
+C:\msys64\tmp\ccBNnzDK.s:3206   .debug_str:00000000000004b4 .LASF15
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 18
 
 
-C:\msys64\tmp\ccyhjTSP.s:2668   .debug_str:00000000000005fb .LASF54
-C:\msys64\tmp\ccyhjTSP.s:2548   .debug_str:00000000000002a4 .LASF55
-C:\msys64\tmp\ccyhjTSP.s:2542   .debug_str:0000000000000260 .LASF56
-C:\msys64\tmp\ccyhjTSP.s:2490   .debug_str:0000000000000000 .LASF57
-C:\msys64\tmp\ccyhjTSP.s:2656   .debug_str:000000000000059b .LASF58
-C:\msys64\tmp\ccyhjTSP.s:2676   .debug_str:0000000000000653 .LASF59
-C:\msys64\tmp\ccyhjTSP.s:2510   .debug_str:0000000000000078 .LASF60
-C:\msys64\tmp\ccyhjTSP.s:2644   .debug_str:0000000000000549 .LASF61
-C:\msys64\tmp\ccyhjTSP.s:2524   .debug_str:00000000000001c9 .LASF62
-C:\msys64\tmp\ccyhjTSP.s:2606   .debug_str:0000000000000420 .LASF63
-C:\msys64\tmp\ccyhjTSP.s:2700   .debug_str:000000000000072b .LASF64
-C:\msys64\tmp\ccyhjTSP.s:2502   .debug_str:0000000000000041 .LASF65
-C:\msys64\tmp\ccyhjTSP.s:2680   .debug_str:0000000000000665 .LASF66
-C:\msys64\tmp\ccyhjTSP.s:2552   .debug_str:00000000000002c2 .LASF67
-C:\msys64\tmp\ccyhjTSP.s:2672   .debug_str:0000000000000622 .LASF68
-C:\msys64\tmp\ccyhjTSP.s:2500   .debug_str:000000000000003b .LASF69
-C:\msys64\tmp\ccyhjTSP.s:2712   .debug_str:000000000000077b .LASF70
-C:\msys64\tmp\ccyhjTSP.s:2706   .debug_str:000000000000075b .LASF71
-C:\msys64\tmp\ccyhjTSP.s:2648   .debug_str:0000000000000559 .LASF72
-C:\msys64\tmp\ccyhjTSP.s:2570   .debug_str:0000000000000334 .LASF73
-C:\msys64\tmp\ccyhjTSP.s:2666   .debug_str:00000000000005e3 .LASF74
-C:\msys64\tmp\ccyhjTSP.s:2514   .debug_str:00000000000000a8 .LASF75
-C:\msys64\tmp\ccyhjTSP.s:2624   .debug_str:0000000000000485 .LASF76
-C:\msys64\tmp\ccyhjTSP.s:2596   .debug_str:00000000000003d1 .LASF77
-C:\msys64\tmp\ccyhjTSP.s:2554   .debug_str:00000000000002c8 .LASF78
-C:\msys64\tmp\ccyhjTSP.s:2658   .debug_str:00000000000005af .LASF79
-C:\msys64\tmp\ccyhjTSP.s:2512   .debug_str:000000000000008c .LASF80
-C:\msys64\tmp\ccyhjTSP.s:2694   .debug_str:00000000000006eb .LASF109
-C:\msys64\tmp\ccyhjTSP.s:2688   .debug_str:000000000000069b .LASF110
-C:\msys64\tmp\ccyhjTSP.s:2532   .debug_str:0000000000000211 .LASF81
-C:\msys64\tmp\ccyhjTSP.s:2696   .debug_str:0000000000000700 .LASF82
-C:\msys64\tmp\ccyhjTSP.s:203    .text:0000000000000118 .LFB32
-C:\msys64\tmp\ccyhjTSP.s:257    .text:0000000000000170 .LFE32
-C:\msys64\tmp\ccyhjTSP.s:232    .text:000000000000014c .LBB38
-C:\msys64\tmp\ccyhjTSP.s:240    .text:0000000000000154 .LBE38
-C:\msys64\tmp\ccyhjTSP.s:2361   .debug_loc:0000000000000000 .LLST4
-C:\msys64\tmp\ccyhjTSP.s:2369   .debug_loc:0000000000000024 .LLST5
-C:\msys64\tmp\ccyhjTSP.s:219    .text:0000000000000134 .LVL13
-C:\msys64\tmp\ccyhjTSP.s:244    .text:000000000000015c .LVL17
-C:\msys64\tmp\ccyhjTSP.s:263    .text:0000000000000170 .LFB31
-C:\msys64\tmp\ccyhjTSP.s:372    .text:000000000000023c .LFE31
-C:\msys64\tmp\ccyhjTSP.s:2376   .debug_loc:0000000000000047 .LLST6
-C:\msys64\tmp\ccyhjTSP.s:287    .text:0000000000000198 .LBB40
-C:\msys64\tmp\ccyhjTSP.s:311    .text:00000000000001c0 .LBE40
-C:\msys64\tmp\ccyhjTSP.s:294    .text:00000000000001a4 .LBB42
-C:\msys64\tmp\ccyhjTSP.s:304    .text:00000000000001b4 .LBE42
-C:\msys64\tmp\ccyhjTSP.s:2383   .debug_loc:000000000000006a .LLST7
-C:\msys64\tmp\ccyhjTSP.s:319    .text:00000000000001d4 .LBB45
-C:\msys64\tmp\ccyhjTSP.s:343    .text:00000000000001fc .LBE45
-C:\msys64\tmp\ccyhjTSP.s:326    .text:00000000000001e0 .LBB47
-C:\msys64\tmp\ccyhjTSP.s:336    .text:00000000000001f0 .LBE47
-C:\msys64\tmp\ccyhjTSP.s:2392   .debug_loc:0000000000000096 .LLST8
-C:\msys64\tmp\ccyhjTSP.s:316    .text:00000000000001d4 .LVL21
-C:\msys64\tmp\ccyhjTSP.s:347    .text:000000000000020c .LVL24
-C:\msys64\tmp\ccyhjTSP.s:357    .text:0000000000000228 .LVL25
-C:\msys64\tmp\ccyhjTSP.s:174    .text:00000000000000fc .LFB30
-C:\msys64\tmp\ccyhjTSP.s:197    .text:0000000000000118 .LFE30
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 16
+C:\msys64\tmp\ccBNnzDK.s:3328   .debug_str:0000000000000882 .LASF32
+C:\msys64\tmp\ccBNnzDK.s:3354   .debug_str:0000000000000942 .LASF13
+C:\msys64\tmp\ccBNnzDK.s:3298   .debug_str:00000000000007b4 .LASF14
+C:\msys64\tmp\ccBNnzDK.s:3146   .debug_str:00000000000002bc .LASF16
+C:\msys64\tmp\ccBNnzDK.s:3322   .debug_str:0000000000000851 .LASF17
+C:\msys64\tmp\ccBNnzDK.s:3220   .debug_str:000000000000050c .LASF27
+C:\msys64\tmp\ccBNnzDK.s:3194   .debug_str:000000000000042a .LASF28
+C:\msys64\tmp\ccBNnzDK.s:3316   .debug_str:0000000000000833 .LASF18
+C:\msys64\tmp\ccBNnzDK.s:3274   .debug_str:00000000000006cf .LASF20
+C:\msys64\tmp\ccBNnzDK.s:3122   .debug_str:00000000000001c0 .LASF19
+C:\msys64\tmp\ccBNnzDK.s:3090   .debug_str:0000000000000015 .LASF21
+C:\msys64\tmp\ccBNnzDK.s:3252   .debug_str:00000000000005ef .LASF50
+C:\msys64\tmp\ccBNnzDK.s:3304   .debug_str:00000000000007d6 .LASF52
+C:\msys64\tmp\ccBNnzDK.s:3138   .debug_str:0000000000000281 .LASF22
+C:\msys64\tmp\ccBNnzDK.s:3188   .debug_str:000000000000040e .LASF23
+C:\msys64\tmp\ccBNnzDK.s:3348   .debug_str:0000000000000916 .LASF111
+C:\msys64\tmp\ccBNnzDK.s:3162   .debug_str:0000000000000344 .LASF113
+C:\msys64\tmp\ccBNnzDK.s:3158   .debug_str:000000000000032a .LASF24
+C:\msys64\tmp\ccBNnzDK.s:3256   .debug_str:000000000000060a .LASF25
+C:\msys64\tmp\ccBNnzDK.s:3238   .debug_str:0000000000000587 .LASF71
+C:\msys64\tmp\ccBNnzDK.s:3208   .debug_str:00000000000004c4 .LASF73
+C:\msys64\tmp\ccBNnzDK.s:3312   .debug_str:0000000000000817 .LASF26
+C:\msys64\tmp\ccBNnzDK.s:3332   .debug_str:0000000000000895 .LASF29
+C:\msys64\tmp\ccBNnzDK.s:3224   .debug_str:0000000000000531 .LASF126
+C:\msys64\tmp\ccBNnzDK.s:3180   .debug_str:00000000000003e5 .LASF127
+C:\msys64\tmp\ccBNnzDK.s:3288   .debug_str:0000000000000752 .LASF48
+C:\msys64\tmp\ccBNnzDK.s:3216   .debug_str:0000000000000500 .LASF30
+C:\msys64\tmp\ccBNnzDK.s:3318   .debug_str:000000000000083b .LASF31
+C:\msys64\tmp\ccBNnzDK.s:3096   .debug_str:000000000000004a .LASF33
+C:\msys64\tmp\ccBNnzDK.s:3340   .debug_str:00000000000008ec .LASF34
+C:\msys64\tmp\ccBNnzDK.s:3338   .debug_str:00000000000008dd .LASF35
+C:\msys64\tmp\ccBNnzDK.s:3280   .debug_str:000000000000070f .LASF36
+C:\msys64\tmp\ccBNnzDK.s:3240   .debug_str:0000000000000590 .LASF37
+C:\msys64\tmp\ccBNnzDK.s:3192   .debug_str:000000000000041d .LASF38
+C:\msys64\tmp\ccBNnzDK.s:3204   .debug_str:000000000000048e .LASF39
+C:\msys64\tmp\ccBNnzDK.s:3110   .debug_str:00000000000000a2 .LASF128
+C:\msys64\tmp\ccBNnzDK.s:3152   .debug_str:00000000000002f9 .LASF129
+C:\msys64\tmp\ccBNnzDK.s:3232   .debug_str:0000000000000573 .LASF67
+C:\msys64\tmp\ccBNnzDK.s:3166   .debug_str:000000000000037f .LASF69
+C:\msys64\tmp\ccBNnzDK.s:3250   .debug_str:00000000000005e4 .LASF40
+C:\msys64\tmp\ccBNnzDK.s:3136   .debug_str:0000000000000268 .LASF41
+C:\msys64\tmp\ccBNnzDK.s:3202   .debug_str:0000000000000481 .LASF42
+C:\msys64\tmp\ccBNnzDK.s:3130   .debug_str:0000000000000222 .LASF43
+C:\msys64\tmp\ccBNnzDK.s:3214   .debug_str:00000000000004f4 .LASF44
+C:\msys64\tmp\ccBNnzDK.s:3260   .debug_str:000000000000061e .LASF45
+C:\msys64\tmp\ccBNnzDK.s:3278   .debug_str:0000000000000704 .LASF46
+C:\msys64\tmp\ccBNnzDK.s:3244   .debug_str:00000000000005a5 .LASF47
+C:\msys64\tmp\ccBNnzDK.s:3148   .debug_str:00000000000002d5 .LASF49
+C:\msys64\tmp\ccBNnzDK.s:3196   .debug_str:0000000000000446 .LASF51
+C:\msys64\tmp\ccBNnzDK.s:3126   .debug_str:00000000000001db .LASF53
+C:\msys64\tmp\ccBNnzDK.s:3100   .debug_str:000000000000005c .LASF130
+C:\msys64\tmp\ccBNnzDK.s:3128   .debug_str:00000000000001f7 .LASF131
+C:\msys64\tmp\ccBNnzDK.s:3210   .debug_str:00000000000004dd .LASF54
+C:\msys64\tmp\ccBNnzDK.s:3186   .debug_str:0000000000000409 .LASF55
+C:\msys64\tmp\ccBNnzDK.s:3236   .debug_str:0000000000000582 .LASF56
+C:\msys64\tmp\ccBNnzDK.s:3234   .debug_str:000000000000057c .LASF57
+C:\msys64\tmp\ccBNnzDK.s:3190   .debug_str:0000000000000415 .LASF58
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 19
 
 
-C:\msys64\tmp\ccyhjTSP.s:148    .text:00000000000000fc .LFE29
-C:\msys64\tmp\ccyhjTSP.s:2401   .debug_loc:00000000000000c2 .LLST0
-C:\msys64\tmp\ccyhjTSP.s:43     .text:000000000000002c .LBB31
-C:\msys64\tmp\ccyhjTSP.s:118    .text:00000000000000c4 .LBE31
-C:\msys64\tmp\ccyhjTSP.s:2430   .debug_loc:0000000000000137 .LLST1
-C:\msys64\tmp\ccyhjTSP.s:2455   .debug_loc:0000000000000199 .LLST2
-C:\msys64\tmp\ccyhjTSP.s:79     .text:000000000000007c .LBB33
-C:\msys64\tmp\ccyhjTSP.s:104    .text:00000000000000a4 .LBE33
-C:\msys64\tmp\ccyhjTSP.s:87     .text:0000000000000088 .LBB35
-C:\msys64\tmp\ccyhjTSP.s:97     .text:0000000000000098 .LBE35
-C:\msys64\tmp\ccyhjTSP.s:2466   .debug_loc:00000000000001cf .LLST3
-C:\msys64\tmp\ccyhjTSP.s:55     .text:0000000000000044 .LVL4
-C:\msys64\tmp\ccyhjTSP.s:109    .text:00000000000000b8 .LVL7
-C:\msys64\tmp\ccyhjTSP.s:39     .text:0000000000000028 .LVL2
-C:\msys64\tmp\ccyhjTSP.s:124    .text:00000000000000d4 .LVL9
-C:\msys64\tmp\ccyhjTSP.s:128    .text:00000000000000e0 .LVL10
-C:\msys64\tmp\ccyhjTSP.s:2702   .debug_str:000000000000073e .LASF83
-C:\msys64\tmp\ccyhjTSP.s:2670   .debug_str:000000000000060e .LASF84
-C:\msys64\tmp\ccyhjTSP.s:2636   .debug_str:0000000000000510 .LASF85
-C:\msys64\tmp\ccyhjTSP.s:2506   .debug_str:000000000000004f .LASF111
-C:\msys64\tmp\ccyhjTSP.s:2662   .debug_str:00000000000005ce .LASF86
-C:\msys64\tmp\ccyhjTSP.s:2710   .debug_str:000000000000076b .LASF88
-C:\msys64\tmp\ccyhjTSP.s:2580   .debug_str:000000000000036d .LASF87
-C:\msys64\tmp\ccyhjTSP.s:2698   .debug_str:000000000000071e .LASF89
-C:\msys64\tmp\ccyhjTSP.s:2588   .debug_str:00000000000003ab .LASF90
-C:\msys64\tmp\ccyhjTSP.s:2660   .debug_str:00000000000005be .LASF91
-C:\msys64\tmp\ccyhjTSP.s:2560   .debug_str:00000000000002fc .LASF92
-C:\msys64\tmp\ccyhjTSP.s:2690   .debug_str:00000000000006be .LASF93
-C:\msys64\tmp\ccyhjTSP.s:231    .text:000000000000014c .LVL15
-C:\msys64\tmp\ccyhjTSP.s:238    .text:0000000000000154 .LVL16
-C:\msys64\tmp\ccyhjTSP.s:279    .text:000000000000018c .LVL18
-C:\msys64\tmp\ccyhjTSP.s:367    .text:0000000000000234 .LVL26
-C:\msys64\tmp\ccyhjTSP.s:293    .text:00000000000001a4 .LVL19
-C:\msys64\tmp\ccyhjTSP.s:301    .text:00000000000001b4 .LVL20
-C:\msys64\tmp\ccyhjTSP.s:325    .text:00000000000001e0 .LVL22
-C:\msys64\tmp\ccyhjTSP.s:333    .text:00000000000001f0 .LVL23
-C:\msys64\tmp\ccyhjTSP.s:19     .text:0000000000000000 .LVL0
-C:\msys64\tmp\ccyhjTSP.s:36     .text:0000000000000020 .LVL1
-C:\msys64\tmp\ccyhjTSP.s:121    .text:00000000000000c8 .LVL8
-C:\msys64\tmp\ccyhjTSP.s:143    .text:00000000000000f4 .LVL12
-C:\msys64\tmp\ccyhjTSP.s:42     .text:000000000000002c .LVL3
-C:\msys64\tmp\ccyhjTSP.s:140    .text:00000000000000f0 .LVL11
-C:\msys64\tmp\ccyhjTSP.s:86     .text:0000000000000088 .LVL5
-C:\msys64\tmp\ccyhjTSP.s:94     .text:0000000000000098 .LVL6
-C:\msys64\tmp\ccyhjTSP.s:405    .debug_info:0000000000000000 .Ldebug_info0
-C:\msys64\tmp\ccyhjTSP.s:151    .gcc_except_table:0000000000000000 .LLSDA29
+C:\msys64\tmp\ccBNnzDK.s:3308   .debug_str:00000000000007fa .LASF59
+C:\msys64\tmp\ccBNnzDK.s:3326   .debug_str:000000000000087a .LASF60
+C:\msys64\tmp\ccBNnzDK.s:3184   .debug_str:0000000000000400 .LASF61
+C:\msys64\tmp\ccBNnzDK.s:3258   .debug_str:0000000000000614 .LASF62
+C:\msys64\tmp\ccBNnzDK.s:3086   .debug_str:0000000000000000 .LASF63
+C:\msys64\tmp\ccBNnzDK.s:3286   .debug_str:0000000000000741 .LASF64
+C:\msys64\tmp\ccBNnzDK.s:3324   .debug_str:000000000000086d .LASF65
+C:\msys64\tmp\ccBNnzDK.s:3242   .debug_str:000000000000059f .LASF66
+C:\msys64\tmp\ccBNnzDK.s:3272   .debug_str:00000000000006c4 .LASF68
+C:\msys64\tmp\ccBNnzDK.s:3350   .debug_str:000000000000091f .LASF70
+C:\msys64\tmp\ccBNnzDK.s:3094   .debug_str:0000000000000041 .LASF72
+C:\msys64\tmp\ccBNnzDK.s:3154   .debug_str:0000000000000301 .LASF74
+C:\msys64\tmp\ccBNnzDK.s:3150   .debug_str:00000000000002f0 .LASF75
+C:\msys64\tmp\ccBNnzDK.s:3124   .debug_str:00000000000001c6 .LASF76
+C:\msys64\tmp\ccBNnzDK.s:3218   .debug_str:0000000000000505 .LASF77
+C:\msys64\tmp\ccBNnzDK.s:3266   .debug_str:0000000000000676 .LASF78
+C:\msys64\tmp\ccBNnzDK.s:3314   .debug_str:000000000000082c .LASF79
+C:\msys64\tmp\ccBNnzDK.s:3170   .debug_str:000000000000039b .LASF80
+C:\msys64\tmp\ccBNnzDK.s:3164   .debug_str:0000000000000377 .LASF81
+C:\msys64\tmp\ccBNnzDK.s:3156   .debug_str:0000000000000316 .LASF82
+C:\msys64\tmp\ccBNnzDK.s:3088   .debug_str:000000000000000d .LASF83
+C:\msys64\tmp\ccBNnzDK.s:3176   .debug_str:00000000000003c9 .LASF84
+C:\msys64\tmp\ccBNnzDK.s:3306   .debug_str:00000000000007f2 .LASF85
+C:\msys64\tmp\ccBNnzDK.s:3112   .debug_str:00000000000000a7 .LASF86
+C:\msys64\tmp\ccBNnzDK.s:3178   .debug_str:00000000000003dd .LASF87
+C:\msys64\tmp\ccBNnzDK.s:3132   .debug_str:000000000000023e .LASF88
+C:\msys64\tmp\ccBNnzDK.s:3230   .debug_str:000000000000056c .LASF89
+C:\msys64\tmp\ccBNnzDK.s:3344   .debug_str:00000000000008fe .LASF90
+C:\msys64\tmp\ccBNnzDK.s:3104   .debug_str:0000000000000070 .LASF91
+C:\msys64\tmp\ccBNnzDK.s:3310   .debug_str:0000000000000804 .LASF92
+C:\msys64\tmp\ccBNnzDK.s:3168   .debug_str:0000000000000395 .LASF93
+C:\msys64\tmp\ccBNnzDK.s:3302   .debug_str:00000000000007c4 .LASF94
+C:\msys64\tmp\ccBNnzDK.s:3102   .debug_str:000000000000006a .LASF95
+C:\msys64\tmp\ccBNnzDK.s:3358   .debug_str:0000000000000953 .LASF96
+C:\msys64\tmp\ccBNnzDK.s:3352   .debug_str:0000000000000937 .LASF97
+C:\msys64\tmp\ccBNnzDK.s:3282   .debug_str:0000000000000717 .LASF98
+C:\msys64\tmp\ccBNnzDK.s:3300   .debug_str:00000000000007b9 .LASF99
+C:\msys64\tmp\ccBNnzDK.s:3296   .debug_str:000000000000079c .LASF100
+C:\msys64\tmp\ccBNnzDK.s:3116   .debug_str:00000000000000d7 .LASF101
+C:\msys64\tmp\ccBNnzDK.s:3254   .debug_str:00000000000005f4 .LASF102
+C:\msys64\tmp\ccBNnzDK.s:3098   .debug_str:0000000000000052 .LASF103
+C:\msys64\tmp\ccBNnzDK.s:3174   .debug_str:00000000000003b3 .LASF104
+C:\msys64\tmp\ccBNnzDK.s:3092   .debug_str:0000000000000033 .LASF105
+C:\msys64\tmp\ccBNnzDK.s:3222   .debug_str:0000000000000516 .LASF106
+C:\msys64\tmp\ccBNnzDK.s:3320   .debug_str:0000000000000842 .LASF107
+C:\msys64\tmp\ccBNnzDK.s:3200   .debug_str:0000000000000464 .LASF108
+C:\msys64\tmp\ccBNnzDK.s:3292   .debug_str:000000000000077e .LASF109
+C:\msys64\tmp\ccBNnzDK.s:3114   .debug_str:00000000000000bb .LASF110
+C:\msys64\tmp\ccBNnzDK.s:3334   .debug_str:00000000000008aa .LASF112
+C:\msys64\tmp\ccBNnzDK.s:3270   .debug_str:000000000000069b .LASF114
+C:\msys64\tmp\ccBNnzDK.s:3142   .debug_str:000000000000028d .LASF115
+C:\msys64\tmp\ccBNnzDK.s:3336   .debug_str:00000000000008bf .LASF116
+C:\msys64\tmp\ccBNnzDK.s:3290   .debug_str:0000000000000764 .LASF117
+C:\msys64\tmp\ccBNnzDK.s:13     .text:0000000000000000 .LFB35
+C:\msys64\tmp\ccBNnzDK.s:67     .text:0000000000000058 .LFE35
+C:\msys64\tmp\ccBNnzDK.s:42     .text:0000000000000030 .LBB19
+C:\msys64\tmp\ccBNnzDK.s:52     .text:0000000000000040 .LBE19
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 20
+
+
+C:\msys64\tmp\ccBNnzDK.s:2863   .debug_loc:0000000000000000 .LLST0
+C:\msys64\tmp\ccBNnzDK.s:2871   .debug_loc:0000000000000024 .LLST1
+C:\msys64\tmp\ccBNnzDK.s:28     .text:0000000000000018 .LVL0
+C:\msys64\tmp\ccBNnzDK.s:56     .text:0000000000000048 .LVL3
+C:\msys64\tmp\ccBNnzDK.s:3346   .debug_str:0000000000000911 .LASF122
+C:\msys64\tmp\ccBNnzDK.s:3356   .debug_str:0000000000000947 .LASF118
+C:\msys64\tmp\ccBNnzDK.s:3330   .debug_str:0000000000000890 .LASF119
+C:\msys64\tmp\ccBNnzDK.s:3144   .debug_str:00000000000002a1 .LASF132
+C:\msys64\tmp\ccBNnzDK.s:300    .text:00000000000001bc .LFB33
+C:\msys64\tmp\ccBNnzDK.s:362    .text:000000000000022c .LFE33
+C:\msys64\tmp\ccBNnzDK.s:2879   .debug_loc:000000000000004f .LLST9
+C:\msys64\tmp\ccBNnzDK.s:193    .text:000000000000012c .LFB31
+C:\msys64\tmp\ccBNnzDK.s:294    .text:00000000000001bc .LFE31
+C:\msys64\tmp\ccBNnzDK.s:2895   .debug_loc:0000000000000099 .LLST5
+C:\msys64\tmp\ccBNnzDK.s:2913   .debug_loc:00000000000000e5 .LLST6
+C:\msys64\tmp\ccBNnzDK.s:3172   .debug_str:00000000000003ae .LASF120
+C:\msys64\tmp\ccBNnzDK.s:2928   .debug_loc:000000000000012e .LLST7
+C:\msys64\tmp\ccBNnzDK.s:3342   .debug_str:00000000000008f9 .LASF121
+C:\msys64\tmp\ccBNnzDK.s:2948   .debug_loc:000000000000018b .LLST8
+C:\msys64\tmp\ccBNnzDK.s:268    .text:000000000000019c .LVL20
+C:\msys64\tmp\ccBNnzDK.s:73     .text:0000000000000058 .LFB30
+C:\msys64\tmp\ccBNnzDK.s:187    .text:000000000000012c .LFE30
+C:\msys64\tmp\ccBNnzDK.s:2972   .debug_loc:00000000000001fb .LLST2
+C:\msys64\tmp\ccBNnzDK.s:101    .text:0000000000000088 .LBB21
+C:\msys64\tmp\ccBNnzDK.s:126    .text:00000000000000b0 .LBE21
+C:\msys64\tmp\ccBNnzDK.s:109    .text:0000000000000094 .LBB23
+C:\msys64\tmp\ccBNnzDK.s:119    .text:00000000000000a4 .LBE23
+C:\msys64\tmp\ccBNnzDK.s:2979   .debug_loc:000000000000021e .LLST3
+C:\msys64\tmp\ccBNnzDK.s:134    .text:00000000000000c4 .LBB26
+C:\msys64\tmp\ccBNnzDK.s:158    .text:00000000000000ec .LBE26
+C:\msys64\tmp\ccBNnzDK.s:141    .text:00000000000000d0 .LBB28
+C:\msys64\tmp\ccBNnzDK.s:151    .text:00000000000000e0 .LBE28
+C:\msys64\tmp\ccBNnzDK.s:2988   .debug_loc:000000000000024a .LLST4
+C:\msys64\tmp\ccBNnzDK.s:131    .text:00000000000000c4 .LVL7
+C:\msys64\tmp\ccBNnzDK.s:162    .text:00000000000000fc .LVL10
+C:\msys64\tmp\ccBNnzDK.s:172    .text:0000000000000118 .LVL11
+C:\msys64\tmp\ccBNnzDK.s:370    .text:000000000000022c .LFB29
+C:\msys64\tmp\ccBNnzDK.s:438    .text:00000000000002a4 .LFE29
+C:\msys64\tmp\ccBNnzDK.s:2997   .debug_loc:0000000000000276 .LLST10
+C:\msys64\tmp\ccBNnzDK.s:3015   .debug_loc:00000000000002c2 .LLST11
+C:\msys64\tmp\ccBNnzDK.s:3033   .debug_loc:000000000000030e .LLST12
+C:\msys64\tmp\ccBNnzDK.s:395    .text:0000000000000258 .LBB33
+C:\msys64\tmp\ccBNnzDK.s:407    .text:0000000000000268 .LBE33
+C:\msys64\tmp\ccBNnzDK.s:3051   .debug_loc:000000000000035a .LLST13
+C:\msys64\tmp\ccBNnzDK.s:3060   .debug_loc:000000000000037f .LLST14
+C:\msys64\tmp\ccBNnzDK.s:402    .text:0000000000000264 .LVL30
+C:\msys64\tmp\ccBNnzDK.s:414    .text:0000000000000280 .LVL32
+C:\msys64\tmp\ccBNnzDK.s:3268   .debug_str:0000000000000689 .LASF133
+C:\msys64\tmp\ccBNnzDK.s:3108   .debug_str:000000000000007e .LASF134
+C:\msys64\tmp\ccBNnzDK.s:3160   .debug_str:000000000000032f .LASF135
+C:\msys64\tmp\ccBNnzDK.s:3198   .debug_str:0000000000000454 .LASF136
+C:\msys64\tmp\ccBNnzDK.s:39     .text:0000000000000030 .LVL1
+C:\msys64\tmp\ccBNnzDK.s:50     .text:0000000000000040 .LVL2
+C:\msys64\tmp\ccBNnzDK.s:303    .text:00000000000001bc .LVL24
+C:\msys64\tmp\ccBNnzDK.s:333    .text:000000000000020c .LVL25
+C:\msys64\tmp\ccBNnzDK.s:348    .text:0000000000000220 .LVL26
+C:\msys64\tmp\ccBNnzDK.s:196    .text:000000000000012c .LVL13
+GAS LISTING C:\msys64\tmp\ccBNnzDK.s 			page 21
+
+
+C:\msys64\tmp\ccBNnzDK.s:279    .text:00000000000001ac .LVL21
+C:\msys64\tmp\ccBNnzDK.s:227    .text:000000000000015c .LVL16
+C:\msys64\tmp\ccBNnzDK.s:259    .text:000000000000018c .LVL19
+C:\msys64\tmp\ccBNnzDK.s:211    .text:0000000000000148 .LVL14
+C:\msys64\tmp\ccBNnzDK.s:234    .text:0000000000000164 .LVL17
+C:\msys64\tmp\ccBNnzDK.s:287    .text:00000000000001b8 .LVL23
+C:\msys64\tmp\ccBNnzDK.s:215    .text:000000000000014c .LVL15
+C:\msys64\tmp\ccBNnzDK.s:251    .text:0000000000000180 .LVL18
+C:\msys64\tmp\ccBNnzDK.s:285    .text:00000000000001b4 .LVL22
+C:\msys64\tmp\ccBNnzDK.s:89     .text:0000000000000074 .LVL4
+C:\msys64\tmp\ccBNnzDK.s:182    .text:0000000000000124 .LVL12
+C:\msys64\tmp\ccBNnzDK.s:108    .text:0000000000000094 .LVL5
+C:\msys64\tmp\ccBNnzDK.s:116    .text:00000000000000a4 .LVL6
+C:\msys64\tmp\ccBNnzDK.s:140    .text:00000000000000d0 .LVL8
+C:\msys64\tmp\ccBNnzDK.s:148    .text:00000000000000e0 .LVL9
+C:\msys64\tmp\ccBNnzDK.s:373    .text:000000000000022c .LVL27
+C:\msys64\tmp\ccBNnzDK.s:400    .text:000000000000025c .LVL29
+C:\msys64\tmp\ccBNnzDK.s:427    .text:0000000000000294 .LVL34
+C:\msys64\tmp\ccBNnzDK.s:430    .text:0000000000000298 .LVL35
+C:\msys64\tmp\ccBNnzDK.s:433    .text:000000000000029c .LVL36
+C:\msys64\tmp\ccBNnzDK.s:394    .text:0000000000000258 .LVL28
+C:\msys64\tmp\ccBNnzDK.s:404    .text:0000000000000268 .LVL31
+C:\msys64\tmp\ccBNnzDK.s:424    .text:0000000000000290 .LVL33
+C:\msys64\tmp\ccBNnzDK.s:478    .debug_info:0000000000000000 .Ldebug_info0
 
 UNDEFINED SYMBOLS
-_Znwm
-_Znam
-_ZN9Scheduler3putEP6Thread
-_ZdlPv
-_Unwind_Resume
-__gxx_personality_v0
 _ZN5Riscv10popSppSpieEv
+_Z15thread_dispatchv
+_ZN9Scheduler3putEP6Thread
 _ZN9Scheduler3getEv
 _ZN6Thread13switchContextEPNS_7ContextES1_
-GAS LISTING C:\msys64\tmp\ccyhjTSP.s 			page 17
-
-
+_ZN15MemoryAllocator7kmallocEm

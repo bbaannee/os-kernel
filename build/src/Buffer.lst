@@ -1,0 +1,380 @@
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 1
+
+
+   1              		.file	"Buffer.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.align	2
+  10              		.globl	_ZN6BufferC2Ev
+  12              	_ZN6BufferC2Ev:
+  13              	.LFB2:
+  14              		.file 1 "src/Buffer.cpp"
+   1:src/Buffer.cpp **** #include "../h/Buffer.h"
+   2:src/Buffer.cpp **** #include "../h/Semaphore.h"
+   3:src/Buffer.cpp **** 
+   4:src/Buffer.cpp **** Buffer::Buffer(): count(0), head(0), tail(0){
+  15              		.loc 1 4 1
+  16              		.cfi_startproc
+  17              	.LVL0:
+  18 0000 130101FF 		addi	sp,sp,-16
+  19              		.cfi_def_cfa_offset 16
+  20 0004 23348100 		sd	s0,8(sp)
+  21              		.cfi_offset 8, -8
+  22 0008 13040101 		addi	s0,sp,16
+  23              		.cfi_def_cfa 8, 0
+  24              	.LBB2:
+  25              		.loc 1 4 44 is_stmt 0
+  26 000c 23200500 		sw	zero,0(a0)
+  27 0010 23220500 		sw	zero,4(a0)
+  28 0014 23240500 		sw	zero,8(a0)
+  29              	.LBE2:
+   5:src/Buffer.cpp **** 
+   6:src/Buffer.cpp **** }
+  30              		.loc 1 6 1
+  31 0018 03348100 		ld	s0,8(sp)
+  32              		.cfi_restore 8
+  33              		.cfi_def_cfa 2, 16
+  34 001c 13010101 		addi	sp,sp,16
+  35              		.cfi_def_cfa_offset 0
+  36 0020 67800000 		jr	ra
+  37              		.cfi_endproc
+  38              	.LFE2:
+  40              		.globl	_ZN6BufferC1Ev
+  41              		.set	_ZN6BufferC1Ev,_ZN6BufferC2Ev
+  42              		.align	2
+  43              		.globl	_ZN6Buffer3putEc
+  45              	_ZN6Buffer3putEc:
+  46              	.LFB4:
+   7:src/Buffer.cpp **** 
+   8:src/Buffer.cpp **** void Buffer::put(char c) {
+  47              		.loc 1 8 26 is_stmt 1
+  48              		.cfi_startproc
+  49              	.LVL1:
+  50 0024 130101FF 		addi	sp,sp,-16
+  51              		.cfi_def_cfa_offset 16
+  52 0028 23348100 		sd	s0,8(sp)
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 2
+
+
+  53              		.cfi_offset 8, -8
+  54 002c 13040101 		addi	s0,sp,16
+  55              		.cfi_def_cfa 8, 0
+   9:src/Buffer.cpp ****     buffer[tail] = c;
+  56              		.loc 1 9 5
+  57              		.loc 1 9 12 is_stmt 0
+  58 0030 83278500 		lw	a5,8(a0)
+  59              		.loc 1 9 18
+  60 0034 3307F500 		add	a4,a0,a5
+  61 0038 2306B700 		sb	a1,12(a4)
+  10:src/Buffer.cpp ****     tail = (tail + 1 ) % Buffer::capacity;
+  62              		.loc 1 10 5 is_stmt 1
+  63              		.loc 1 10 18 is_stmt 0
+  64 003c 9B871700 		addiw	a5,a5,1
+  65              		.loc 1 10 24
+  66 0040 1BD7F741 		sraiw	a4,a5,31
+  67 0044 1B578701 		srliw	a4,a4,24
+  68 0048 BB87E700 		addw	a5,a5,a4
+  69 004c 93F7F70F 		andi	a5,a5,255
+  70 0050 BB87E740 		subw	a5,a5,a4
+  71              		.loc 1 10 10
+  72 0054 2324F500 		sw	a5,8(a0)
+  11:src/Buffer.cpp ****     count++;
+  73              		.loc 1 11 5 is_stmt 1
+  74 0058 83270500 		lw	a5,0(a0)
+  75              		.loc 1 11 10 is_stmt 0
+  76 005c 9B871700 		addiw	a5,a5,1
+  77 0060 2320F500 		sw	a5,0(a0)
+  12:src/Buffer.cpp **** }
+  78              		.loc 1 12 1
+  79 0064 03348100 		ld	s0,8(sp)
+  80              		.cfi_restore 8
+  81              		.cfi_def_cfa 2, 16
+  82 0068 13010101 		addi	sp,sp,16
+  83              		.cfi_def_cfa_offset 0
+  84 006c 67800000 		jr	ra
+  85              		.cfi_endproc
+  86              	.LFE4:
+  88              		.align	2
+  89              		.globl	_ZN6Buffer3getEv
+  91              	_ZN6Buffer3getEv:
+  92              	.LFB5:
+  13:src/Buffer.cpp **** 
+  14:src/Buffer.cpp **** 
+  15:src/Buffer.cpp **** char Buffer::get() {
+  93              		.loc 1 15 20 is_stmt 1
+  94              		.cfi_startproc
+  95              	.LVL2:
+  96 0070 130101FF 		addi	sp,sp,-16
+  97              		.cfi_def_cfa_offset 16
+  98 0074 23348100 		sd	s0,8(sp)
+  99              		.cfi_offset 8, -8
+ 100 0078 13040101 		addi	s0,sp,16
+ 101              		.cfi_def_cfa 8, 0
+ 102 007c 13070500 		mv	a4,a0
+  16:src/Buffer.cpp ****     char x = buffer[head];
+ 103              		.loc 1 16 5
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 3
+
+
+ 104              		.loc 1 16 21 is_stmt 0
+ 105 0080 83274500 		lw	a5,4(a0)
+ 106              		.loc 1 16 10
+ 107 0084 B306F500 		add	a3,a0,a5
+ 108 0088 03C5C600 		lbu	a0,12(a3)
+ 109              	.LVL3:
+  17:src/Buffer.cpp ****     head = (head + 1 ) % Buffer::capacity;
+ 110              		.loc 1 17 5 is_stmt 1
+ 111              		.loc 1 17 18 is_stmt 0
+ 112 008c 9B871700 		addiw	a5,a5,1
+ 113              		.loc 1 17 24
+ 114 0090 9BD6F741 		sraiw	a3,a5,31
+ 115 0094 9BD68601 		srliw	a3,a3,24
+ 116 0098 BB87D700 		addw	a5,a5,a3
+ 117 009c 93F7F70F 		andi	a5,a5,255
+ 118 00a0 BB87D740 		subw	a5,a5,a3
+ 119              		.loc 1 17 10
+ 120 00a4 2322F700 		sw	a5,4(a4)
+  18:src/Buffer.cpp ****     count--;
+ 121              		.loc 1 18 5 is_stmt 1
+ 122 00a8 83270700 		lw	a5,0(a4)
+ 123              		.loc 1 18 10 is_stmt 0
+ 124 00ac 9B87F7FF 		addiw	a5,a5,-1
+ 125 00b0 2320F700 		sw	a5,0(a4)
+  19:src/Buffer.cpp ****     return x;
+ 126              		.loc 1 19 5 is_stmt 1
+  20:src/Buffer.cpp **** }
+ 127              		.loc 1 20 1 is_stmt 0
+ 128 00b4 03348100 		ld	s0,8(sp)
+ 129              		.cfi_restore 8
+ 130              		.cfi_def_cfa 2, 16
+ 131 00b8 13010101 		addi	sp,sp,16
+ 132              		.cfi_def_cfa_offset 0
+ 133 00bc 67800000 		jr	ra
+ 134              		.cfi_endproc
+ 135              	.LFE5:
+ 137              		.align	2
+ 138              		.globl	_ZN6Buffer6isFullEv
+ 140              	_ZN6Buffer6isFullEv:
+ 141              	.LFB6:
+  21:src/Buffer.cpp **** 
+  22:src/Buffer.cpp **** bool Buffer::isFull() {
+ 142              		.loc 1 22 23 is_stmt 1
+ 143              		.cfi_startproc
+ 144              	.LVL4:
+ 145 00c0 130101FF 		addi	sp,sp,-16
+ 146              		.cfi_def_cfa_offset 16
+ 147 00c4 23348100 		sd	s0,8(sp)
+ 148              		.cfi_offset 8, -8
+ 149 00c8 13040101 		addi	s0,sp,16
+ 150              		.cfi_def_cfa 8, 0
+  23:src/Buffer.cpp ****     return count == capacity;
+ 151              		.loc 1 23 5
+ 152              		.loc 1 23 12 is_stmt 0
+ 153 00cc 03250500 		lw	a0,0(a0)
+ 154              	.LVL5:
+ 155              		.loc 1 23 21
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 4
+
+
+ 156 00d0 130505F0 		addi	a0,a0,-256
+  24:src/Buffer.cpp **** }
+ 157              		.loc 1 24 1
+ 158 00d4 13351500 		seqz	a0,a0
+ 159 00d8 03348100 		ld	s0,8(sp)
+ 160              		.cfi_restore 8
+ 161              		.cfi_def_cfa 2, 16
+ 162 00dc 13010101 		addi	sp,sp,16
+ 163              		.cfi_def_cfa_offset 0
+ 164 00e0 67800000 		jr	ra
+ 165              		.cfi_endproc
+ 166              	.LFE6:
+ 168              		.align	2
+ 169              		.globl	_ZN6Buffer7isEmptyEv
+ 171              	_ZN6Buffer7isEmptyEv:
+ 172              	.LFB7:
+  25:src/Buffer.cpp **** 
+  26:src/Buffer.cpp **** bool Buffer::isEmpty() {
+ 173              		.loc 1 26 24 is_stmt 1
+ 174              		.cfi_startproc
+ 175              	.LVL6:
+ 176 00e4 130101FF 		addi	sp,sp,-16
+ 177              		.cfi_def_cfa_offset 16
+ 178 00e8 23348100 		sd	s0,8(sp)
+ 179              		.cfi_offset 8, -8
+ 180 00ec 13040101 		addi	s0,sp,16
+ 181              		.cfi_def_cfa 8, 0
+  27:src/Buffer.cpp ****     return count == 0;
+ 182              		.loc 1 27 5
+ 183              		.loc 1 27 12 is_stmt 0
+ 184 00f0 03250500 		lw	a0,0(a0)
+ 185              	.LVL7:
+  28:src/Buffer.cpp **** }
+ 186              		.loc 1 28 1
+ 187 00f4 13351500 		seqz	a0,a0
+ 188 00f8 03348100 		ld	s0,8(sp)
+ 189              		.cfi_restore 8
+ 190              		.cfi_def_cfa 2, 16
+ 191 00fc 13010101 		addi	sp,sp,16
+ 192              		.cfi_def_cfa_offset 0
+ 193 0100 67800000 		jr	ra
+ 194              		.cfi_endproc
+ 195              	.LFE7:
+ 197              	.Letext0:
+ 198              		.file 2 "src/../h/../h/../lib/hw.h"
+ 199              		.file 3 "src/../h/Buffer.h"
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Buffer.cpp
+C:\msys64\tmp\ccCkM9XW.s:12     .text:0000000000000000 _ZN6BufferC2Ev
+C:\msys64\tmp\ccCkM9XW.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccCkM9XW.s:18     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccCkM9XW.s:19     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccCkM9XW.s:21     .text:0000000000000008 .L0 
+C:\msys64\tmp\ccCkM9XW.s:23     .text:000000000000000c .L0 
+C:\msys64\tmp\ccCkM9XW.s:26     .text:000000000000000c .L0 
+C:\msys64\tmp\ccCkM9XW.s:31     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccCkM9XW.s:32     .text:000000000000001c .L0 
+C:\msys64\tmp\ccCkM9XW.s:33     .text:000000000000001c .L0 
+C:\msys64\tmp\ccCkM9XW.s:35     .text:0000000000000020 .L0 
+C:\msys64\tmp\ccCkM9XW.s:37     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccCkM9XW.s:12     .text:0000000000000000 _ZN6BufferC1Ev
+C:\msys64\tmp\ccCkM9XW.s:45     .text:0000000000000024 _ZN6Buffer3putEc
+C:\msys64\tmp\ccCkM9XW.s:48     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccCkM9XW.s:50     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccCkM9XW.s:51     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccCkM9XW.s:53     .text:000000000000002c .L0 
+C:\msys64\tmp\ccCkM9XW.s:55     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccCkM9XW.s:57     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccCkM9XW.s:58     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccCkM9XW.s:60     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccCkM9XW.s:63     .text:000000000000003c .L0 
+C:\msys64\tmp\ccCkM9XW.s:64     .text:000000000000003c .L0 
+C:\msys64\tmp\ccCkM9XW.s:66     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccCkM9XW.s:72     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccCkM9XW.s:74     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccCkM9XW.s:76     .text:000000000000005c .L0 
+C:\msys64\tmp\ccCkM9XW.s:79     .text:0000000000000064 .L0 
+C:\msys64\tmp\ccCkM9XW.s:80     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccCkM9XW.s:81     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccCkM9XW.s:83     .text:000000000000006c .L0 
+C:\msys64\tmp\ccCkM9XW.s:85     .text:0000000000000070 .L0 
+C:\msys64\tmp\ccCkM9XW.s:91     .text:0000000000000070 _ZN6Buffer3getEv
+C:\msys64\tmp\ccCkM9XW.s:94     .text:0000000000000070 .L0 
+C:\msys64\tmp\ccCkM9XW.s:96     .text:0000000000000070 .L0 
+C:\msys64\tmp\ccCkM9XW.s:97     .text:0000000000000074 .L0 
+C:\msys64\tmp\ccCkM9XW.s:99     .text:0000000000000078 .L0 
+C:\msys64\tmp\ccCkM9XW.s:101    .text:000000000000007c .L0 
+C:\msys64\tmp\ccCkM9XW.s:104    .text:0000000000000080 .L0 
+C:\msys64\tmp\ccCkM9XW.s:105    .text:0000000000000080 .L0 
+C:\msys64\tmp\ccCkM9XW.s:107    .text:0000000000000084 .L0 
+C:\msys64\tmp\ccCkM9XW.s:111    .text:000000000000008c .L0 
+C:\msys64\tmp\ccCkM9XW.s:112    .text:000000000000008c .L0 
+C:\msys64\tmp\ccCkM9XW.s:114    .text:0000000000000090 .L0 
+C:\msys64\tmp\ccCkM9XW.s:120    .text:00000000000000a4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:122    .text:00000000000000a8 .L0 
+C:\msys64\tmp\ccCkM9XW.s:124    .text:00000000000000ac .L0 
+C:\msys64\tmp\ccCkM9XW.s:127    .text:00000000000000b4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:128    .text:00000000000000b4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:129    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccCkM9XW.s:130    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccCkM9XW.s:132    .text:00000000000000bc .L0 
+C:\msys64\tmp\ccCkM9XW.s:134    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:140    .text:00000000000000c0 _ZN6Buffer6isFullEv
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 6
+
+
+C:\msys64\tmp\ccCkM9XW.s:143    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:145    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:146    .text:00000000000000c4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:148    .text:00000000000000c8 .L0 
+C:\msys64\tmp\ccCkM9XW.s:150    .text:00000000000000cc .L0 
+C:\msys64\tmp\ccCkM9XW.s:152    .text:00000000000000cc .L0 
+C:\msys64\tmp\ccCkM9XW.s:153    .text:00000000000000cc .L0 
+C:\msys64\tmp\ccCkM9XW.s:156    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:158    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:160    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccCkM9XW.s:161    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccCkM9XW.s:163    .text:00000000000000e0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:165    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:171    .text:00000000000000e4 _ZN6Buffer7isEmptyEv
+C:\msys64\tmp\ccCkM9XW.s:174    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:176    .text:00000000000000e4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:177    .text:00000000000000e8 .L0 
+C:\msys64\tmp\ccCkM9XW.s:179    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccCkM9XW.s:181    .text:00000000000000f0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:183    .text:00000000000000f0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:184    .text:00000000000000f0 .L0 
+C:\msys64\tmp\ccCkM9XW.s:187    .text:00000000000000f4 .L0 
+C:\msys64\tmp\ccCkM9XW.s:189    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccCkM9XW.s:190    .text:00000000000000fc .L0 
+C:\msys64\tmp\ccCkM9XW.s:192    .text:0000000000000100 .L0 
+C:\msys64\tmp\ccCkM9XW.s:194    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccCkM9XW.s:200    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccCkM9XW.s:529    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccCkM9XW.s:1065   .debug_str:0000000000000114 .LASF24
+C:\msys64\tmp\ccCkM9XW.s:1085   .debug_str:000000000000024d .LASF25
+C:\msys64\tmp\ccCkM9XW.s:1061   .debug_str:00000000000000d8 .LASF26
+C:\msys64\tmp\ccCkM9XW.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccCkM9XW.s:197    .text:0000000000000104 .Letext0
+C:\msys64\tmp\ccCkM9XW.s:1025   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccCkM9XW.s:1063   .debug_str:0000000000000107 .LASF0
+C:\msys64\tmp\ccCkM9XW.s:1055   .debug_str:00000000000000b4 .LASF1
+C:\msys64\tmp\ccCkM9XW.s:1049   .debug_str:000000000000008f .LASF2
+C:\msys64\tmp\ccCkM9XW.s:1037   .debug_str:000000000000003f .LASF4
+C:\msys64\tmp\ccCkM9XW.s:1053   .debug_str:00000000000000a2 .LASF3
+C:\msys64\tmp\ccCkM9XW.s:1029   .debug_str:0000000000000013 .LASF5
+C:\msys64\tmp\ccCkM9XW.s:1027   .debug_str:0000000000000000 .LASF6
+C:\msys64\tmp\ccCkM9XW.s:1047   .debug_str:000000000000007c .LASF7
+C:\msys64\tmp\ccCkM9XW.s:1089   .debug_str:000000000000026b .LASF8
+C:\msys64\tmp\ccCkM9XW.s:1057   .debug_str:00000000000000c7 .LASF9
+C:\msys64\tmp\ccCkM9XW.s:1035   .debug_str:0000000000000029 .LASF10
+C:\msys64\tmp\ccCkM9XW.s:1069   .debug_str:00000000000001ee .LASF11
+C:\msys64\tmp\ccCkM9XW.s:1039   .debug_str:0000000000000046 .LASF12
+C:\msys64\tmp\ccCkM9XW.s:1073   .debug_str:0000000000000219 .LASF13
+C:\msys64\tmp\ccCkM9XW.s:1087   .debug_str:000000000000025c .LASF27
+C:\msys64\tmp\ccCkM9XW.s:1045   .debug_str:000000000000006b .LASF28
+C:\msys64\tmp\ccCkM9XW.s:1041   .debug_str:000000000000004b .LASF29
+C:\msys64\tmp\ccCkM9XW.s:1067   .debug_str:00000000000001e7 .LASF14
+C:\msys64\tmp\ccCkM9XW.s:1081   .debug_str:0000000000000234 .LASF16
+C:\msys64\tmp\ccCkM9XW.s:1075   .debug_str:0000000000000220 .LASF15
+C:\msys64\tmp\ccCkM9XW.s:1071   .debug_str:0000000000000204 .LASF17
+C:\msys64\tmp\ccCkM9XW.s:1033   .debug_str:0000000000000023 .LASF18
+C:\msys64\tmp\ccCkM9XW.s:1059   .debug_str:00000000000000d3 .LASF19
+GAS LISTING C:\msys64\tmp\ccCkM9XW.s 			page 7
+
+
+C:\msys64\tmp\ccCkM9XW.s:1079   .debug_str:000000000000022f .LASF20
+C:\msys64\tmp\ccCkM9XW.s:1031   .debug_str:000000000000001a .LASF30
+C:\msys64\tmp\ccCkM9XW.s:1077   .debug_str:0000000000000228 .LASF21
+C:\msys64\tmp\ccCkM9XW.s:1083   .debug_str:0000000000000248 .LASF22
+C:\msys64\tmp\ccCkM9XW.s:172    .text:00000000000000e4 .LFB7
+C:\msys64\tmp\ccCkM9XW.s:195    .text:0000000000000104 .LFE7
+C:\msys64\tmp\ccCkM9XW.s:1051   .debug_str:000000000000009d .LASF23
+C:\msys64\tmp\ccCkM9XW.s:973    .debug_loc:0000000000000000 .LLST2
+C:\msys64\tmp\ccCkM9XW.s:141    .text:00000000000000c0 .LFB6
+C:\msys64\tmp\ccCkM9XW.s:166    .text:00000000000000e4 .LFE6
+C:\msys64\tmp\ccCkM9XW.s:987    .debug_loc:0000000000000039 .LLST1
+C:\msys64\tmp\ccCkM9XW.s:92     .text:0000000000000070 .LFB5
+C:\msys64\tmp\ccCkM9XW.s:135    .text:00000000000000c0 .LFE5
+C:\msys64\tmp\ccCkM9XW.s:1001   .debug_loc:0000000000000072 .LLST0
+C:\msys64\tmp\ccCkM9XW.s:46     .text:0000000000000024 .LFB4
+C:\msys64\tmp\ccCkM9XW.s:86     .text:0000000000000070 .LFE4
+C:\msys64\tmp\ccCkM9XW.s:1043   .debug_str:000000000000005c .LASF31
+C:\msys64\tmp\ccCkM9XW.s:13     .text:0000000000000000 .LFB2
+C:\msys64\tmp\ccCkM9XW.s:38     .text:0000000000000024 .LFE2
+C:\msys64\tmp\ccCkM9XW.s:175    .text:00000000000000e4 .LVL6
+C:\msys64\tmp\ccCkM9XW.s:185    .text:00000000000000f4 .LVL7
+C:\msys64\tmp\ccCkM9XW.s:144    .text:00000000000000c0 .LVL4
+C:\msys64\tmp\ccCkM9XW.s:154    .text:00000000000000d0 .LVL5
+C:\msys64\tmp\ccCkM9XW.s:95     .text:0000000000000070 .LVL2
+C:\msys64\tmp\ccCkM9XW.s:109    .text:000000000000008c .LVL3
+C:\msys64\tmp\ccCkM9XW.s:201    .debug_info:0000000000000000 .Ldebug_info0
+
+NO UNDEFINED SYMBOLS

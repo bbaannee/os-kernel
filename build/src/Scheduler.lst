@@ -1,4 +1,4 @@
-GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 1
+GAS LISTING C:\msys64\tmp\cc4WGUrv.s 			page 1
 
 
    1              		.file	"Scheduler.cpp"
@@ -12,12 +12,15 @@ GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 1
    9              		.align	2
   10              		.globl	_ZN9Scheduler3putEP6Thread
   12              	_ZN9Scheduler3putEP6Thread:
-  13              	.LFB13:
+  13              	.LFB11:
   14              		.file 1 "src/Scheduler.cpp"
    1:src/Scheduler.cpp **** #include "../h/Scheduler.h"
-   2:src/Scheduler.cpp **** #include "../h/Thread.h"
-   3:src/Scheduler.cpp **** void Scheduler::put(Thread* t) {
-  15              		.loc 1 3 32
+   2:src/Scheduler.cpp **** 
+   3:src/Scheduler.cpp **** #include "../h/Thread.h"
+   4:src/Scheduler.cpp **** #include "../h/printer.h"
+   5:src/Scheduler.cpp **** 
+   6:src/Scheduler.cpp **** void Scheduler::put(Thread* t) {
+  15              		.loc 1 6 32
   16              		.cfi_startproc
   17              	.LVL0:
   18 0000 130101FF 		addi	sp,sp,-16
@@ -26,41 +29,41 @@ GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 1
   21              		.cfi_offset 8, -8
   22 0008 13040101 		addi	s0,sp,16
   23              		.cfi_def_cfa 8, 0
-   4:src/Scheduler.cpp ****     if (!t) return;
-  24              		.loc 1 4 5
+   7:src/Scheduler.cpp ****     if (!t) return;
+  24              		.loc 1 7 5
   25 000c 638E0500 		beq	a1,zero,.L1
-   5:src/Scheduler.cpp ****     t->next = nullptr;
-  26              		.loc 1 5 5
-  27              		.loc 1 5 13 is_stmt 0
+   8:src/Scheduler.cpp ****     t->next = nullptr;
+  26              		.loc 1 8 5
+  27              		.loc 1 8 13 is_stmt 0
   28 0010 23B00500 		sd	zero,0(a1)
-   6:src/Scheduler.cpp **** 
-   7:src/Scheduler.cpp ****     if (!head) {
-  29              		.loc 1 7 5 is_stmt 1
-  30              		.loc 1 7 10 is_stmt 0
+   9:src/Scheduler.cpp **** 
+  10:src/Scheduler.cpp ****     if (!head) {
+  29              		.loc 1 10 5 is_stmt 1
+  30              		.loc 1 10 10 is_stmt 0
   31 0014 83370500 		ld	a5,0(a0)
-  32              		.loc 1 7 5
+  32              		.loc 1 10 5
   33 0018 638E0700 		beq	a5,zero,.L6
-   8:src/Scheduler.cpp ****         head = t;
-   9:src/Scheduler.cpp ****     } else {
-  10:src/Scheduler.cpp ****         tail->next = t;
-  34              		.loc 1 10 9 is_stmt 1
+  11:src/Scheduler.cpp ****         head = t;
+  12:src/Scheduler.cpp ****     } else {
+  13:src/Scheduler.cpp ****         tail->next = t;
+  34              		.loc 1 13 9 is_stmt 1
   35 001c 83378500 		ld	a5,8(a0)
-  36              		.loc 1 10 20 is_stmt 0
+  36              		.loc 1 13 20 is_stmt 0
   37 0020 23B0B700 		sd	a1,0(a5)
   38              	.L4:
-  11:src/Scheduler.cpp ****     }
-  12:src/Scheduler.cpp ****     tail = t;
-  39              		.loc 1 12 5 is_stmt 1
-  40              		.loc 1 12 10 is_stmt 0
+  14:src/Scheduler.cpp ****     }
+  15:src/Scheduler.cpp ****     tail = t;
+  39              		.loc 1 15 5 is_stmt 1
+  40              		.loc 1 15 10 is_stmt 0
   41 0024 2334B500 		sd	a1,8(a0)
   42              	.L1:
-  13:src/Scheduler.cpp **** }
-  43              		.loc 1 13 1
+  16:src/Scheduler.cpp **** }
+GAS LISTING C:\msys64\tmp\cc4WGUrv.s 			page 2
+
+
+  43              		.loc 1 16 1
   44 0028 03348100 		ld	s0,8(sp)
   45              		.cfi_remember_state
-GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 2
-
-
   46              		.cfi_restore 8
   47              		.cfi_def_cfa 2, 16
   48 002c 13010101 		addi	sp,sp,16
@@ -68,21 +71,21 @@ GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 1
   50 0030 67800000 		jr	ra
   51              	.L6:
   52              		.cfi_restore_state
-   8:src/Scheduler.cpp ****         head = t;
-  53              		.loc 1 8 9 is_stmt 1
-   8:src/Scheduler.cpp ****         head = t;
-  54              		.loc 1 8 14 is_stmt 0
+  11:src/Scheduler.cpp ****         head = t;
+  53              		.loc 1 11 9 is_stmt 1
+  11:src/Scheduler.cpp ****         head = t;
+  54              		.loc 1 11 14 is_stmt 0
   55 0034 2330B500 		sd	a1,0(a0)
   56 0038 6FF0DFFE 		j	.L4
   57              		.cfi_endproc
-  58              	.LFE13:
+  58              	.LFE11:
   60              		.align	2
   61              		.globl	_ZN9Scheduler3getEv
   63              	_ZN9Scheduler3getEv:
-  64              	.LFB14:
-  14:src/Scheduler.cpp **** 
-  15:src/Scheduler.cpp **** Thread* Scheduler::get() {
-  65              		.loc 1 15 26 is_stmt 1
+  64              	.LFB12:
+  17:src/Scheduler.cpp **** 
+  18:src/Scheduler.cpp **** Thread* Scheduler::get() {
+  65              		.loc 1 18 26 is_stmt 1
   66              		.cfi_startproc
   67              	.LVL1:
   68 003c 130101FF 		addi	sp,sp,-16
@@ -92,46 +95,46 @@ GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 1
   72 0044 13040101 		addi	s0,sp,16
   73              		.cfi_def_cfa 8, 0
   74 0048 93070500 		mv	a5,a0
-  16:src/Scheduler.cpp ****     if (!head) {
-  75              		.loc 1 16 5
-  76              		.loc 1 16 10 is_stmt 0
+  19:src/Scheduler.cpp ****     if (!head) {
+  75              		.loc 1 19 5
+  76              		.loc 1 19 10 is_stmt 0
   77 004c 03350500 		ld	a0,0(a0)
   78              	.LVL2:
-  79              		.loc 1 16 5
+  79              		.loc 1 19 5
   80 0050 630A0500 		beq	a0,zero,.L7
-  17:src/Scheduler.cpp ****         return nullptr;
-  18:src/Scheduler.cpp ****     }
-  19:src/Scheduler.cpp **** 
-  20:src/Scheduler.cpp ****     Thread* t = head;
-  81              		.loc 1 20 5 is_stmt 1
-  82              	.LVL3:
-  21:src/Scheduler.cpp ****     head = head->next;
-  83              		.loc 1 21 5
-  84              		.loc 1 21 18 is_stmt 0
-  85 0054 03370500 		ld	a4,0(a0)
-  86              		.loc 1 21 10
-  87 0058 23B0E700 		sd	a4,0(a5)
+  20:src/Scheduler.cpp ****         return nullptr;
+  21:src/Scheduler.cpp ****     }
   22:src/Scheduler.cpp **** 
-  23:src/Scheduler.cpp ****     if (!head) {
-  88              		.loc 1 23 5 is_stmt 1
+  23:src/Scheduler.cpp ****     Thread* t = head;
+  81              		.loc 1 23 5 is_stmt 1
+  82              	.LVL3:
+  24:src/Scheduler.cpp ****     head = head->next;
+  83              		.loc 1 24 5
+  84              		.loc 1 24 18 is_stmt 0
+  85 0054 03370500 		ld	a4,0(a0)
+  86              		.loc 1 24 10
+  87 0058 23B0E700 		sd	a4,0(a5)
+  25:src/Scheduler.cpp **** 
+  26:src/Scheduler.cpp ****     if (!head) {
+  88              		.loc 1 26 5 is_stmt 1
   89 005c 630A0700 		beq	a4,zero,.L11
+GAS LISTING C:\msys64\tmp\cc4WGUrv.s 			page 3
+
+
   90              	.L9:
-  24:src/Scheduler.cpp ****         tail = nullptr;
-  25:src/Scheduler.cpp ****     }
-GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 3
-
-
-  26:src/Scheduler.cpp **** 
-  27:src/Scheduler.cpp ****     t->next = nullptr;
-  91              		.loc 1 27 5
-  92              		.loc 1 27 13 is_stmt 0
+  27:src/Scheduler.cpp ****         tail = nullptr;
+  28:src/Scheduler.cpp ****     }
+  29:src/Scheduler.cpp **** 
+  30:src/Scheduler.cpp ****     t->next = nullptr;
+  91              		.loc 1 30 5
+  92              		.loc 1 30 13 is_stmt 0
   93 0060 23300500 		sd	zero,0(a0)
-  28:src/Scheduler.cpp ****     return t;
-  94              		.loc 1 28 5 is_stmt 1
+  31:src/Scheduler.cpp ****     return t;
+  94              		.loc 1 31 5 is_stmt 1
   95              	.LVL4:
   96              	.L7:
-  29:src/Scheduler.cpp **** }...
-  97              		.loc 1 29 1 is_stmt 0
+  32:src/Scheduler.cpp **** }...
+  97              		.loc 1 32 1 is_stmt 0
   98 0064 03348100 		ld	s0,8(sp)
   99              		.cfi_remember_state
  100              		.cfi_restore 8
@@ -142,162 +145,169 @@ GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 1
  105              	.LVL5:
  106              	.L11:
  107              		.cfi_restore_state
-  24:src/Scheduler.cpp ****         tail = nullptr;
- 108              		.loc 1 24 9 is_stmt 1
-  24:src/Scheduler.cpp ****         tail = nullptr;
- 109              		.loc 1 24 14 is_stmt 0
+  27:src/Scheduler.cpp ****         tail = nullptr;
+ 108              		.loc 1 27 9 is_stmt 1
+  27:src/Scheduler.cpp ****         tail = nullptr;
+ 109              		.loc 1 27 14 is_stmt 0
  110 0070 23B40700 		sd	zero,8(a5)
  111 0074 6FF0DFFE 		j	.L9
  112              		.cfi_endproc
- 113              	.LFE14:
+ 113              	.LFE12:
  115              	.Letext0:
  116              		.file 2 "src/../h/Scheduler.h"
  117              		.file 3 "src/../h/Thread.h"
  118              		.file 4 "src/../h/../lib/hw.h"
-GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 4
+GAS LISTING C:\msys64\tmp\cc4WGUrv.s 			page 4
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 Scheduler.cpp
-C:\msys64\tmp\cckGt1jM.s:12     .text:0000000000000000 _ZN9Scheduler3putEP6Thread
-C:\msys64\tmp\cckGt1jM.s:16     .text:0000000000000000 .L0 
-C:\msys64\tmp\cckGt1jM.s:18     .text:0000000000000000 .L0 
-C:\msys64\tmp\cckGt1jM.s:19     .text:0000000000000004 .L0 
-C:\msys64\tmp\cckGt1jM.s:21     .text:0000000000000008 .L0 
-C:\msys64\tmp\cckGt1jM.s:23     .text:000000000000000c .L0 
-C:\msys64\tmp\cckGt1jM.s:25     .text:000000000000000c .L0 
-C:\msys64\tmp\cckGt1jM.s:27     .text:0000000000000010 .L0 
-C:\msys64\tmp\cckGt1jM.s:28     .text:0000000000000010 .L0 
-C:\msys64\tmp\cckGt1jM.s:30     .text:0000000000000014 .L0 
-C:\msys64\tmp\cckGt1jM.s:31     .text:0000000000000014 .L0 
-C:\msys64\tmp\cckGt1jM.s:33     .text:0000000000000018 .L0 
-C:\msys64\tmp\cckGt1jM.s:35     .text:000000000000001c .L0 
-C:\msys64\tmp\cckGt1jM.s:37     .text:0000000000000020 .L0 
-C:\msys64\tmp\cckGt1jM.s:40     .text:0000000000000024 .L0 
-C:\msys64\tmp\cckGt1jM.s:41     .text:0000000000000024 .L0 
-C:\msys64\tmp\cckGt1jM.s:44     .text:0000000000000028 .L0 
-C:\msys64\tmp\cckGt1jM.s:45     .text:000000000000002c .L0 
-C:\msys64\tmp\cckGt1jM.s:46     .text:000000000000002c .L0 
-C:\msys64\tmp\cckGt1jM.s:47     .text:000000000000002c .L0 
-C:\msys64\tmp\cckGt1jM.s:49     .text:0000000000000030 .L0 
-C:\msys64\tmp\cckGt1jM.s:52     .text:0000000000000034 .L0 
-C:\msys64\tmp\cckGt1jM.s:54     .text:0000000000000034 .L0 
-C:\msys64\tmp\cckGt1jM.s:55     .text:0000000000000034 .L0 
-C:\msys64\tmp\cckGt1jM.s:57     .text:000000000000003c .L0 
-C:\msys64\tmp\cckGt1jM.s:63     .text:000000000000003c _ZN9Scheduler3getEv
-C:\msys64\tmp\cckGt1jM.s:66     .text:000000000000003c .L0 
-C:\msys64\tmp\cckGt1jM.s:68     .text:000000000000003c .L0 
-C:\msys64\tmp\cckGt1jM.s:69     .text:0000000000000040 .L0 
-C:\msys64\tmp\cckGt1jM.s:71     .text:0000000000000044 .L0 
-C:\msys64\tmp\cckGt1jM.s:73     .text:0000000000000048 .L0 
-C:\msys64\tmp\cckGt1jM.s:76     .text:000000000000004c .L0 
-C:\msys64\tmp\cckGt1jM.s:77     .text:000000000000004c .L0 
-C:\msys64\tmp\cckGt1jM.s:80     .text:0000000000000050 .L0 
-C:\msys64\tmp\cckGt1jM.s:83     .text:0000000000000054 .L0 
-C:\msys64\tmp\cckGt1jM.s:84     .text:0000000000000054 .L0 
-C:\msys64\tmp\cckGt1jM.s:85     .text:0000000000000054 .L0 
-C:\msys64\tmp\cckGt1jM.s:87     .text:0000000000000058 .L0 
-C:\msys64\tmp\cckGt1jM.s:89     .text:000000000000005c .L0 
-C:\msys64\tmp\cckGt1jM.s:92     .text:0000000000000060 .L0 
-C:\msys64\tmp\cckGt1jM.s:93     .text:0000000000000060 .L0 
-C:\msys64\tmp\cckGt1jM.s:97     .text:0000000000000064 .L0 
-C:\msys64\tmp\cckGt1jM.s:98     .text:0000000000000064 .L0 
-C:\msys64\tmp\cckGt1jM.s:99     .text:0000000000000068 .L0 
-C:\msys64\tmp\cckGt1jM.s:100    .text:0000000000000068 .L0 
-C:\msys64\tmp\cckGt1jM.s:101    .text:0000000000000068 .L0 
-C:\msys64\tmp\cckGt1jM.s:103    .text:000000000000006c .L0 
-C:\msys64\tmp\cckGt1jM.s:107    .text:0000000000000070 .L0 
-C:\msys64\tmp\cckGt1jM.s:109    .text:0000000000000070 .L0 
-C:\msys64\tmp\cckGt1jM.s:110    .text:0000000000000070 .L0 
-C:\msys64\tmp\cckGt1jM.s:112    .text:0000000000000078 .L0 
-C:\msys64\tmp\cckGt1jM.s:119    .text:0000000000000078 .L0 
-C:\msys64\tmp\cckGt1jM.s:42     .text:0000000000000028 .L1
-C:\msys64\tmp\cckGt1jM.s:51     .text:0000000000000034 .L6
-C:\msys64\tmp\cckGt1jM.s:38     .text:0000000000000024 .L4
-GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 5
+C:\msys64\tmp\cc4WGUrv.s:12     .text:0000000000000000 _ZN9Scheduler3putEP6Thread
+C:\msys64\tmp\cc4WGUrv.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\cc4WGUrv.s:18     .text:0000000000000000 .L0 
+C:\msys64\tmp\cc4WGUrv.s:19     .text:0000000000000004 .L0 
+C:\msys64\tmp\cc4WGUrv.s:21     .text:0000000000000008 .L0 
+C:\msys64\tmp\cc4WGUrv.s:23     .text:000000000000000c .L0 
+C:\msys64\tmp\cc4WGUrv.s:25     .text:000000000000000c .L0 
+C:\msys64\tmp\cc4WGUrv.s:27     .text:0000000000000010 .L0 
+C:\msys64\tmp\cc4WGUrv.s:28     .text:0000000000000010 .L0 
+C:\msys64\tmp\cc4WGUrv.s:30     .text:0000000000000014 .L0 
+C:\msys64\tmp\cc4WGUrv.s:31     .text:0000000000000014 .L0 
+C:\msys64\tmp\cc4WGUrv.s:33     .text:0000000000000018 .L0 
+C:\msys64\tmp\cc4WGUrv.s:35     .text:000000000000001c .L0 
+C:\msys64\tmp\cc4WGUrv.s:37     .text:0000000000000020 .L0 
+C:\msys64\tmp\cc4WGUrv.s:40     .text:0000000000000024 .L0 
+C:\msys64\tmp\cc4WGUrv.s:41     .text:0000000000000024 .L0 
+C:\msys64\tmp\cc4WGUrv.s:44     .text:0000000000000028 .L0 
+C:\msys64\tmp\cc4WGUrv.s:45     .text:000000000000002c .L0 
+C:\msys64\tmp\cc4WGUrv.s:46     .text:000000000000002c .L0 
+C:\msys64\tmp\cc4WGUrv.s:47     .text:000000000000002c .L0 
+C:\msys64\tmp\cc4WGUrv.s:49     .text:0000000000000030 .L0 
+C:\msys64\tmp\cc4WGUrv.s:52     .text:0000000000000034 .L0 
+C:\msys64\tmp\cc4WGUrv.s:54     .text:0000000000000034 .L0 
+C:\msys64\tmp\cc4WGUrv.s:55     .text:0000000000000034 .L0 
+C:\msys64\tmp\cc4WGUrv.s:57     .text:000000000000003c .L0 
+C:\msys64\tmp\cc4WGUrv.s:63     .text:000000000000003c _ZN9Scheduler3getEv
+C:\msys64\tmp\cc4WGUrv.s:66     .text:000000000000003c .L0 
+C:\msys64\tmp\cc4WGUrv.s:68     .text:000000000000003c .L0 
+C:\msys64\tmp\cc4WGUrv.s:69     .text:0000000000000040 .L0 
+C:\msys64\tmp\cc4WGUrv.s:71     .text:0000000000000044 .L0 
+C:\msys64\tmp\cc4WGUrv.s:73     .text:0000000000000048 .L0 
+C:\msys64\tmp\cc4WGUrv.s:76     .text:000000000000004c .L0 
+C:\msys64\tmp\cc4WGUrv.s:77     .text:000000000000004c .L0 
+C:\msys64\tmp\cc4WGUrv.s:80     .text:0000000000000050 .L0 
+C:\msys64\tmp\cc4WGUrv.s:83     .text:0000000000000054 .L0 
+C:\msys64\tmp\cc4WGUrv.s:84     .text:0000000000000054 .L0 
+C:\msys64\tmp\cc4WGUrv.s:85     .text:0000000000000054 .L0 
+C:\msys64\tmp\cc4WGUrv.s:87     .text:0000000000000058 .L0 
+C:\msys64\tmp\cc4WGUrv.s:89     .text:000000000000005c .L0 
+C:\msys64\tmp\cc4WGUrv.s:92     .text:0000000000000060 .L0 
+C:\msys64\tmp\cc4WGUrv.s:93     .text:0000000000000060 .L0 
+C:\msys64\tmp\cc4WGUrv.s:97     .text:0000000000000064 .L0 
+C:\msys64\tmp\cc4WGUrv.s:98     .text:0000000000000064 .L0 
+C:\msys64\tmp\cc4WGUrv.s:99     .text:0000000000000068 .L0 
+C:\msys64\tmp\cc4WGUrv.s:100    .text:0000000000000068 .L0 
+C:\msys64\tmp\cc4WGUrv.s:101    .text:0000000000000068 .L0 
+C:\msys64\tmp\cc4WGUrv.s:103    .text:000000000000006c .L0 
+C:\msys64\tmp\cc4WGUrv.s:107    .text:0000000000000070 .L0 
+C:\msys64\tmp\cc4WGUrv.s:109    .text:0000000000000070 .L0 
+C:\msys64\tmp\cc4WGUrv.s:110    .text:0000000000000070 .L0 
+C:\msys64\tmp\cc4WGUrv.s:112    .text:0000000000000078 .L0 
+C:\msys64\tmp\cc4WGUrv.s:119    .text:0000000000000078 .L0 
+C:\msys64\tmp\cc4WGUrv.s:42     .text:0000000000000028 .L1
+C:\msys64\tmp\cc4WGUrv.s:51     .text:0000000000000034 .L6
+C:\msys64\tmp\cc4WGUrv.s:38     .text:0000000000000024 .L4
+GAS LISTING C:\msys64\tmp\cc4WGUrv.s 			page 5
 
 
-C:\msys64\tmp\cckGt1jM.s:96     .text:0000000000000064 .L7
-C:\msys64\tmp\cckGt1jM.s:106    .text:0000000000000070 .L11
-C:\msys64\tmp\cckGt1jM.s:90     .text:0000000000000060 .L9
-C:\msys64\tmp\cckGt1jM.s:611    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
-C:\msys64\tmp\cckGt1jM.s:1435   .debug_str:0000000000000239 .LASF43
-C:\msys64\tmp\cckGt1jM.s:1425   .debug_str:00000000000001ea .LASF44
-C:\msys64\tmp\cckGt1jM.s:1439   .debug_str:0000000000000314 .LASF45
-C:\msys64\tmp\cckGt1jM.s:8      .text:0000000000000000 .Ltext0
-C:\msys64\tmp\cckGt1jM.s:115    .text:0000000000000078 .Letext0
-C:\msys64\tmp\cckGt1jM.s:1357   .debug_line:0000000000000000 .Ldebug_line0
-C:\msys64\tmp\cckGt1jM.s:1387   .debug_str:00000000000000b5 .LASF0
-C:\msys64\tmp\cckGt1jM.s:1453   .debug_str:0000000000000399 .LASF46
-C:\msys64\tmp\cckGt1jM.s:1391   .debug_str:00000000000000d2 .LASF47
-C:\msys64\tmp\cckGt1jM.s:1409   .debug_str:0000000000000182 .LASF13
-C:\msys64\tmp\cckGt1jM.s:1469   .debug_str:0000000000000408 .LASF48
-C:\msys64\tmp\cckGt1jM.s:1457   .debug_str:00000000000003aa .LASF49
-C:\msys64\tmp\cckGt1jM.s:1431   .debug_str:0000000000000211 .LASF50
-C:\msys64\tmp\cckGt1jM.s:1371   .debug_str:0000000000000057 .LASF51
-C:\msys64\tmp\cckGt1jM.s:1423   .debug_str:00000000000001d8 .LASF19
-C:\msys64\tmp\cckGt1jM.s:1421   .debug_str:00000000000001d3 .LASF1
-C:\msys64\tmp\cckGt1jM.s:1461   .debug_str:00000000000003cc .LASF2
-C:\msys64\tmp\cckGt1jM.s:1397   .debug_str:0000000000000121 .LASF3
-C:\msys64\tmp\cckGt1jM.s:1383   .debug_str:000000000000009f .LASF52
-C:\msys64\tmp\cckGt1jM.s:1455   .debug_str:00000000000003a2 .LASF4
-C:\msys64\tmp\cckGt1jM.s:1429   .debug_str:0000000000000202 .LASF6
-C:\msys64\tmp\cckGt1jM.s:1447   .debug_str:000000000000036e .LASF5
-C:\msys64\tmp\cckGt1jM.s:1465   .debug_str:00000000000003e4 .LASF7
-C:\msys64\tmp\cckGt1jM.s:1445   .debug_str:0000000000000369 .LASF53
-C:\msys64\tmp\cckGt1jM.s:1437   .debug_str:000000000000030c .LASF54
-C:\msys64\tmp\cckGt1jM.s:1427   .debug_str:00000000000001fc .LASF8
-C:\msys64\tmp\cckGt1jM.s:1477   .debug_str:0000000000000444 .LASF10
-C:\msys64\tmp\cckGt1jM.s:1415   .debug_str:00000000000001b3 .LASF9
-C:\msys64\tmp\cckGt1jM.s:1401   .debug_str:0000000000000136 .LASF11
-C:\msys64\tmp\cckGt1jM.s:1393   .debug_str:00000000000000eb .LASF12
-C:\msys64\tmp\cckGt1jM.s:1475   .debug_str:000000000000042b .LASF14
-C:\msys64\tmp\cckGt1jM.s:1459   .debug_str:00000000000003bf .LASF15
-C:\msys64\tmp\cckGt1jM.s:1369   .debug_str:000000000000003b .LASF16
-C:\msys64\tmp\cckGt1jM.s:1441   .debug_str:0000000000000343 .LASF17
-C:\msys64\tmp\cckGt1jM.s:1443   .debug_str:000000000000034f .LASF18
-C:\msys64\tmp\cckGt1jM.s:1473   .debug_str:0000000000000417 .LASF20
-C:\msys64\tmp\cckGt1jM.s:1359   .debug_str:0000000000000000 .LASF55
-C:\msys64\tmp\cckGt1jM.s:1405   .debug_str:0000000000000157 .LASF56
-C:\msys64\tmp\cckGt1jM.s:1385   .debug_str:00000000000000a7 .LASF57
-C:\msys64\tmp\cckGt1jM.s:1395   .debug_str:00000000000000f6 .LASF58
-C:\msys64\tmp\cckGt1jM.s:1471   .debug_str:0000000000000412 .LASF21
-C:\msys64\tmp\cckGt1jM.s:1417   .debug_str:00000000000001bc .LASF22
-C:\msys64\tmp\cckGt1jM.s:1379   .debug_str:000000000000008d .LASF23
-C:\msys64\tmp\cckGt1jM.s:1451   .debug_str:0000000000000391 .LASF24
-C:\msys64\tmp\cckGt1jM.s:1363   .debug_str:000000000000001f .LASF25
-C:\msys64\tmp\cckGt1jM.s:1413   .debug_str:00000000000001aa .LASF26
-C:\msys64\tmp\cckGt1jM.s:1361   .debug_str:000000000000000e .LASF59
-C:\msys64\tmp\cckGt1jM.s:1367   .debug_str:0000000000000030 .LASF27
-C:\msys64\tmp\cckGt1jM.s:1403   .debug_str:000000000000014c .LASF28
-C:\msys64\tmp\cckGt1jM.s:1433   .debug_str:000000000000022c .LASF29
-C:\msys64\tmp\cckGt1jM.s:1411   .debug_str:0000000000000197 .LASF30
-C:\msys64\tmp\cckGt1jM.s:1399   .debug_str:0000000000000128 .LASF31
-C:\msys64\tmp\cckGt1jM.s:1375   .debug_str:0000000000000081 .LASF33
-GAS LISTING C:\msys64\tmp\cckGt1jM.s 			page 6
+C:\msys64\tmp\cc4WGUrv.s:96     .text:0000000000000064 .L7
+C:\msys64\tmp\cc4WGUrv.s:106    .text:0000000000000070 .L11
+C:\msys64\tmp\cc4WGUrv.s:90     .text:0000000000000060 .L9
+C:\msys64\tmp\cc4WGUrv.s:677    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\cc4WGUrv.s:1404   .debug_str:0000000000000059 .LASF49
+C:\msys64\tmp\cc4WGUrv.s:1512   .debug_str:0000000000000470 .LASF50
+C:\msys64\tmp\cc4WGUrv.s:1488   .debug_str:00000000000003a5 .LASF51
+C:\msys64\tmp\cc4WGUrv.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\cc4WGUrv.s:115    .text:0000000000000078 .Letext0
+C:\msys64\tmp\cc4WGUrv.s:1386   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\cc4WGUrv.s:1482   .debug_str:000000000000036e .LASF0
+C:\msys64\tmp\cc4WGUrv.s:1472   .debug_str:0000000000000320 .LASF52
+C:\msys64\tmp\cc4WGUrv.s:1448   .debug_str:0000000000000285 .LASF53
+C:\msys64\tmp\cc4WGUrv.s:1504   .debug_str:0000000000000432 .LASF11
+C:\msys64\tmp\cc4WGUrv.s:1458   .debug_str:00000000000002cc .LASF54
+C:\msys64\tmp\cc4WGUrv.s:1510   .debug_str:000000000000045b .LASF55
+C:\msys64\tmp\cc4WGUrv.s:1460   .debug_str:00000000000002d6 .LASF56
+C:\msys64\tmp\cc4WGUrv.s:1452   .debug_str:00000000000002a7 .LASF57
+C:\msys64\tmp\cc4WGUrv.s:1446   .debug_str:0000000000000273 .LASF19
+C:\msys64\tmp\cc4WGUrv.s:1412   .debug_str:0000000000000168 .LASF1
+C:\msys64\tmp\cc4WGUrv.s:1456   .debug_str:00000000000002c7 .LASF2
+C:\msys64\tmp\cc4WGUrv.s:1506   .debug_str:0000000000000447 .LASF3
+C:\msys64\tmp\cc4WGUrv.s:1390   .debug_str:000000000000000d .LASF58
+C:\msys64\tmp\cc4WGUrv.s:1514   .debug_str:0000000000000482 .LASF4
+C:\msys64\tmp\cc4WGUrv.s:1400   .debug_str:000000000000003e .LASF6
+C:\msys64\tmp\cc4WGUrv.s:1434   .debug_str:000000000000020f .LASF5
+C:\msys64\tmp\cc4WGUrv.s:1474   .debug_str:0000000000000329 .LASF7
+C:\msys64\tmp\cc4WGUrv.s:1436   .debug_str:0000000000000217 .LASF8
+C:\msys64\tmp\cc4WGUrv.s:1444   .debug_str:000000000000024d .LASF9
+C:\msys64\tmp\cc4WGUrv.s:1396   .debug_str:000000000000002a .LASF59
+C:\msys64\tmp\cc4WGUrv.s:1416   .debug_str:0000000000000188 .LASF60
+C:\msys64\tmp\cc4WGUrv.s:1466   .debug_str:000000000000030c .LASF61
+C:\msys64\tmp\cc4WGUrv.s:1422   .debug_str:00000000000001c0 .LASF62
+C:\msys64\tmp\cc4WGUrv.s:1496   .debug_str:00000000000003fa .LASF10
+C:\msys64\tmp\cc4WGUrv.s:1408   .debug_str:0000000000000148 .LASF12
+C:\msys64\tmp\cc4WGUrv.s:1442   .debug_str:0000000000000240 .LASF13
+C:\msys64\tmp\cc4WGUrv.s:1500   .debug_str:000000000000040c .LASF14
+C:\msys64\tmp\cc4WGUrv.s:1454   .debug_str:00000000000002bb .LASF15
+C:\msys64\tmp\cc4WGUrv.s:1484   .debug_str:0000000000000378 .LASF16
+C:\msys64\tmp\cc4WGUrv.s:1494   .debug_str:00000000000003ef .LASF17
+C:\msys64\tmp\cc4WGUrv.s:1476   .debug_str:0000000000000338 .LASF18
+C:\msys64\tmp\cc4WGUrv.s:1414   .debug_str:000000000000016d .LASF20
+C:\msys64\tmp\cc4WGUrv.s:1438   .debug_str:0000000000000224 .LASF63
+C:\msys64\tmp\cc4WGUrv.s:1406   .debug_str:000000000000012c .LASF64
+C:\msys64\tmp\cc4WGUrv.s:1392   .debug_str:0000000000000015 .LASF65
+C:\msys64\tmp\cc4WGUrv.s:1420   .debug_str:0000000000000195 .LASF66
+C:\msys64\tmp\cc4WGUrv.s:1520   .debug_str:00000000000004b2 .LASF21
+C:\msys64\tmp\cc4WGUrv.s:1450   .debug_str:000000000000029e .LASF22
+C:\msys64\tmp\cc4WGUrv.s:1430   .debug_str:0000000000000202 .LASF23
+C:\msys64\tmp\cc4WGUrv.s:1470   .debug_str:000000000000031b .LASF24
+C:\msys64\tmp\cc4WGUrv.s:1468   .debug_str:0000000000000315 .LASF25
+C:\msys64\tmp\cc4WGUrv.s:1432   .debug_str:0000000000000207 .LASF26
+C:\msys64\tmp\cc4WGUrv.s:1502   .debug_str:0000000000000428 .LASF27
+C:\msys64\tmp\cc4WGUrv.s:1464   .debug_str:0000000000000304 .LASF28
+C:\msys64\tmp\cc4WGUrv.s:1428   .debug_str:00000000000001f9 .LASF29
+C:\msys64\tmp\cc4WGUrv.s:1478   .debug_str:0000000000000351 .LASF30
+C:\msys64\tmp\cc4WGUrv.s:1388   .debug_str:0000000000000000 .LASF31
+GAS LISTING C:\msys64\tmp\cc4WGUrv.s 			page 6
 
 
-C:\msys64\tmp\cckGt1jM.s:1419   .debug_str:00000000000001c1 .LASF32
-C:\msys64\tmp\cckGt1jM.s:1365   .debug_str:0000000000000029 .LASF34
-C:\msys64\tmp\cckGt1jM.s:1463   .debug_str:00000000000003d1 .LASF35
-C:\msys64\tmp\cckGt1jM.s:1389   .debug_str:00000000000000bf .LASF36
-C:\msys64\tmp\cckGt1jM.s:1407   .debug_str:0000000000000173 .LASF37
-C:\msys64\tmp\cckGt1jM.s:1381   .debug_str:0000000000000093 .LASF38
-C:\msys64\tmp\cckGt1jM.s:1373   .debug_str:000000000000006b .LASF39
-C:\msys64\tmp\cckGt1jM.s:1449   .debug_str:000000000000037b .LASF40
-C:\msys64\tmp\cckGt1jM.s:1467   .debug_str:0000000000000403 .LASF41
-C:\msys64\tmp\cckGt1jM.s:64     .text:000000000000003c .LFB14
-C:\msys64\tmp\cckGt1jM.s:113    .text:0000000000000078 .LFE14
-C:\msys64\tmp\cckGt1jM.s:1377   .debug_str:0000000000000088 .LASF42
-C:\msys64\tmp\cckGt1jM.s:1322   .debug_loc:0000000000000000 .LLST0
-C:\msys64\tmp\cckGt1jM.s:1333   .debug_loc:0000000000000036 .LLST1
-C:\msys64\tmp\cckGt1jM.s:13     .text:0000000000000000 .LFB13
-C:\msys64\tmp\cckGt1jM.s:58     .text:000000000000003c .LFE13
-C:\msys64\tmp\cckGt1jM.s:67     .text:000000000000003c .LVL1
-C:\msys64\tmp\cckGt1jM.s:78     .text:0000000000000050 .LVL2
-C:\msys64\tmp\cckGt1jM.s:82     .text:0000000000000054 .LVL3
-C:\msys64\tmp\cckGt1jM.s:95     .text:0000000000000064 .LVL4
-C:\msys64\tmp\cckGt1jM.s:105    .text:0000000000000070 .LVL5
-C:\msys64\tmp\cckGt1jM.s:120    .debug_info:0000000000000000 .Ldebug_info0
+C:\msys64\tmp\cc4WGUrv.s:1424   .debug_str:00000000000001d6 .LASF32
+C:\msys64\tmp\cc4WGUrv.s:1508   .debug_str:000000000000044e .LASF33
+C:\msys64\tmp\cc4WGUrv.s:1516   .debug_str:000000000000048f .LASF34
+C:\msys64\tmp\cc4WGUrv.s:1486   .debug_str:0000000000000392 .LASF35
+C:\msys64\tmp\cc4WGUrv.s:1440   .debug_str:0000000000000232 .LASF36
+C:\msys64\tmp\cc4WGUrv.s:1410   .debug_str:0000000000000161 .LASF38
+C:\msys64\tmp\cc4WGUrv.s:1426   .debug_str:00000000000001e7 .LASF37
+C:\msys64\tmp\cc4WGUrv.s:1394   .debug_str:0000000000000023 .LASF39
+C:\msys64\tmp\cc4WGUrv.s:1498   .debug_str:0000000000000405 .LASF40
+C:\msys64\tmp\cc4WGUrv.s:1480   .debug_str:000000000000035b .LASF41
+C:\msys64\tmp\cc4WGUrv.s:1462   .debug_str:00000000000002f1 .LASF42
+C:\msys64\tmp\cc4WGUrv.s:1398   .debug_str:000000000000002f .LASF43
+C:\msys64\tmp\cc4WGUrv.s:1402   .debug_str:000000000000004d .LASF44
+C:\msys64\tmp\cc4WGUrv.s:1492   .debug_str:00000000000003d9 .LASF45
+C:\msys64\tmp\cc4WGUrv.s:1518   .debug_str:000000000000049c .LASF46
+C:\msys64\tmp\cc4WGUrv.s:1418   .debug_str:0000000000000190 .LASF47
+C:\msys64\tmp\cc4WGUrv.s:64     .text:000000000000003c .LFB12
+C:\msys64\tmp\cc4WGUrv.s:113    .text:0000000000000078 .LFE12
+C:\msys64\tmp\cc4WGUrv.s:1490   .debug_str:00000000000003d4 .LASF48
+C:\msys64\tmp\cc4WGUrv.s:1351   .debug_loc:0000000000000000 .LLST0
+C:\msys64\tmp\cc4WGUrv.s:1362   .debug_loc:0000000000000036 .LLST1
+C:\msys64\tmp\cc4WGUrv.s:13     .text:0000000000000000 .LFB11
+C:\msys64\tmp\cc4WGUrv.s:58     .text:000000000000003c .LFE11
+C:\msys64\tmp\cc4WGUrv.s:67     .text:000000000000003c .LVL1
+C:\msys64\tmp\cc4WGUrv.s:78     .text:0000000000000050 .LVL2
+C:\msys64\tmp\cc4WGUrv.s:82     .text:0000000000000054 .LVL3
+C:\msys64\tmp\cc4WGUrv.s:95     .text:0000000000000064 .LVL4
+C:\msys64\tmp\cc4WGUrv.s:105    .text:0000000000000070 .LVL5
+C:\msys64\tmp\cc4WGUrv.s:120    .debug_info:0000000000000000 .Ldebug_info0
 
 NO UNDEFINED SYMBOLS
