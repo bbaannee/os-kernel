@@ -1,25 +1,27 @@
 #include "../h/Console.h"
 #include "../lib/hw.h"
 
-Buffer* kConsole::inbuff = nullptr;
-Buffer* kConsole::outbuff = nullptr;
-kSemaphore* kConsole::inSem = nullptr;
-kSemaphore* kConsole::outSem = nullptr;
+Buffer* Console::inbuff = nullptr;
+Buffer* Console::outbuff = nullptr;
+_sem* Console::inSem = nullptr;
+_sem* Console::outSem = nullptr;
 
-bool kConsole::initialized = false;
+bool Console::initialized = false;
 
-void kConsole::ensureInit() {
+void Console::ensureInit() {
     if (initialized) return;
     inbuff  = new Buffer();
     outbuff = new Buffer();
-    inSem   = new kSemaphore(0);
-    outSem  = new kSemaphore(256);
+    inSem   = new _sem(0);
+    outSem  = new _sem(256);
     initialized = true;
 }
 
 
-char kConsole::getc() {
+
+char Console::getc() {
     ensureInit();
+
     int status = inSem->wait();
 
     if (status < 0) {
@@ -29,7 +31,7 @@ char kConsole::getc() {
     return inbuff->get();
 }
 
-void kConsole::putc(char c) {
+void Console::putc(char c) {
     ensureInit();
     outSem->wait();
     outbuff->put(c);

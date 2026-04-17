@@ -3,7 +3,7 @@
 #include "../h/Thread.h"
 #include "../h/printer.h"
 
-void Scheduler::put(kThread* t) {
+void Scheduler::put(_thread* t) {
     if (!t) return;
     t->next = nullptr;
 
@@ -15,12 +15,12 @@ void Scheduler::put(kThread* t) {
     tail = t;
 }
 
-kThread* Scheduler::get() {
+_thread* Scheduler::get() {
     if (!head) {
         return nullptr;
     }
 
-    kThread* t = head;
+    _thread* t = head;
     head = head->next;
 
     if (!head) {

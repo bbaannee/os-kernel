@@ -1,4 +1,5 @@
 #include "../h/MemoryAllocator.h"
+#include "../lib/console.h"
 bool MemoryAllocator::isinit = false;
 MemoryAllocator::segmentHeader* MemoryAllocator::head = nullptr;
 int MemoryAllocator::kfree(void *addr) {

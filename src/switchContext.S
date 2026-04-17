@@ -1,9 +1,9 @@
-# void kThread::switchContext(Context *oldContext, Context *newContext)
+# void Thread::switchContext(Context *oldContext, Context *newContext)
 # a0 = &old->context, a1 = &new->context
 
-.global _ZN7kThread13switchContextEPNS_7ContextES1_
-.type _ZN7kThread13switchContextEPNS_7ContextES1_, @function
-_ZN7kThread13switchContextEPNS_7ContextES1_:
+.global _ZN7_thread13switchContextEPNS_7ContextES1_
+.type _ZN7_thread13switchContextEPNS_7ContextES1_, @function
+_ZN7_thread13switchContextEPNS_7ContextES1_:
 
    
     sd ra, 0(a0)

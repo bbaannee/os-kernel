@@ -6,19 +6,19 @@
 #include "../h/Scheduler.h"
 #include "../h/syscall_c.h"
 
-kThread* kThread::running = nullptr;
+_thread* _thread::running = nullptr;
 
-uint64 kThread::timeSliceCounter = 0;
+uint64 _thread::timeSliceCounter = 0;
 
-kThread* kThread::sleepingHead = nullptr;
+_thread* _thread::sleepingHead = nullptr;
 
-kThread* kThread::createkThread(Body body, void* args, void* stack) {
-    return new kThread(body, args, stack, DEFAULT_TIME_SLICE);
+_thread* _thread::createThread(Body body, void* args, void* stack) {
+    return new _thread(body, args, stack, DEFAULT_TIME_SLICE);
 }
 
 
-void kThread::dispatch() {
-    kThread* old = running;
+void _thread::dispatch() {
+    _thread* old = running;
 
     // Ako nije gotova, vrati je u Scheduler
     if (old && !old->finished && old ->isReady) {
@@ -35,11 +35,11 @@ void kThread::dispatch() {
 }
 
 
-void kThread::time_sleep(time_t n) {
+void _thread::time_sleep(time_t n) {
     if (n == 0) return;
 
-    kThread* curr = sleepingHead;
-    kThread* prev = nullptr;
+    _thread* curr = sleepingHead;
+    _thread* prev = nullptr;
 
     while (curr && n >= curr->timeSleeping) {
         n -= curr->timeSleeping;
@@ -47,27 +47,27 @@ void kThread::time_sleep(time_t n) {
         curr = curr->waitnext;
     }
 
-    kThread::running->timeSleeping = n;
-    kThread::running->waitnext = curr;
+    _thread::running->timeSleeping = n;
+    _thread::running->waitnext = curr;
 
     if (!prev) {
-        sleepingHead = kThread::running;
+        sleepingHead = _thread::running;
     } else {
-        prev->waitnext = kThread::running;
+        prev->waitnext = _thread::running;
     }
 
     if (curr) {
         curr->timeSleeping -= n;
     }
 
-    kThread::running->isReady = false;
-    kThread::dispatch();
+    _thread::running->isReady = false;
+    _thread::dispatch();
 }
 
-kThread::kThread(Body body, void* args, void* stack_space ,uint64 time): next(nullptr), waitnext(nullptr), body(body), args(args), stack((uint64*)stack_space),
+_thread::_thread(Body body, void* args, void* stack_space ,uint64 time): next(nullptr), waitnext(nullptr), body(body), args(args), stack((uint64*)stack_space),
                                                                        timeSlice(time), isReady(true), finished(false), semStatus(0), timeSleeping(0) {
     if (body != nullptr) {
-        context.ra = (uint64)&kThreadWrapper;
+        context.ra = (uint64)&threadWrapper;
         context.sp = ((uint64)stack_space + DEFAULT_STACK_SIZE) & ~0xFUL;
     } else {
         context.ra = 0;
@@ -75,12 +75,12 @@ kThread::kThread(Body body, void* args, void* stack_space ,uint64 time): next(nu
     }
 }
 
-void kThread::kThreadWrapper(){
+void _thread::threadWrapper(){
 
 Riscv::popSppSpie();
 if (running->body)running -> body(running->args);
 
 running -> setFinished(true);
 
-kThread_dispatch();
+thread_dispatch();
 }

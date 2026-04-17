@@ -5,7 +5,7 @@
 void printString(char const *string)
 {
     // NEMOJ gasiti prekide ovde! 
-    // Tvoj novi kConsole::putc je kThread-safe i koristi semafore.
+    // Tvoj novi Console::putc je thread-safe i koristi semafore.
     while (*string != '\0')
     {
         putc(*string); // Koristi sistemski poziv (0x42)

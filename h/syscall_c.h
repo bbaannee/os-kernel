@@ -10,15 +10,15 @@
 void* mem_alloc(size_t size);
 int mem_free(void*);
 
-class _kThread;
-typedef _kThread* kThread_t;
-int kThread_create (
- kThread_t* handle,
+class _thread;
+typedef _thread* thread_t;
+int thread_create (
+ thread_t* handle,
  void(*start_routine)(void*),
  void* arg
 );
-void kThread_dispatch();
-int kThread_exit();
+void thread_dispatch();
+int thread_exit();
 
 class _sem;
 typedef _sem* sem_t;

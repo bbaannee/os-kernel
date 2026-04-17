@@ -2,20 +2,20 @@
 // Created by os on 4/6/26.
 //
 
-#ifndef PROJECT_BASE_V1_1_kSemaphore_H
-#define PROJECT_BASE_V1_1_kSemaphore_H
+#ifndef PROJECT_BASE_V1_1_SEMAPHORE_H
+#define PROJECT_BASE_V1_1_SEMAPHORE_H
 #include "../lib/hw.h"
 #include "../h/MemoryAllocator.h"
-class kThread;
+class _thread;
 
-class kSemaphore {
+class _sem {
 public:
 
     void* operator new(size_t size){
         void* ptr = MemoryAllocator::kmalloc(size);
         return ptr;
     }
-    kSemaphore(int init);
+    _sem(int init);
 
     int wait();
 
@@ -25,18 +25,18 @@ public:
 
 private:
 
-    void add(kThread* t);
+    void add(_thread* t);
 
-    kThread* get ();
+    _thread* get ();
 
 
 
     int val;
 
-    kThread* head;
-    kThread* tail;
+    _thread* head;
+    _thread* tail;
     bool closed;
 };
 
 
-#endif //PROJECT_BASE_V1_1_kSemaphore_H
+#endif //PROJECT_BASE_V1_1_SEMAPHORE_H

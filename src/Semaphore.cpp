@@ -1,29 +1,29 @@
 #include "../h/Semaphore.h"
 #include "../h/Thread.h"
 
-kSemaphore::kSemaphore(int init):val(init), head(nullptr), tail(nullptr), closed(false) {
+_sem::_sem(int init):val(init), head(nullptr), tail(nullptr), closed(false) {
 }
 
-int kSemaphore::wait() {
-    if (!kThread::running) return -1;
+int _sem::wait() {
+    if (!_thread::running) return -1;
     if (val > 0) {
         val--;
     } else {
-        kThread::running->isReady = false;
-        kThread::running->semStatus = 0;
+        _thread::running->isReady = false;
+        _thread::running->semStatus = 0;
 
-        add(kThread::running);
-        kThread::dispatch();
+        add(_thread::running);
+        _thread::dispatch();
 
-        if (kThread::running->semStatus < 0) {
+        if (_thread::running->semStatus < 0) {
             return -1;
         }
     }
     return 0;
 }
 
-int kSemaphore::signal() {
-    kThread* t = get();
+int _sem::signal() {
+    _thread* t = get();
     if (t) {
         t->isReady = true;
         Scheduler::instance().put(t);
@@ -34,7 +34,7 @@ int kSemaphore::signal() {
     return 0;
 }
 
-void kSemaphore::add(kThread* t) {
+void _sem::add(_thread* t) {
     if (!t) return;
     t->waitnext = nullptr;
 
@@ -45,12 +45,12 @@ void kSemaphore::add(kThread* t) {
     }
     tail = t;
 }
-kThread* kSemaphore::get() {
+_thread* _sem::get() {
     if (!head) {
         return nullptr;
     }
 
-    kThread* t = head;
+    _thread* t = head;
     head = head->waitnext;
 
     if (!head) {
@@ -61,11 +61,11 @@ kThread* kSemaphore::get() {
     return t;
 }
 
-int kSemaphore::close() {
+int _sem::close() {
     closed = true;
 
     while (head) {
-        kThread* t = get();
+        _thread* t = get();
         if (t) {
             t->isReady = true;
 
