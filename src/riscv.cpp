@@ -114,14 +114,14 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 				break;
 			}
 			case 0x41: {
-				char c = Console::getc();
+				char c = _console::getc();
 				writeARegister(0, (uint64)c);
 				break;
 			}
 
 			case 0x42: { // putc
 				char c = (char)a1; // Karakter koji je korisnik prosledio
-				Console::putc(c);
+				_console::putc(c);
 				break;
 			}
 			default: {
@@ -138,17 +138,17 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
     	if (irq == CONSOLE_IRQ) { // Proveravamo da li je prekid stigao baš sa konzole (obično 10)
 
     		// RX deo: Čitamo sve dok hardver ima podataka I dok imamo gde da ih smestimo
-    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x01) && !Console::getInBuff()->isFull()) {
+    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x01) && !_console::getInBuff()->isFull()) {
     		char c = *((volatile uint8*)CONSOLE_RX_DATA);
-    		Console::getInBuff()->put(c);
-    		Console::getInSem()->signal();
+    		_console::getInBuff()->put(c);
+    		_console::getInSem()->signal();
     	}
 
     	// TX deo: Šaljemo sve dok je hardver spreman I dok imamo šta da pošaljemo
-    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x20) && !Console::getOutBuff()->isEmpty()) {
-    		char c = Console::getOutBuff()->get();
+    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x20) && !_console::getOutBuff()->isEmpty()) {
+    		char c = _console::getOutBuff()->get();
     		*((volatile uint8*)CONSOLE_TX_DATA) = (uint8)c;
-    		Console::getOutSem()->signal();
+    		_console::getOutSem()->signal();
     	}
     	}
 

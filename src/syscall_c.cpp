@@ -1,6 +1,7 @@
-#include "../h/syscall_c.h"
+#include "../h/syscall_c.hpp"
 #include  "../h/riscv.h"
 #include "../lib/mem.h"
+#include "../h/Console.h"
 void *mem_alloc(size_t size) {
     size_t blocks = (size + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
 
@@ -119,6 +120,7 @@ int time_sleep(time_t t) {
 }
 
 char getc() {
+     sem_wait(reinterpret_cast<sem_t>(_console::getInSem()));
     Riscv::writeARegister(0, 0x41);
 
     __asm__ volatile("ecall");
@@ -128,7 +130,7 @@ char getc() {
 }
 
 void putc(char c) {
-
+    sem_wait(reinterpret_cast<sem_t>(_console::getOutSem()));
     Riscv::writeARegister(1, (uint64)c);
     Riscv::writeARegister(0, 0x42);
 
@@ -136,20 +138,3 @@ void putc(char c) {
 
 }
 
-void* operator new(size_t size) {
-    return mem_alloc(size);
-}
-
-
-void* operator new[](size_t size) {
-    return mem_alloc(size);
-}
-
-
-void operator delete(void* ptr) noexcept {
-    mem_free(ptr);
-}
-
-void operator delete[](void* ptr) noexcept {
-    mem_free(ptr);
-}

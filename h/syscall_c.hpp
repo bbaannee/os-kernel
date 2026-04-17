@@ -39,10 +39,6 @@ char getc ();
 
 void putc (char);
 
-void* operator new(size_t size);
-void* operator new[](size_t size);
-void operator delete(void* ptr) noexcept;
-void operator delete[](void* ptr) noexcept;
 
 
 #endif //PROJECT_BASE_SYSCALL_C_H

@@ -1,41 +1,94 @@
-#include "../lib/hw.h"
-#include "../h/syscall_c.h"
+#include "../h/syscall_cpp.hpp"
+#include "../h/printer.h"
 #include "../h/riscv.h"
 #include "../h/Thread.h"
-#include "../h/Console.h" // Obavezno uključi zaglavlje
-#include "../h/workers.h"
-#include "../h/printer.h"
+
+// 1. Testiranje nasleđivanja: Nit koja čeka na semaforu
+class WorkerThread : public Thread {
+private:
+    Semaphore* sem;
+    const char* name;
+public:
+    WorkerThread(const char* n, Semaphore* s) : Thread(), sem(s), name(n) {}
+
+    void run() override {
+        printString(name);
+        printString(": Cekam na semaforu...\n");
+        
+        sem->wait(); // Ovde nit mora da stane!
+        
+        printString(name);
+        printString(": Docekao signal i nastavljam rad!\n");
+        
+        for(int i = 0; i < 3; i++) {
+            printString(name);
+            printString(": Radi...\n");
+            Thread::sleep(5);
+        }
+    }
+};
+
 void idlef(void*) {
-    while (1) thread_dispatch();
+    while (1) Thread::dispatch();
 }
+
 int main() {
+    // --- INICIJALIZACIJA PRE UPALJENIH PREKIDA ---
+    
+    // Postavi trap handler
     Riscv::w_stvec((uint64) &Riscv::supervisorTrap);
 
-    // 3. Postavi main nit
-    thread_t mainThr;
-    thread_create(&mainThr, nullptr, nullptr);
-    _thread::running = (_thread*)mainThr;
+    // Registruj main nit
+    thread_t mainHandle;
+    thread_create(&mainHandle, nullptr, nullptr);
+    _thread::running = (_thread*)mainHandle;
 
-    printString("System initialized. Main thread started.\n");
+    // Kreiraj idle nit
+    thread_t idleHandle;
+    thread_create(&idleHandle, idlef, nullptr);
 
-    // 4. Kreiranje semafora za sinhronizaciju ispisa
-    sem_t ispisSem;
-    sem_open(&ispisSem, 1);
+    printString("--- Testiranje C++ API (Semaphore & Inheritance) ---\n");
 
-    // 5. Kreiranje radnih niti i idle niti
-    thread_t threads[2];
-    thread_t idle;
-    thread_create(&threads[0], workerBodyA, ispisSem);
-    thread_create(&threads[1], workerBodyB, ispisSem);
-    thread_create(&idle, idlef, nullptr);
+    // Kreiraj semafor (vrednost 0 znači da će prvi wait() odmah blokirati)
+    Semaphore* testSem = new Semaphore(0);
+
+    // Kreiraj niti preko nasleđivanja (ovo testira tvoj 'wrapper')
+    WorkerThread* thr1 = new WorkerThread("NIT_1", testSem);
+    WorkerThread* thr2 = new WorkerThread("NIT_2", testSem);
+
+    // Startuj niti (one će se odmah blokirati na semaforu)
+    thr1->start();
+    thr2->start();
+
+    // --- PALJENJE PREKIDA ---
     Riscv::ms_sstatus(Riscv::SSTATUS_SIE);
 
-    while (!(((_thread*)threads[0])->isFinished() && ((_thread*)threads[1])->isFinished())) {
-        time_sleep(10); // Spavaj malo da ne trošiš CPU dok čekaš
+    // Main malo spava dok niti čekaju
+    for(int i = 0; i < 2; i++) {
+        printString("Main: Niti bi trebalo da su blokirane, ja spavam...\n");
+        Thread::sleep(15);
     }
 
-    sem_close(ispisSem);
+    // Puštamo prvu nit
+    printString("Main: Signaliziram prvi put...\n");
+    testSem->signal();
+    Thread::sleep(10);
+
+    // Puštamo drugu nit
+    printString("Main: Signaliziram drugi put...\n");
+    testSem->signal();
+
+    // Čekamo da sve završe
+    for(int i = 0; i < 5; i++) {
+        Thread::sleep(10);
+    }
+
     printString("Test zavrsen.\n");
+
+    // Čišćenje memorije
+    delete thr1;
+    delete thr2;
+    delete testSem;
+
     return 0;
 }
-

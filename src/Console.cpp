@@ -1,14 +1,14 @@
 #include "../h/Console.h"
 #include "../lib/hw.h"
 
-Buffer* Console::inbuff = nullptr;
-Buffer* Console::outbuff = nullptr;
-_sem* Console::inSem = nullptr;
-_sem* Console::outSem = nullptr;
+Buffer* _console::inbuff = nullptr;
+Buffer* _console::outbuff = nullptr;
+_sem* _console::inSem = nullptr;
+_sem* _console::outSem = nullptr;
 
-bool Console::initialized = false;
+bool _console::initialized = false;
 
-void Console::ensureInit() {
+void _console::ensureInit() {
     if (initialized) return;
     inbuff  = new Buffer();
     outbuff = new Buffer();
@@ -19,26 +19,27 @@ void Console::ensureInit() {
 
 
 
-char Console::getc() {
+char _console::getc() {
     ensureInit();
-
-    int status = inSem->wait();
-
-    if (status < 0) {
-        return -1;
-    }
 
     return inbuff->get();
 }
 
-void Console::putc(char c) {
+void _console::putc(char c) {
     ensureInit();
-    outSem->wait();
     outbuff->put(c);
 
-    if (*((volatile uint8*)CONSOLE_STATUS) & 0x20) {
-        char toSend = outbuff->get();
-        *((volatile uint8*)CONSOLE_TX_DATA) = (uint8)toSend;
-        outSem->signal();
-    }
+    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x01) && !_console::getInBuff()->isFull()) {
+    		char c = *((volatile uint8*)CONSOLE_RX_DATA);
+    		_console::getInBuff()->put(c);
+    		_console::getInSem()->signal();
+    	}
+
+    	// TX deo: Šaljemo sve dok je hardver spreman I dok imamo šta da pošaljemo
+    	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x20) && !_console::getOutBuff()->isEmpty()) {
+    		char c = _console::getOutBuff()->get();
+    		*((volatile uint8*)CONSOLE_TX_DATA) = (uint8)c;
+    		_console::getOutSem()->signal();
+    	}
+    	
 }

@@ -1,5 +1,5 @@
 #include "../h/printer.h"
-#include "../h/syscall_c.h" // Koristimo tvoj javni API
+#include "../h/syscall_c.hpp" // Koristimo tvoj javni API
 #include "../h/riscv.h"
 
 void printString(char const *string)

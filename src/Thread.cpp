@@ -4,7 +4,7 @@
 
 #include "../h/riscv.h"
 #include "../h/Scheduler.h"
-#include "../h/syscall_c.h"
+#include "../h/syscall_c.hpp"
 
 _thread* _thread::running = nullptr;
 

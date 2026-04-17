@@ -1,0 +1,363 @@
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 1
+
+
+   1              		.file	"printer.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.align	2
+  10              		.globl	_Z11printStringPKc
+  12              	_Z11printStringPKc:
+  13              	.LFB18:
+  14              		.file 1 "src/printer.cpp"
+   1:src/printer.cpp **** #include "../h/printer.h"
+   2:src/printer.cpp **** #include "../h/syscall_c.hpp" // Koristimo tvoj javni API
+   3:src/printer.cpp **** #include "../h/riscv.h"
+   4:src/printer.cpp **** 
+   5:src/printer.cpp **** void printString(char const *string)
+   6:src/printer.cpp **** {
+  15              		.loc 1 6 1
+  16              		.cfi_startproc
+  17              	.LVL0:
+  18 0000 130101FE 		addi	sp,sp,-32
+  19              		.cfi_def_cfa_offset 32
+  20 0004 233C1100 		sd	ra,24(sp)
+  21 0008 23388100 		sd	s0,16(sp)
+  22 000c 23349100 		sd	s1,8(sp)
+  23              		.cfi_offset 1, -8
+  24              		.cfi_offset 8, -16
+  25              		.cfi_offset 9, -24
+  26 0010 13040102 		addi	s0,sp,32
+  27              		.cfi_def_cfa 8, 0
+  28 0014 93040500 		mv	s1,a0
+  29 0018 6F000001 		j	.L3
+  30              	.LVL1:
+  31              	.L5:
+   7:src/printer.cpp ****     // NEMOJ gasiti prekide ovde! 
+   8:src/printer.cpp ****     // Tvoj novi Console::putc je thread-safe i koristi semafore.
+   9:src/printer.cpp ****     while (*string != '\0')
+  10:src/printer.cpp ****     {
+  11:src/printer.cpp ****         putc(*string); // Koristi sistemski poziv (0x42)
+  32              		.loc 1 11 9
+  33              		.loc 1 11 13 is_stmt 0
+  34 001c 97000000 		call	_Z4putcc
+  34      E7800000 
+  35              	.LVL2:
+  12:src/printer.cpp ****         string++;
+  36              		.loc 1 12 9 is_stmt 1
+  37              		.loc 1 12 15 is_stmt 0
+  38 0024 93841400 		addi	s1,s1,1
+  39              	.LVL3:
+  40              	.L3:
+   9:src/printer.cpp ****     {
+  41              		.loc 1 9 5 is_stmt 1
+   9:src/printer.cpp ****     {
+  42              		.loc 1 9 20
+   9:src/printer.cpp ****     {
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 2
+
+
+  43              		.loc 1 9 12 is_stmt 0
+  44 0028 03C50400 		lbu	a0,0(s1)
+   9:src/printer.cpp ****     {
+  45              		.loc 1 9 20
+  46 002c E31805FE 		bne	a0,zero,.L5
+  13:src/printer.cpp ****     }
+  14:src/printer.cpp **** }
+  47              		.loc 1 14 1
+  48 0030 83308101 		ld	ra,24(sp)
+  49              		.cfi_restore 1
+  50 0034 03340101 		ld	s0,16(sp)
+  51              		.cfi_restore 8
+  52              		.cfi_def_cfa 2, 32
+  53 0038 83348100 		ld	s1,8(sp)
+  54              		.cfi_restore 9
+  55              	.LVL4:
+  56 003c 13010102 		addi	sp,sp,32
+  57              		.cfi_def_cfa_offset 0
+  58 0040 67800000 		jr	ra
+  59              		.cfi_endproc
+  60              	.LFE18:
+  62              		.align	2
+  63              		.globl	_Z12printIntegerm
+  65              	_Z12printIntegerm:
+  66              	.LFB19:
+  15:src/printer.cpp **** 
+  16:src/printer.cpp **** void printInteger(uint64 integer)
+  17:src/printer.cpp **** {   
+  67              		.loc 1 17 1 is_stmt 1
+  68              		.cfi_startproc
+  69              	.LVL5:
+  70 0044 130101FC 		addi	sp,sp,-64
+  71              		.cfi_def_cfa_offset 64
+  72 0048 233C1102 		sd	ra,56(sp)
+  73 004c 23388102 		sd	s0,48(sp)
+  74 0050 23349102 		sd	s1,40(sp)
+  75              		.cfi_offset 1, -8
+  76              		.cfi_offset 8, -16
+  77              		.cfi_offset 9, -24
+  78 0054 13040104 		addi	s0,sp,64
+  79              		.cfi_def_cfa 8, 0
+  18:src/printer.cpp ****     static char digits[] = "0123456789";
+  80              		.loc 1 18 5
+  19:src/printer.cpp ****     char buf[20]; // Povećaj malo za svaki slučaj (uint64 može biti dug)
+  81              		.loc 1 19 5
+  20:src/printer.cpp ****     int i;
+  82              		.loc 1 20 5
+  21:src/printer.cpp ****     uint64 x = integer;
+  83              		.loc 1 21 5
+  84              	.LVL6:
+  22:src/printer.cpp **** 
+  23:src/printer.cpp ****     // Obrada nule
+  24:src/printer.cpp ****     if (x == 0) {
+  85              		.loc 1 24 5
+  86 0058 63020504 		beq	a0,zero,.L13
+  25:src/printer.cpp ****         putc('0');
+  26:src/printer.cpp ****         return;
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 3
+
+
+  27:src/printer.cpp ****     }
+  28:src/printer.cpp **** 
+  29:src/printer.cpp ****     i = 0;
+  87              		.loc 1 29 7 is_stmt 0
+  88 005c 93040000 		li	s1,0
+  89              	.LVL7:
+  90              	.L7:
+  30:src/printer.cpp ****     do
+  91              		.loc 1 30 5 is_stmt 1
+  31:src/printer.cpp ****     {
+  32:src/printer.cpp ****         buf[i++] = digits[x % 10];
+  92              		.loc 1 32 9
+  93              		.loc 1 32 29 is_stmt 0
+  94 0060 9306A000 		li	a3,10
+  95 0064 3376D502 		remu	a2,a0,a3
+  96              	.LVL8:
+  97              		.loc 1 32 33
+  98 0068 17070000 		lla	a4,.LANCHOR0
+  98      13070700 
+  99 0070 3307C700 		add	a4,a4,a2
+ 100 0074 03470700 		lbu	a4,0(a4)
+ 101              		.loc 1 32 18
+ 102 0078 130604FE 		addi	a2,s0,-32
+ 103 007c B3079600 		add	a5,a2,s1
+ 104 0080 9B841400 		addiw	s1,s1,1
+ 105              	.LVL9:
+ 106 0084 2384E7FE 		sb	a4,-24(a5)
+  33:src/printer.cpp ****     } while ((x /= 10) != 0);
+ 107              		.loc 1 33 24 is_stmt 1
+ 108 0088 13070500 		mv	a4,a0
+ 109              		.loc 1 33 17 is_stmt 0
+ 110 008c 3355D502 		divu	a0,a0,a3
+ 111              	.LVL10:
+ 112              		.loc 1 33 24
+ 113 0090 93079000 		li	a5,9
+ 114 0094 E3E6E7FC 		bgtu	a4,a5,.L7
+ 115 0098 6F008002 		j	.L10
+ 116              	.LVL11:
+ 117              	.L13:
+  25:src/printer.cpp ****         return;
+ 118              		.loc 1 25 9 is_stmt 1
+  25:src/printer.cpp ****         return;
+ 119              		.loc 1 25 13 is_stmt 0
+ 120 009c 13050003 		li	a0,48
+ 121              	.LVL12:
+ 122 00a0 97000000 		call	_Z4putcc
+ 122      E7800000 
+ 123              	.LVL13:
+  26:src/printer.cpp ****     }
+ 124              		.loc 1 26 9 is_stmt 1
+ 125 00a8 6F000002 		j	.L6
+ 126              	.LVL14:
+ 127              	.L14:
+  34:src/printer.cpp **** 
+  35:src/printer.cpp ****     // Ispis unazad
+  36:src/printer.cpp ****     while (--i >= 0) {
+  37:src/printer.cpp ****         putc(buf[i]);
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 4
+
+
+ 128              		.loc 1 37 9
+ 129              		.loc 1 37 13 is_stmt 0
+ 130 00ac 930704FE 		addi	a5,s0,-32
+ 131 00b0 B3879700 		add	a5,a5,s1
+ 132 00b4 03C587FE 		lbu	a0,-24(a5)
+ 133 00b8 97000000 		call	_Z4putcc
+ 133      E7800000 
+ 134              	.LVL15:
+ 135              	.L10:
+  36:src/printer.cpp ****         putc(buf[i]);
+ 136              		.loc 1 36 5 is_stmt 1
+  36:src/printer.cpp ****         putc(buf[i]);
+ 137              		.loc 1 36 16
+ 138 00c0 9B84F4FF 		addiw	s1,s1,-1
+ 139              	.LVL16:
+ 140 00c4 E3D404FE 		bge	s1,zero,.L14
+ 141              	.L6:
+  38:src/printer.cpp ****     }
+  39:src/printer.cpp **** }...
+ 142              		.loc 1 39 1 is_stmt 0
+ 143 00c8 83308103 		ld	ra,56(sp)
+ 144              		.cfi_restore 1
+ 145 00cc 03340103 		ld	s0,48(sp)
+ 146              		.cfi_restore 8
+ 147              		.cfi_def_cfa 2, 64
+ 148 00d0 83348102 		ld	s1,40(sp)
+ 149              		.cfi_restore 9
+ 150 00d4 13010104 		addi	sp,sp,64
+ 151              		.cfi_def_cfa_offset 0
+ 152 00d8 67800000 		jr	ra
+ 153              		.cfi_endproc
+ 154              	.LFE19:
+ 156              		.section	.rodata
+ 157              		.align	3
+ 158              		.set	.LANCHOR0,. + 0
+ 161              	_ZZ12printIntegermE6digits:
+ 162 0000 30313233 		.string	"0123456789"
+ 162      34353637 
+ 162      383900
+ 163              		.text
+ 164              	.Letext0:
+ 165              		.file 2 "src/../h/../lib/hw.h"
+ 166              		.file 3 "src/../h/syscall_c.hpp"
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 printer.cpp
+C:\msys64\tmp\ccjT7GAO.s:12     .text:0000000000000000 _Z11printStringPKc
+C:\msys64\tmp\ccjT7GAO.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccjT7GAO.s:18     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccjT7GAO.s:19     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccjT7GAO.s:23     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccjT7GAO.s:24     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccjT7GAO.s:25     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccjT7GAO.s:27     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccjT7GAO.s:33     .text:000000000000001c .L0 
+C:\msys64\tmp\ccjT7GAO.s:34     .text:000000000000001c .L0 
+C:\msys64\tmp\ccjT7GAO.s:37     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccjT7GAO.s:38     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccjT7GAO.s:42     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccjT7GAO.s:43     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccjT7GAO.s:44     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccjT7GAO.s:46     .text:000000000000002c .L0 
+C:\msys64\tmp\ccjT7GAO.s:48     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccjT7GAO.s:49     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccjT7GAO.s:51     .text:0000000000000038 .L0 
+C:\msys64\tmp\ccjT7GAO.s:52     .text:0000000000000038 .L0 
+C:\msys64\tmp\ccjT7GAO.s:54     .text:000000000000003c .L0 
+C:\msys64\tmp\ccjT7GAO.s:57     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccjT7GAO.s:59     .text:0000000000000044 .L0 
+C:\msys64\tmp\ccjT7GAO.s:65     .text:0000000000000044 _Z12printIntegerm
+C:\msys64\tmp\ccjT7GAO.s:68     .text:0000000000000044 .L0 
+C:\msys64\tmp\ccjT7GAO.s:70     .text:0000000000000044 .L0 
+C:\msys64\tmp\ccjT7GAO.s:71     .text:0000000000000048 .L0 
+C:\msys64\tmp\ccjT7GAO.s:75     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccjT7GAO.s:76     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccjT7GAO.s:77     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccjT7GAO.s:79     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccjT7GAO.s:81     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccjT7GAO.s:82     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccjT7GAO.s:83     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccjT7GAO.s:85     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccjT7GAO.s:86     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccjT7GAO.s:88     .text:000000000000005c .L0 
+C:\msys64\tmp\ccjT7GAO.s:92     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccjT7GAO.s:93     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccjT7GAO.s:94     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccjT7GAO.s:98     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccjT7GAO.s:102    .text:0000000000000078 .L0 
+C:\msys64\tmp\ccjT7GAO.s:108    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccjT7GAO.s:110    .text:000000000000008c .L0 
+C:\msys64\tmp\ccjT7GAO.s:113    .text:0000000000000090 .L0 
+C:\msys64\tmp\ccjT7GAO.s:119    .text:000000000000009c .L0 
+C:\msys64\tmp\ccjT7GAO.s:120    .text:000000000000009c .L0 
+C:\msys64\tmp\ccjT7GAO.s:125    .text:00000000000000a8 .L0 
+C:\msys64\tmp\ccjT7GAO.s:129    .text:00000000000000ac .L0 
+C:\msys64\tmp\ccjT7GAO.s:130    .text:00000000000000ac .L0 
+C:\msys64\tmp\ccjT7GAO.s:137    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccjT7GAO.s:138    .text:00000000000000c0 .L0 
+C:\msys64\tmp\ccjT7GAO.s:143    .text:00000000000000c8 .L0 
+C:\msys64\tmp\ccjT7GAO.s:144    .text:00000000000000cc .L0 
+C:\msys64\tmp\ccjT7GAO.s:146    .text:00000000000000d0 .L0 
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 6
+
+
+C:\msys64\tmp\ccjT7GAO.s:147    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccjT7GAO.s:149    .text:00000000000000d4 .L0 
+C:\msys64\tmp\ccjT7GAO.s:151    .text:00000000000000d8 .L0 
+C:\msys64\tmp\ccjT7GAO.s:153    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccjT7GAO.s:158    .rodata:0000000000000000 .LANCHOR0
+C:\msys64\tmp\ccjT7GAO.s:161    .rodata:0000000000000000 _ZZ12printIntegermE6digits
+C:\msys64\tmp\ccjT7GAO.s:167    .text:00000000000000dc .L0 
+C:\msys64\tmp\ccjT7GAO.s:98     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccjT7GAO.s:40     .text:0000000000000028 .L3
+C:\msys64\tmp\ccjT7GAO.s:31     .text:000000000000001c .L5
+C:\msys64\tmp\ccjT7GAO.s:117    .text:000000000000009c .L13
+C:\msys64\tmp\ccjT7GAO.s:90     .text:0000000000000060 .L7
+C:\msys64\tmp\ccjT7GAO.s:135    .text:00000000000000c0 .L10
+C:\msys64\tmp\ccjT7GAO.s:141    .text:00000000000000c8 .L6
+C:\msys64\tmp\ccjT7GAO.s:127    .text:00000000000000ac .L14
+C:\msys64\tmp\ccjT7GAO.s:401    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccjT7GAO.s:810    .debug_str:00000000000000ed .LASF20
+C:\msys64\tmp\ccjT7GAO.s:814    .debug_str:00000000000001c5 .LASF21
+C:\msys64\tmp\ccjT7GAO.s:806    .debug_str:00000000000000b1 .LASF22
+C:\msys64\tmp\ccjT7GAO.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccjT7GAO.s:164    .text:00000000000000dc .Letext0
+C:\msys64\tmp\ccjT7GAO.s:778    .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccjT7GAO.s:808    .debug_str:00000000000000e0 .LASF0
+C:\msys64\tmp\ccjT7GAO.s:800    .debug_str:0000000000000089 .LASF1
+C:\msys64\tmp\ccjT7GAO.s:796    .debug_str:0000000000000069 .LASF2
+C:\msys64\tmp\ccjT7GAO.s:786    .debug_str:0000000000000030 .LASF4
+C:\msys64\tmp\ccjT7GAO.s:798    .debug_str:0000000000000077 .LASF3
+C:\msys64\tmp\ccjT7GAO.s:782    .debug_str:0000000000000013 .LASF5
+C:\msys64\tmp\ccjT7GAO.s:780    .debug_str:0000000000000000 .LASF6
+C:\msys64\tmp\ccjT7GAO.s:792    .debug_str:0000000000000043 .LASF7
+C:\msys64\tmp\ccjT7GAO.s:828    .debug_str:0000000000000225 .LASF8
+C:\msys64\tmp\ccjT7GAO.s:804    .debug_str:00000000000000a5 .LASF9
+C:\msys64\tmp\ccjT7GAO.s:784    .debug_str:000000000000001a .LASF10
+C:\msys64\tmp\ccjT7GAO.s:818    .debug_str:00000000000001e2 .LASF11
+C:\msys64\tmp\ccjT7GAO.s:816    .debug_str:00000000000001d5 .LASF14
+C:\msys64\tmp\ccjT7GAO.s:824    .debug_str:0000000000000207 .LASF16
+C:\msys64\tmp\ccjT7GAO.s:66     .text:0000000000000044 .LFB19
+C:\msys64\tmp\ccjT7GAO.s:154    .text:00000000000000dc .LFE19
+C:\msys64\tmp\ccjT7GAO.s:822    .debug_str:00000000000001ff .LASF18
+C:\msys64\tmp\ccjT7GAO.s:698    .debug_loc:0000000000000000 .LLST1
+C:\msys64\tmp\ccjT7GAO.s:820    .debug_str:00000000000001f8 .LASF12
+C:\msys64\tmp\ccjT7GAO.s:723    .debug_loc:0000000000000062 .LLST2
+C:\msys64\tmp\ccjT7GAO.s:740    .debug_loc:00000000000000ad .LLST3
+C:\msys64\tmp\ccjT7GAO.s:123    .text:00000000000000a8 .LVL13
+C:\msys64\tmp\ccjT7GAO.s:134    .text:00000000000000c0 .LVL15
+C:\msys64\tmp\ccjT7GAO.s:812    .debug_str:00000000000001c0 .LASF13
+C:\msys64\tmp\ccjT7GAO.s:826    .debug_str:0000000000000219 .LASF15
+C:\msys64\tmp\ccjT7GAO.s:794    .debug_str:0000000000000056 .LASF17
+C:\msys64\tmp\ccjT7GAO.s:13     .text:0000000000000000 .LFB18
+C:\msys64\tmp\ccjT7GAO.s:60     .text:0000000000000044 .LFE18
+C:\msys64\tmp\ccjT7GAO.s:790    .debug_str:000000000000003c .LASF19
+C:\msys64\tmp\ccjT7GAO.s:754    .debug_loc:00000000000000e6 .LLST0
+C:\msys64\tmp\ccjT7GAO.s:35     .text:0000000000000024 .LVL2
+C:\msys64\tmp\ccjT7GAO.s:802    .debug_str:000000000000009c .LASF23
+C:\msys64\tmp\ccjT7GAO.s:788    .debug_str:0000000000000037 .LASF24
+C:\msys64\tmp\ccjT7GAO.s:69     .text:0000000000000044 .LVL5
+C:\msys64\tmp\ccjT7GAO.s:89     .text:0000000000000060 .LVL7
+GAS LISTING C:\msys64\tmp\ccjT7GAO.s 			page 7
+
+
+C:\msys64\tmp\ccjT7GAO.s:116    .text:000000000000009c .LVL11
+C:\msys64\tmp\ccjT7GAO.s:121    .text:00000000000000a0 .LVL12
+C:\msys64\tmp\ccjT7GAO.s:96     .text:0000000000000068 .LVL8
+C:\msys64\tmp\ccjT7GAO.s:105    .text:0000000000000084 .LVL9
+C:\msys64\tmp\ccjT7GAO.s:139    .text:00000000000000c4 .LVL16
+C:\msys64\tmp\ccjT7GAO.s:84     .text:0000000000000058 .LVL6
+C:\msys64\tmp\ccjT7GAO.s:126    .text:00000000000000ac .LVL14
+C:\msys64\tmp\ccjT7GAO.s:17     .text:0000000000000000 .LVL0
+C:\msys64\tmp\ccjT7GAO.s:30     .text:000000000000001c .LVL1
+C:\msys64\tmp\ccjT7GAO.s:55     .text:000000000000003c .LVL4
+C:\msys64\tmp\ccjT7GAO.s:168    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+_Z4putcc
