@@ -17,15 +17,15 @@ public:
     static void putc(char c);
 
     // Geteri za prekidnu rutinu (console_handler)
-    static Buffer* getInBuff() { ensureInit(); return inbuff; }
-    static Buffer* getOutBuff() { ensureInit(); return outbuff; }
+    static kBuffer* getInBuff() { ensureInit(); return inbuff; }
+    static kBuffer* getOutBuff() { ensureInit(); return outbuff; }
     static _sem* getInSem() { ensureInit(); return inSem; }
     static _sem* getOutSem() { ensureInit(); return outSem; }
 
 private:
     // Statički članovi - pokazivači na bafere i semafore
-    static Buffer *inbuff;
-    static Buffer *outbuff;
+    static kBuffer *inbuff;
+    static kBuffer *outbuff;
     static _sem *inSem;
     static _sem *outSem;
 

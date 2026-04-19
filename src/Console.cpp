@@ -1,8 +1,8 @@
 #include "../h/Console.h"
 #include "../lib/hw.h"
 
-Buffer* _console::inbuff = nullptr;
-Buffer* _console::outbuff = nullptr;
+kBuffer* _console::inbuff = nullptr;
+kBuffer* _console::outbuff = nullptr;
 _sem* _console::inSem = nullptr;
 _sem* _console::outSem = nullptr;
 
@@ -10,8 +10,8 @@ bool _console::initialized = false;
 
 void _console::ensureInit() {
     if (initialized) return;
-    inbuff  = new Buffer();
-    outbuff = new Buffer();
+    inbuff  = new kBuffer();
+    outbuff = new kBuffer();
     inSem   = new _sem(0);
     outSem  = new _sem(256);
     initialized = true;

@@ -6,9 +6,9 @@
 #define PROJEKAT_BUFFER_H
 #include "../h/Semaphore.h"
 
-class Buffer {
+class kBuffer {
     public:
-Buffer();
+kBuffer();
     void put(char c);
     char get();
 

@@ -25,13 +25,12 @@ void _thread::dispatch() {
         Scheduler::instance().put(old);
     }
 
-    // Uzmi sledeću
+   
     running = Scheduler::instance().get();
-
+     _thread::timeSliceCounter = 0;
     // Ako smo zapravo promenili nit, uradi switch
-    if (old != running) {
-        switchContext(&old->context, &running->context);
-    }
+   
+    switchContext(&old->context, &running->context);
 }
 
 

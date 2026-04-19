@@ -1,7 +1,7 @@
 #include "../h/Scheduler.h"
 
 #include "../h/Thread.h"
-#include "../h/printer.h"
+
 
 void Scheduler::put(_thread* t) {
     if (!t) return;

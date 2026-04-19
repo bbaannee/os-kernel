@@ -1,28 +1,28 @@
 #include "../h/Buffer.h"
 #include "../h/Semaphore.h"
 
-Buffer::Buffer(): count(0), head(0), tail(0){
+kBuffer::kBuffer(): count(0), head(0), tail(0){
 
 }
 
-void Buffer::put(char c) {
+void kBuffer::put(char c) {
     buffer[tail] = c;
-    tail = (tail + 1 ) % Buffer::capacity;
+    tail = (tail + 1 ) % kBuffer::capacity;
     count++;
 }
 
 
-char Buffer::get() {
+char kBuffer::get() {
     char x = buffer[head];
-    head = (head + 1 ) % Buffer::capacity;
+    head = (head + 1 ) % kBuffer::capacity;
     count--;
     return x;
 }
 
-bool Buffer::isFull() {
+bool kBuffer::isFull() {
     return count == capacity;
 }
 
-bool Buffer::isEmpty() {
+bool kBuffer::isEmpty() {
     return count == 0;
 }
