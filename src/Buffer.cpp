@@ -1,5 +1,4 @@
 #include "../h/Buffer.h"
-#include "../h/Semaphore.h"
 
 kBuffer::kBuffer(): count(0), head(0), tail(0){
 

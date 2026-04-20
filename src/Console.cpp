@@ -35,7 +35,7 @@ void _console::putc(char c) {
     		_console::getInSem()->signal();
     	}
 
-    	// TX deo: Šaljemo sve dok je hardver spreman I dok imamo šta da pošaljemo
+    	
     	while ((*((volatile uint8*)CONSOLE_STATUS) & 0x20) && !_console::getOutBuff()->isEmpty()) {
     		char c = _console::getOutBuff()->get();
     		*((volatile uint8*)CONSOLE_TX_DATA) = (uint8)c;

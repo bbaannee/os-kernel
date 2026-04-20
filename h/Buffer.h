@@ -4,25 +4,24 @@
 
 #ifndef PROJEKAT_BUFFER_H
 #define PROJEKAT_BUFFER_H
-#include "../h/Semaphore.h"
 
-class kBuffer {
-    public:
-kBuffer();
+
+class kBuffer
+{
+public:
+    kBuffer();
     void put(char c);
     char get();
 
     bool isFull();
     bool isEmpty();
-    private:
+
+private:
     int count;
     int head, tail;
 
     static const int capacity = 256;
     char buffer[capacity];
-
 };
 
-
-
-#endif //PROJEKAT_BUFFER_H
+#endif // PROJEKAT_BUFFER_H

@@ -4,7 +4,6 @@
 
 #ifndef PROJECT_BASE_V1_1_SEMAPHORE_H
 #define PROJECT_BASE_V1_1_SEMAPHORE_H
-#include "../lib/hw.h"
 #include "../h/MemoryAllocator.h"
 class _thread;
 

@@ -4,26 +4,38 @@
 #include "../h/Semaphore.h"
 #include "../h/Buffer.h"
 
-class _console {
+class _console
+{
 public:
-    // Zabrana pravljenja objekata klase Console
     _console() = delete;
-    _console(const _console&) = delete;
-    _console& operator=(const _console&) = delete;
+    _console(const _console &) = delete;
+    _console &operator=(const _console &) = delete;
 
-
-    // Sistemski pozivi (0x41 i 0x42)
     static char getc();
     static void putc(char c);
 
-    // Geteri za prekidnu rutinu (console_handler)
-    static kBuffer* getInBuff() { ensureInit(); return inbuff; }
-    static kBuffer* getOutBuff() { ensureInit(); return outbuff; }
-    static _sem* getInSem() { ensureInit(); return inSem; }
-    static _sem* getOutSem() { ensureInit(); return outSem; }
+    static kBuffer *getInBuff()
+    {
+        ensureInit();
+        return inbuff;
+    }
+    static kBuffer *getOutBuff()
+    {
+        ensureInit();
+        return outbuff;
+    }
+    static _sem *getInSem()
+    {
+        ensureInit();
+        return inSem;
+    }
+    static _sem *getOutSem()
+    {
+        ensureInit();
+        return outSem;
+    }
 
 private:
-    // Statički članovi - pokazivači na bafere i semafore
     static kBuffer *inbuff;
     static kBuffer *outbuff;
     static _sem *inSem;
@@ -33,4 +45,4 @@ private:
     static void ensureInit();
 };
 
-#endif //PROJEKAT_CONSOLE_H
+#endif // PROJEKAT_CONSOLE_H

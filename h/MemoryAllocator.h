@@ -7,26 +7,28 @@
 
 #include "../lib/hw.h"
 
-class MemoryAllocator{
+class MemoryAllocator
+{
 public:
-        MemoryAllocator() = delete;
+    MemoryAllocator() = delete;
 
-        MemoryAllocator(const MemoryAllocator&) = delete;
-        MemoryAllocator& operator=(const MemoryAllocator&) = delete;
+    MemoryAllocator(const MemoryAllocator &) = delete;
+    MemoryAllocator &operator=(const MemoryAllocator &) = delete;
 
-        static void* kmalloc(size_t size);
-        static int kfree(void* addr);
+    static void *kmalloc(size_t size);
+    static int kfree(void *addr);
+
 private:
     static void init();
-    struct segmentHeader{
-        segmentHeader* next;
-        size_t size;  //free space without header in bytes
+    struct segmentHeader
+    {
+        segmentHeader *next;
+        size_t size; // free space without header in bytes
     };
 
-    static segmentHeader* head;
+    static segmentHeader *head;
     static bool isinit;
-    static void tryMerge(segmentHeader* block);
-
+    static void tryMerge(segmentHeader *block);
 };
 
-#endif //PROJECT_BASE_MEMORYALLOCATOR_H
+#endif // PROJECT_BASE_MEMORYALLOCATOR_H

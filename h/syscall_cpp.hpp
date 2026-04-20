@@ -1,7 +1,7 @@
 #ifndef _syscall_cpp
 #define _syscall_cpp
-#include "syscall_c.hpp"
-void * operator new(size_t);
+#include "syscall_c.h"
+void *operator new(size_t);
 void operator delete(void *);
 class Thread
 {
@@ -43,6 +43,7 @@ protected:
     PeriodicThread(time_t period);
     virtual void periodicActivation() {}
     virtual void run() override;
+
 private:
     time_t period;
 };

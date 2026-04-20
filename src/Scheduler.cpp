@@ -2,28 +2,35 @@
 
 #include "../h/Thread.h"
 
-
-void Scheduler::put(_thread* t) {
-    if (!t) return;
+void Scheduler::put(_thread *t)
+{
+    if (!t)
+        return;
     t->next = nullptr;
 
-    if (!head) {
+    if (!head)
+    {
         head = t;
-    } else {
+    }
+    else
+    {
         tail->next = t;
     }
     tail = t;
 }
 
-_thread* Scheduler::get() {
-    if (!head) {
+_thread *Scheduler::get()
+{
+    if (!head)
+    {
         return nullptr;
     }
 
-    _thread* t = head;
+    _thread *t = head;
     head = head->next;
 
-    if (!head) {
+    if (!head)
+    {
         tail = nullptr;
     }
 

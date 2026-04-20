@@ -1,6 +1,5 @@
-#include "../h/syscall_c.hpp"
+#include "../h/syscall_c.h"
 #include  "../h/riscv.h"
-#include "../lib/mem.h"
 #include "../h/Console.h"
 void *mem_alloc(size_t size) {
     size_t blocks = (size + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;

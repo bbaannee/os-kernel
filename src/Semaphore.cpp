@@ -1,59 +1,78 @@
 #include "../h/Semaphore.h"
 #include "../h/Thread.h"
 
-_sem::_sem(int init):val(init), head(nullptr), tail(nullptr), closed(false) {
+_sem::_sem(int init) : val(init), head(nullptr), tail(nullptr), closed(false)
+{
 }
 
-int _sem::wait() {
-    if (!_thread::running) return -1;
-    if (val > 0) {
+int _sem::wait()
+{
+    if (!_thread::running)
+        return -1;
+    if (val > 0)
+    {
         val--;
-    } else {
+    }
+    else
+    {
         _thread::running->isReady = false;
         _thread::running->semStatus = 0;
 
         add(_thread::running);
         _thread::dispatch();
 
-        if (_thread::running->semStatus < 0) {
+        if (_thread::running->semStatus < 0)
+        {
             return -1;
         }
     }
     return 0;
 }
 
-int _sem::signal() {
-    _thread* t = get();
-    if (t) {
+int _sem::signal()
+{
+    _thread *t = get();
+    if (t)
+    {
         t->isReady = true;
         Scheduler::instance().put(t);
-    } else {
+    }
+    else
+    {
         val++;
     }
 
     return 0;
 }
 
-void _sem::add(_thread* t) {
-    if (!t) return;
+void _sem::add(_thread *t)
+{
+    if (!t)
+        return;
     t->waitnext = nullptr;
 
-    if (!head) {
+    if (!head)
+    {
         head = t;
-    } else {
+    }
+    else
+    {
         tail->waitnext = t;
     }
     tail = t;
 }
-_thread* _sem::get() {
-    if (!head) {
+_thread *_sem::get()
+{
+    if (!head)
+    {
         return nullptr;
     }
 
-    _thread* t = head;
+    _thread *t = head;
     head = head->waitnext;
 
-    if (!head) {
+    if (!head)
+    {
         tail = nullptr;
     }
 
@@ -61,12 +80,15 @@ _thread* _sem::get() {
     return t;
 }
 
-int _sem::close() {
+int _sem::close()
+{
     closed = true;
 
-    while (head) {
-        _thread* t = get();
-        if (t) {
+    while (head)
+    {
+        _thread *t = get();
+        if (t)
+        {
             t->isReady = true;
 
             t->semStatus = -1;

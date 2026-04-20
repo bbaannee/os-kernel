@@ -7,21 +7,26 @@
 
 class _thread;
 
-class Scheduler {
+class Scheduler
+{
 public:
-    static Scheduler& instance(){static Scheduler instance; return instance;}
+    static Scheduler &instance()
+    {
+        static Scheduler instance;
+        return instance;
+    }
 
-    Scheduler(const Scheduler&) = delete;
-    Scheduler& operator=(const Scheduler&) = delete;
+    Scheduler(const Scheduler &) = delete;
+    Scheduler &operator=(const Scheduler &) = delete;
 
+    void put(_thread *t);
 
-    void put(_thread* t);
+    _thread *get();
 
-    _thread* get();
 private:
-    Scheduler():head(nullptr), tail(nullptr){};
-    _thread* head;
-    _thread* tail;
+    Scheduler() : head(nullptr), tail(nullptr) {};
+    _thread *head;
+    _thread *tail;
 };
 
-#endif //PROJEKAT_SCHEDULER_H
+#endif // PROJEKAT_SCHEDULER_H
