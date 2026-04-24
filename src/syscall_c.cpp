@@ -1,6 +1,7 @@
 #include "../h/syscall_c.h"
 #include  "../h/riscv.h"
 #include "../h/Console.h"
+
 void *mem_alloc(size_t size) {
     size_t blocks = (size + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
 
@@ -108,7 +109,32 @@ int sem_signal(sem_t id) {
     return (int) a0;
 }
 
-int time_sleep(time_t t) {
+int sem_wait_n(sem_t id, unsigned n)
+{
+    Riscv::writeARegister(2, (uint64)n);
+    Riscv::writeARegister(1, (uint64)id);
+
+    Riscv::writeARegister(0, 0x25);
+
+    __asm__ volatile("ecall");
+
+    volatile long a0 = Riscv::readARegister(0);
+    return (int) a0;
+}
+int sem_signal_n(sem_t id, unsigned n)
+{   
+    Riscv::writeARegister(2, (uint64)n);
+    Riscv::writeARegister(1, (uint64)id);
+
+    Riscv::writeARegister(0, 0x26);
+
+    __asm__ volatile("ecall");
+
+    volatile long a0 = Riscv::readARegister(0);
+    return (int) a0;
+}
+int time_sleep(time_t t)
+{
     Riscv::writeARegister(1, (uint64)t);
     Riscv::writeARegister(0, 0x31);
 

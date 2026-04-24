@@ -6,43 +6,13 @@ _sem::_sem(int init) : val(init), head(nullptr), tail(nullptr), closed(false)
 }
 
 int _sem::wait()
-{
-    if (!_thread::running)
-        return -1;
-    if (val > 0)
-    {
-        val--;
-    }
-    else
-    {
-        _thread::running->isReady = false;
-        _thread::running->semStatus = 0;
-
-        add(_thread::running);
-        _thread::dispatch();
-
-        if (_thread::running->semStatus < 0)
-        {
-            return -1;
-        }
-    }
-    return 0;
+{   
+    return wait_n(1);
 }
 
 int _sem::signal()
 {
-    _thread *t = get();
-    if (t)
-    {
-        t->isReady = true;
-        Scheduler::instance().put(t);
-    }
-    else
-    {
-        val++;
-    }
-
-    return 0;
+    return signal_n(1);
 }
 
 void _sem::add(_thread *t)
@@ -95,6 +65,48 @@ int _sem::close()
 
             Scheduler::instance().put(t);
         }
+    }
+
+    return 0;
+}
+int _sem::wait_n(unsigned n)
+{
+    if(closed) return -1;
+    if(n == 0) return 0;
+
+    if(head == nullptr && val >=(int) n){
+        val -= n;
+        return 0;
+    }else{
+        _thread::running->isReady = false;
+        _thread::running->requestedN = n; 
+        _thread::running->semStatus = 0;
+
+        add(_thread::running); 
+        _thread::dispatch();
+
+  
+        if (_thread::running->semStatus < 0) {
+            return -1;
+        }
+        return 0;
+    }
+}
+
+int _sem::signal_n(unsigned n) {
+    if (closed) return -1;
+    
+    val += n;
+
+    while (head && val >= (int)head->requestedN) {
+        _thread *t = get(); 
+        
+        val -= t->requestedN; 
+        t->isReady = true;
+        t->semStatus = 0;
+        
+        Scheduler::instance().put(t);
+
     }
 
     return 0;

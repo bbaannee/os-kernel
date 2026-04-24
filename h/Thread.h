@@ -60,6 +60,7 @@ private:
 
 	bool finished;
 	int semStatus; // 0 normal, -1 closed sem while wiating
+	unsigned requestedN;
 	uint64 timeSleeping;
 	static uint64 timeSliceCounter;
 	static _thread *sleepingHead;

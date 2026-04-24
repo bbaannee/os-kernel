@@ -131,6 +131,32 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 			}
 			break;
 		}
+		case 0x25:{
+			_sem *s = (_sem *)a1;
+			unsigned n = (unsigned)a2;
+			if (s == nullptr)
+			{
+				writeARegister(0, -1);
+			}
+			else
+			{
+				writeARegister(0, s->wait_n(n));
+			}
+			break;
+		}
+		case 0x26:{
+			_sem *s = (_sem *)a1;
+			unsigned n = (unsigned)a2;
+			if (s == nullptr)
+			{
+				writeARegister(0, -1);
+			}
+			else
+			{
+				writeARegister(0, s->signal_n(n));
+			}
+			break;
+		}
 		case 0x31:
 		{
 			if (_thread::running == nullptr)

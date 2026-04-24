@@ -22,6 +22,9 @@ public:
 
     int close();
 
+    int wait_n(unsigned n);
+
+    int signal_n(unsigned n);
 private:
 
     void add(_thread* t);
