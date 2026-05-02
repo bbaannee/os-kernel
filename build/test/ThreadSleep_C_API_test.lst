@@ -1,0 +1,409 @@
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 1
+
+
+   1              		.file	"ThreadSleep_C_API_test.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.section	.rodata.str1.8,"aMS",@progbits,1
+  10              		.align	3
+  11              	.LC0:
+  12 0000 48656C6C 		.string	"Hello "
+  12      6F2000
+  13 0007 00       		.align	3
+  14              	.LC1:
+  15 0008 20210A00 		.string	" !\n"
+  16              		.text
+  17              		.align	2
+  19              	_ZL9sleepyRunPv:
+  20              	.LFB0:
+  21              		.file 1 "test/ThreadSleep_C_API_test.cpp"
+   1:test/ThreadSleep_C_API_test.cpp **** #include "../h/syscall_c.h"
+   2:test/ThreadSleep_C_API_test.cpp **** 
+   3:test/ThreadSleep_C_API_test.cpp **** #include "printing.hpp"
+   4:test/ThreadSleep_C_API_test.cpp **** 
+   5:test/ThreadSleep_C_API_test.cpp **** static volatile bool finished[2];
+   6:test/ThreadSleep_C_API_test.cpp **** 
+   7:test/ThreadSleep_C_API_test.cpp **** static void sleepyRun(void *arg) {
+  22              		.loc 1 7 34
+  23              		.cfi_startproc
+  24              	.LVL0:
+  25 0000 130101FE 		addi	sp,sp,-32
+  26              		.cfi_def_cfa_offset 32
+  27 0004 233C1100 		sd	ra,24(sp)
+  28 0008 23388100 		sd	s0,16(sp)
+  29 000c 23349100 		sd	s1,8(sp)
+  30 0010 23302101 		sd	s2,0(sp)
+  31              		.cfi_offset 1, -8
+  32              		.cfi_offset 8, -16
+  33              		.cfi_offset 9, -24
+  34              		.cfi_offset 18, -32
+  35 0014 13040102 		addi	s0,sp,32
+  36              		.cfi_def_cfa 8, 0
+   8:test/ThreadSleep_C_API_test.cpp ****     time_t sleep_time = *((time_t *) arg);
+  37              		.loc 1 8 5
+  38              		.loc 1 8 12 is_stmt 0
+  39 0018 03390500 		ld	s2,0(a0)
+  40              	.LVL1:
+   9:test/ThreadSleep_C_API_test.cpp ****     int i = 6;
+  41              		.loc 1 9 5 is_stmt 1
+  42              		.loc 1 9 9 is_stmt 0
+  43 001c 93046000 		li	s1,6
+  44 0020 6F004004 		j	.L3
+  45              	.LVL2:
+  46              	.L5:
+  10:test/ThreadSleep_C_API_test.cpp ****     while (--i > 0) {
+  11:test/ThreadSleep_C_API_test.cpp **** 
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 2
+
+
+  12:test/ThreadSleep_C_API_test.cpp ****         printString("Hello ");
+  47              		.loc 1 12 9 is_stmt 1
+  48              		.loc 1 12 20 is_stmt 0
+  49 0024 17050000 		lla	a0,.LC0
+  49      13050500 
+  50 002c 97000000 		call	_Z11printStringPKc
+  50      E7800000 
+  51              	.LVL3:
+  13:test/ThreadSleep_C_API_test.cpp ****         printInt(sleep_time);
+  52              		.loc 1 13 9 is_stmt 1
+  53              		.loc 1 13 17 is_stmt 0
+  54 0034 13060000 		li	a2,0
+  55 0038 9305A000 		li	a1,10
+  56 003c 1B050900 		sext.w	a0,s2
+  57 0040 97000000 		call	_Z8printIntiii
+  57      E7800000 
+  58              	.LVL4:
+  14:test/ThreadSleep_C_API_test.cpp ****         printString(" !\n");
+  59              		.loc 1 14 9 is_stmt 1
+  60              		.loc 1 14 20 is_stmt 0
+  61 0048 17050000 		lla	a0,.LC1
+  61      13050500 
+  62 0050 97000000 		call	_Z11printStringPKc
+  62      E7800000 
+  63              	.LVL5:
+  15:test/ThreadSleep_C_API_test.cpp ****         time_sleep(sleep_time);
+  64              		.loc 1 15 9 is_stmt 1
+  65              		.loc 1 15 19 is_stmt 0
+  66 0058 13050900 		mv	a0,s2
+  67 005c 97000000 		call	_Z10time_sleepm
+  67      E7800000 
+  68              	.LVL6:
+  69              	.L3:
+  10:test/ThreadSleep_C_API_test.cpp **** 
+  70              		.loc 1 10 5 is_stmt 1
+  10:test/ThreadSleep_C_API_test.cpp **** 
+  71              		.loc 1 10 16
+  72 0064 9B84F4FF 		addiw	s1,s1,-1
+  73              	.LVL7:
+  74 0068 E34E90FA 		bgt	s1,zero,.L5
+  16:test/ThreadSleep_C_API_test.cpp ****     }
+  17:test/ThreadSleep_C_API_test.cpp ****     finished[sleep_time/10-1] = true;
+  75              		.loc 1 17 5
+  76              		.loc 1 17 24 is_stmt 0
+  77 006c 9307A000 		li	a5,10
+  78 0070 3359F902 		divu	s2,s2,a5
+  79              	.LVL8:
+  80              		.loc 1 17 27
+  81 0074 1309F9FF 		addi	s2,s2,-1
+  82              		.loc 1 17 31
+  83 0078 97070000 		lla	a5,_ZL8finished
+  83      93870700 
+  84 0080 33892701 		add	s2,a5,s2
+  85 0084 93071000 		li	a5,1
+  86 0088 2300F900 		sb	a5,0(s2)
+  18:test/ThreadSleep_C_API_test.cpp **** }
+  87              		.loc 1 18 1
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 3
+
+
+  88 008c 83308101 		ld	ra,24(sp)
+  89              		.cfi_restore 1
+  90 0090 03340101 		ld	s0,16(sp)
+  91              		.cfi_restore 8
+  92              		.cfi_def_cfa 2, 32
+  93 0094 83348100 		ld	s1,8(sp)
+  94              		.cfi_restore 9
+  95 0098 03390100 		ld	s2,0(sp)
+  96              		.cfi_restore 18
+  97 009c 13010102 		addi	sp,sp,32
+  98              		.cfi_def_cfa_offset 0
+  99 00a0 67800000 		jr	ra
+ 100              		.cfi_endproc
+ 101              	.LFE0:
+ 103              		.align	2
+ 104              		.globl	_Z12testSleepingv
+ 106              	_Z12testSleepingv:
+ 107              	.LFB1:
+  19:test/ThreadSleep_C_API_test.cpp **** 
+  20:test/ThreadSleep_C_API_test.cpp **** void testSleeping() {
+ 108              		.loc 1 20 21 is_stmt 1
+ 109              		.cfi_startproc
+ 110 00a4 130101FC 		addi	sp,sp,-64
+ 111              		.cfi_def_cfa_offset 64
+ 112 00a8 233C1102 		sd	ra,56(sp)
+ 113 00ac 23388102 		sd	s0,48(sp)
+ 114 00b0 23349102 		sd	s1,40(sp)
+ 115              		.cfi_offset 1, -8
+ 116              		.cfi_offset 8, -16
+ 117              		.cfi_offset 9, -24
+ 118 00b4 13040104 		addi	s0,sp,64
+ 119              		.cfi_def_cfa 8, 0
+  21:test/ThreadSleep_C_API_test.cpp ****     const int sleepy_thread_count = 2;
+ 120              		.loc 1 21 5
+ 121              	.LVL9:
+  22:test/ThreadSleep_C_API_test.cpp ****     time_t sleep_times[sleepy_thread_count] = {10, 20};
+ 122              		.loc 1 22 5
+ 123              		.loc 1 22 12 is_stmt 0
+ 124 00b8 9307A000 		li	a5,10
+ 125 00bc 2338F4FC 		sd	a5,-48(s0)
+ 126 00c0 93074001 		li	a5,20
+ 127 00c4 233CF4FC 		sd	a5,-40(s0)
+  23:test/ThreadSleep_C_API_test.cpp ****     thread_t sleepyThread[sleepy_thread_count];
+ 128              		.loc 1 23 5 is_stmt 1
+  24:test/ThreadSleep_C_API_test.cpp **** 
+  25:test/ThreadSleep_C_API_test.cpp ****     for (int i = 0; i < sleepy_thread_count; i++) {
+ 129              		.loc 1 25 5
+ 130              	.LVL10:
+ 131              	.LBB2:
+ 132              		.loc 1 25 14 is_stmt 0
+ 133 00c8 93040000 		li	s1,0
+ 134              	.LVL11:
+ 135              	.L8:
+ 136              		.loc 1 25 23 is_stmt 1 discriminator 1
+ 137 00cc 93071000 		li	a5,1
+ 138 00d0 63C89702 		bgt	s1,a5,.L9
+  26:test/ThreadSleep_C_API_test.cpp ****         thread_create(&sleepyThread[i], sleepyRun, sleep_times + i);
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 4
+
+
+ 139              		.loc 1 26 9
+ 140              		.loc 1 26 64 is_stmt 0
+ 141 00d4 13953400 		slli	a0,s1,3
+ 142              		.loc 1 26 22
+ 143 00d8 930704FD 		addi	a5,s0,-48
+ 144 00dc 3386A700 		add	a2,a5,a0
+ 145 00e0 97050000 		lla	a1,_ZL9sleepyRunPv
+ 145      93850500 
+ 146 00e8 930704FC 		addi	a5,s0,-64
+ 147 00ec 3385A700 		add	a0,a5,a0
+ 148 00f0 97000000 		call	_Z13thread_createPP7_threadPFvPvES2_
+ 148      E7800000 
+ 149              	.LVL12:
+  25:test/ThreadSleep_C_API_test.cpp ****         thread_create(&sleepyThread[i], sleepyRun, sleep_times + i);
+ 150              		.loc 1 25 5 is_stmt 1
+ 151 00f8 9B841400 		addiw	s1,s1,1
+ 152              	.LVL13:
+ 153 00fc 6FF01FFD 		j	.L8
+ 154              	.LVL14:
+ 155              	.L9:
+ 156              	.LBE2:
+  27:test/ThreadSleep_C_API_test.cpp ****     }
+  28:test/ThreadSleep_C_API_test.cpp **** 
+  29:test/ThreadSleep_C_API_test.cpp ****     while (!(finished[0] && finished[1])) {}
+ 157              		.loc 1 29 5
+ 158              		.loc 1 29 12
+ 159              		.loc 1 29 24 is_stmt 0
+ 160 0100 97070000 		lbu	a5,_ZL8finished
+ 160      83C70700 
+ 161              		.loc 1 29 12
+ 162 0108 E38C07FE 		beq	a5,zero,.L9
+ 163              		.loc 1 29 39 discriminator 2
+ 164 010c 97070000 		lbu	a5,_ZL8finished+1
+ 164      83C70700 
+ 165              		.loc 1 29 12 discriminator 2
+ 166 0114 E38607FE 		beq	a5,zero,.L9
+  30:test/ThreadSleep_C_API_test.cpp **** }
+ 167              		.loc 1 30 1
+ 168 0118 83308103 		ld	ra,56(sp)
+ 169              		.cfi_restore 1
+ 170 011c 03340103 		ld	s0,48(sp)
+ 171              		.cfi_restore 8
+ 172              		.cfi_def_cfa 2, 64
+ 173 0120 83348102 		ld	s1,40(sp)
+ 174              		.cfi_restore 9
+ 175              	.LVL15:
+ 176 0124 13010104 		addi	sp,sp,64
+ 177              		.cfi_def_cfa_offset 0
+ 178 0128 67800000 		jr	ra
+ 179              		.cfi_endproc
+ 180              	.LFE1:
+ 182              		.section	.sbss,"aw",@nobits
+ 183              		.align	3
+ 186              	_ZL8finished:
+ 187 0000 0000     		.zero	2
+ 188              		.text
+ 189              	.Letext0:
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 5
+
+
+ 190              		.file 2 "test/../h/../lib/hw.h"
+ 191              		.file 3 "test/../h/syscall_c.h"
+ 192              		.file 4 "test/printing.hpp"
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ThreadSleep_C_API_test.cpp
+C:\msys64\tmp\cclttYS5.s:19     .text:0000000000000000 _ZL9sleepyRunPv
+C:\msys64\tmp\cclttYS5.s:23     .text:0000000000000000 .L0 
+C:\msys64\tmp\cclttYS5.s:25     .text:0000000000000000 .L0 
+C:\msys64\tmp\cclttYS5.s:26     .text:0000000000000004 .L0 
+C:\msys64\tmp\cclttYS5.s:31     .text:0000000000000014 .L0 
+C:\msys64\tmp\cclttYS5.s:32     .text:0000000000000014 .L0 
+C:\msys64\tmp\cclttYS5.s:33     .text:0000000000000014 .L0 
+C:\msys64\tmp\cclttYS5.s:34     .text:0000000000000014 .L0 
+C:\msys64\tmp\cclttYS5.s:36     .text:0000000000000018 .L0 
+C:\msys64\tmp\cclttYS5.s:38     .text:0000000000000018 .L0 
+C:\msys64\tmp\cclttYS5.s:39     .text:0000000000000018 .L0 
+C:\msys64\tmp\cclttYS5.s:42     .text:000000000000001c .L0 
+C:\msys64\tmp\cclttYS5.s:43     .text:000000000000001c .L0 
+C:\msys64\tmp\cclttYS5.s:48     .text:0000000000000024 .L0 
+C:\msys64\tmp\cclttYS5.s:49     .text:0000000000000024 .L0 
+C:\msys64\tmp\cclttYS5.s:53     .text:0000000000000034 .L0 
+C:\msys64\tmp\cclttYS5.s:54     .text:0000000000000034 .L0 
+C:\msys64\tmp\cclttYS5.s:60     .text:0000000000000048 .L0 
+C:\msys64\tmp\cclttYS5.s:61     .text:0000000000000048 .L0 
+C:\msys64\tmp\cclttYS5.s:65     .text:0000000000000058 .L0 
+C:\msys64\tmp\cclttYS5.s:66     .text:0000000000000058 .L0 
+C:\msys64\tmp\cclttYS5.s:71     .text:0000000000000064 .L0 
+C:\msys64\tmp\cclttYS5.s:72     .text:0000000000000064 .L0 
+C:\msys64\tmp\cclttYS5.s:76     .text:000000000000006c .L0 
+C:\msys64\tmp\cclttYS5.s:77     .text:000000000000006c .L0 
+C:\msys64\tmp\cclttYS5.s:81     .text:0000000000000074 .L0 
+C:\msys64\tmp\cclttYS5.s:186    .sbss:0000000000000000 _ZL8finished
+C:\msys64\tmp\cclttYS5.s:83     .text:0000000000000078 .L0 
+C:\msys64\tmp\cclttYS5.s:88     .text:000000000000008c .L0 
+C:\msys64\tmp\cclttYS5.s:89     .text:0000000000000090 .L0 
+C:\msys64\tmp\cclttYS5.s:91     .text:0000000000000094 .L0 
+C:\msys64\tmp\cclttYS5.s:92     .text:0000000000000094 .L0 
+C:\msys64\tmp\cclttYS5.s:94     .text:0000000000000098 .L0 
+C:\msys64\tmp\cclttYS5.s:96     .text:000000000000009c .L0 
+C:\msys64\tmp\cclttYS5.s:98     .text:00000000000000a0 .L0 
+C:\msys64\tmp\cclttYS5.s:100    .text:00000000000000a4 .L0 
+C:\msys64\tmp\cclttYS5.s:106    .text:00000000000000a4 _Z12testSleepingv
+C:\msys64\tmp\cclttYS5.s:109    .text:00000000000000a4 .L0 
+C:\msys64\tmp\cclttYS5.s:110    .text:00000000000000a4 .L0 
+C:\msys64\tmp\cclttYS5.s:111    .text:00000000000000a8 .L0 
+C:\msys64\tmp\cclttYS5.s:115    .text:00000000000000b4 .L0 
+C:\msys64\tmp\cclttYS5.s:116    .text:00000000000000b4 .L0 
+C:\msys64\tmp\cclttYS5.s:117    .text:00000000000000b4 .L0 
+C:\msys64\tmp\cclttYS5.s:119    .text:00000000000000b8 .L0 
+C:\msys64\tmp\cclttYS5.s:122    .text:00000000000000b8 .L0 
+C:\msys64\tmp\cclttYS5.s:123    .text:00000000000000b8 .L0 
+C:\msys64\tmp\cclttYS5.s:124    .text:00000000000000b8 .L0 
+C:\msys64\tmp\cclttYS5.s:129    .text:00000000000000c8 .L0 
+C:\msys64\tmp\cclttYS5.s:132    .text:00000000000000c8 .L0 
+C:\msys64\tmp\cclttYS5.s:133    .text:00000000000000c8 .L0 
+C:\msys64\tmp\cclttYS5.s:137    .text:00000000000000cc .L0 
+C:\msys64\tmp\cclttYS5.s:140    .text:00000000000000d4 .L0 
+C:\msys64\tmp\cclttYS5.s:141    .text:00000000000000d4 .L0 
+C:\msys64\tmp\cclttYS5.s:143    .text:00000000000000d8 .L0 
+C:\msys64\tmp\cclttYS5.s:151    .text:00000000000000f8 .L0 
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 7
+
+
+C:\msys64\tmp\cclttYS5.s:158    .text:0000000000000100 .L0 
+C:\msys64\tmp\cclttYS5.s:159    .text:0000000000000100 .L0 
+C:\msys64\tmp\cclttYS5.s:160    .text:0000000000000100 .L0 
+C:\msys64\tmp\cclttYS5.s:162    .text:0000000000000108 .L0 
+C:\msys64\tmp\cclttYS5.s:164    .text:000000000000010c .L0 
+C:\msys64\tmp\cclttYS5.s:166    .text:0000000000000114 .L0 
+C:\msys64\tmp\cclttYS5.s:168    .text:0000000000000118 .L0 
+C:\msys64\tmp\cclttYS5.s:169    .text:000000000000011c .L0 
+C:\msys64\tmp\cclttYS5.s:171    .text:0000000000000120 .L0 
+C:\msys64\tmp\cclttYS5.s:172    .text:0000000000000120 .L0 
+C:\msys64\tmp\cclttYS5.s:174    .text:0000000000000124 .L0 
+C:\msys64\tmp\cclttYS5.s:177    .text:0000000000000128 .L0 
+C:\msys64\tmp\cclttYS5.s:179    .text:000000000000012c .L0 
+C:\msys64\tmp\cclttYS5.s:193    .text:000000000000012c .L0 
+C:\msys64\tmp\cclttYS5.s:11     .rodata.str1.8:0000000000000000 .LC0
+C:\msys64\tmp\cclttYS5.s:49     .text:0000000000000024 .L0 
+C:\msys64\tmp\cclttYS5.s:14     .rodata.str1.8:0000000000000008 .LC1
+C:\msys64\tmp\cclttYS5.s:61     .text:0000000000000048 .L0 
+C:\msys64\tmp\cclttYS5.s:83     .text:0000000000000078 .L0 
+C:\msys64\tmp\cclttYS5.s:145    .text:00000000000000e0 .L0 
+C:\msys64\tmp\cclttYS5.s:160    .text:0000000000000100 .L0 
+C:\msys64\tmp\cclttYS5.s:164    .text:000000000000010c .L0 
+C:\msys64\tmp\cclttYS5.s:69     .text:0000000000000064 .L3
+C:\msys64\tmp\cclttYS5.s:46     .text:0000000000000024 .L5
+C:\msys64\tmp\cclttYS5.s:155    .text:0000000000000100 .L9
+C:\msys64\tmp\cclttYS5.s:135    .text:00000000000000cc .L8
+C:\msys64\tmp\cclttYS5.s:548    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\cclttYS5.s:979    .debug_str:00000000000000c4 .LASF28
+C:\msys64\tmp\cclttYS5.s:977    .debug_str:00000000000000a4 .LASF29
+C:\msys64\tmp\cclttYS5.s:1001   .debug_str:0000000000000216 .LASF30
+C:\msys64\tmp\cclttYS5.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\cclttYS5.s:189    .text:000000000000012c .Letext0
+C:\msys64\tmp\cclttYS5.s:953    .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\cclttYS5.s:959    .debug_str:0000000000000015 .LASF0
+C:\msys64\tmp\cclttYS5.s:1009   .debug_str:0000000000000278 .LASF1
+C:\msys64\tmp\cclttYS5.s:989    .debug_str:00000000000001c9 .LASF2
+C:\msys64\tmp\cclttYS5.s:1019   .debug_str:00000000000002c2 .LASF4
+C:\msys64\tmp\cclttYS5.s:971    .debug_str:0000000000000074 .LASF3
+C:\msys64\tmp\cclttYS5.s:965    .debug_str:000000000000003c .LASF5
+C:\msys64\tmp\cclttYS5.s:993    .debug_str:00000000000001e5 .LASF6
+C:\msys64\tmp\cclttYS5.s:975    .debug_str:0000000000000091 .LASF7
+C:\msys64\tmp\cclttYS5.s:1007   .debug_str:0000000000000265 .LASF8
+C:\msys64\tmp\cclttYS5.s:963    .debug_str:000000000000002d .LASF9
+C:\msys64\tmp\cclttYS5.s:987    .debug_str:00000000000001bd .LASF10
+C:\msys64\tmp\cclttYS5.s:1003   .debug_str:0000000000000245 .LASF11
+C:\msys64\tmp\cclttYS5.s:995    .debug_str:00000000000001ec .LASF12
+C:\msys64\tmp\cclttYS5.s:985    .debug_str:00000000000001b4 .LASF13
+C:\msys64\tmp\cclttYS5.s:1015   .debug_str:00000000000002b1 .LASF31
+C:\msys64\tmp\cclttYS5.s:997    .debug_str:0000000000000202 .LASF14
+C:\msys64\tmp\cclttYS5.s:955    .debug_str:0000000000000000 .LASF15
+C:\msys64\tmp\cclttYS5.s:983    .debug_str:00000000000001a7 .LASF32
+C:\msys64\tmp\cclttYS5.s:1013   .debug_str:000000000000029f .LASF33
+C:\msys64\tmp\cclttYS5.s:107    .text:00000000000000a4 .LFB1
+C:\msys64\tmp\cclttYS5.s:180    .text:000000000000012c .LFE1
+C:\msys64\tmp\cclttYS5.s:1011   .debug_str:000000000000028b .LASF16
+C:\msys64\tmp\cclttYS5.s:957    .debug_str:0000000000000009 .LASF17
+C:\msys64\tmp\cclttYS5.s:1021   .debug_str:00000000000002c9 .LASF18
+GAS LISTING C:\msys64\tmp\cclttYS5.s 			page 8
+
+
+C:\msys64\tmp\cclttYS5.s:131    .text:00000000000000c8 .LBB2
+C:\msys64\tmp\cclttYS5.s:156    .text:0000000000000100 .LBE2
+C:\msys64\tmp\cclttYS5.s:891    .debug_loc:0000000000000000 .LLST3
+C:\msys64\tmp\cclttYS5.s:149    .text:00000000000000f8 .LVL12
+C:\msys64\tmp\cclttYS5.s:1005   .debug_str:000000000000025b .LASF34
+C:\msys64\tmp\cclttYS5.s:20     .text:0000000000000000 .LFB0
+C:\msys64\tmp\cclttYS5.s:101    .text:00000000000000a4 .LFE0
+C:\msys64\tmp\cclttYS5.s:907    .debug_loc:000000000000004a .LLST0
+C:\msys64\tmp\cclttYS5.s:973    .debug_str:0000000000000086 .LASF19
+C:\msys64\tmp\cclttYS5.s:921    .debug_loc:0000000000000083 .LLST1
+C:\msys64\tmp\cclttYS5.s:928    .debug_loc:00000000000000a6 .LLST2
+C:\msys64\tmp\cclttYS5.s:51     .text:0000000000000034 .LVL3
+C:\msys64\tmp\cclttYS5.s:58     .text:0000000000000048 .LVL4
+C:\msys64\tmp\cclttYS5.s:63     .text:0000000000000058 .LVL5
+C:\msys64\tmp\cclttYS5.s:68     .text:0000000000000064 .LVL6
+C:\msys64\tmp\cclttYS5.s:969    .debug_str:000000000000004f .LASF20
+C:\msys64\tmp\cclttYS5.s:991    .debug_str:00000000000001d7 .LASF22
+C:\msys64\tmp\cclttYS5.s:1023   .debug_str:00000000000002d6 .LASF21
+C:\msys64\tmp\cclttYS5.s:967    .debug_str:0000000000000043 .LASF23
+C:\msys64\tmp\cclttYS5.s:999    .debug_str:0000000000000207 .LASF24
+C:\msys64\tmp\cclttYS5.s:1017   .debug_str:00000000000002b9 .LASF25
+C:\msys64\tmp\cclttYS5.s:981    .debug_str:0000000000000197 .LASF26
+C:\msys64\tmp\cclttYS5.s:961    .debug_str:0000000000000022 .LASF27
+C:\msys64\tmp\cclttYS5.s:130    .text:00000000000000c8 .LVL10
+C:\msys64\tmp\cclttYS5.s:134    .text:00000000000000cc .LVL11
+C:\msys64\tmp\cclttYS5.s:152    .text:00000000000000fc .LVL13
+C:\msys64\tmp\cclttYS5.s:154    .text:0000000000000100 .LVL14
+C:\msys64\tmp\cclttYS5.s:175    .text:0000000000000124 .LVL15
+C:\msys64\tmp\cclttYS5.s:24     .text:0000000000000000 .LVL0
+C:\msys64\tmp\cclttYS5.s:45     .text:0000000000000024 .LVL2
+C:\msys64\tmp\cclttYS5.s:40     .text:000000000000001c .LVL1
+C:\msys64\tmp\cclttYS5.s:79     .text:0000000000000074 .LVL8
+C:\msys64\tmp\cclttYS5.s:73     .text:0000000000000068 .LVL7
+C:\msys64\tmp\cclttYS5.s:194    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+_Z11printStringPKc
+_Z8printIntiii
+_Z10time_sleepm
+_Z13thread_createPP7_threadPFvPvES2_

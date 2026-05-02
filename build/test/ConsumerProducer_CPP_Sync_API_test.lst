@@ -1,0 +1,2891 @@
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 1
+
+
+   1              		.file	"ConsumerProducer_CPP_Sync_API_test.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.section	.text._ZN12ConsumerSyncD2Ev,"axG",@progbits,_ZN12ConsumerSyncD5Ev,comdat
+  10              		.align	2
+  11              		.weak	_ZN12ConsumerSyncD2Ev
+  13              	_ZN12ConsumerSyncD2Ev:
+  14              	.LFB19:
+  15              		.file 1 "test/ConsumerProducer_CPP_Sync_API_test.cpp"
+   1:test/ConsumerProducer_CPP_Sync_API_test.cpp **** #include "../h/syscall_cpp.hpp"
+   2:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+   3:test/ConsumerProducer_CPP_Sync_API_test.cpp **** #include "buffer_CPP_API.hpp"
+   4:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+   5:test/ConsumerProducer_CPP_Sync_API_test.cpp **** static Semaphore* waitForAll;
+   6:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+   7:test/ConsumerProducer_CPP_Sync_API_test.cpp **** struct thread_data {
+   8:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int id;
+   9:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     BufferCPP *buffer;
+  10:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     Semaphore* wait;
+  11:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+  12:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  13:test/ConsumerProducer_CPP_Sync_API_test.cpp **** static volatile int threadEnd = 0;
+  14:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  15:test/ConsumerProducer_CPP_Sync_API_test.cpp **** class ProducerKeyboard:public Thread {
+  16:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+  17:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     void producerKeyboard(void *arg);
+  18:test/ConsumerProducer_CPP_Sync_API_test.cpp **** public:
+  19:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     ProducerKeyboard(thread_data* _td):Thread(), td(_td) {}
+  20:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  21:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     void run() override {
+  22:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         producerKeyboard(td);
+  23:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+  24:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+  25:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  26:test/ConsumerProducer_CPP_Sync_API_test.cpp **** void ProducerKeyboard::producerKeyboard(void *arg) {
+  27:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+  28:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  29:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int key;
+  30:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int i = 0;
+  31:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while ((key = getc()) != 0x1b) {
+  32:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(key);
+  33:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+  34:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  35:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         if (i % (10 * data->id) == 0) {
+  36:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+  37:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+  38:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+  39:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  40:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     threadEnd = 1;
+  41:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     td->buffer->put('!');
+  42:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  43:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data->wait->signal();
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 2
+
+
+  44:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+  45:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  46:test/ConsumerProducer_CPP_Sync_API_test.cpp **** class ProducerSync:public Thread {
+  47:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+  48:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     void producer(void *arg);
+  49:test/ConsumerProducer_CPP_Sync_API_test.cpp **** public:
+  50:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     ProducerSync(thread_data* _td):Thread(), td(_td) {}
+  51:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  52:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     void run() override {
+  53:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         producer(td);
+  54:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+  55:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+  56:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  57:test/ConsumerProducer_CPP_Sync_API_test.cpp **** void ProducerSync::producer(void *arg) {
+  58:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+  59:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  60:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int i = 0;
+  61:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while (!threadEnd) {
+  62:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(data->id + '0');
+  63:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+  64:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  65:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         if (i % (10 * data->id) == 0) {
+  66:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+  67:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+  68:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+  69:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  70:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data->wait->signal();
+  71:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+  72:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  73:test/ConsumerProducer_CPP_Sync_API_test.cpp **** class ConsumerSync:public Thread {
+  16              		.loc 1 73 7
+  17              		.cfi_startproc
+  18              	.LVL0:
+  19 0000 130101FF 		addi	sp,sp,-16
+  20              		.cfi_def_cfa_offset 16
+  21 0004 23341100 		sd	ra,8(sp)
+  22 0008 23308100 		sd	s0,0(sp)
+  23              		.cfi_offset 1, -8
+  24              		.cfi_offset 8, -16
+  25 000c 13040101 		addi	s0,sp,16
+  26              		.cfi_def_cfa 8, 0
+  27              	.LBB23:
+  28              		.loc 1 73 7 is_stmt 0
+  29 0010 97070000 		lla	a5,_ZTV12ConsumerSync+16
+  29      93870700 
+  30 0018 2330F500 		sd	a5,0(a0)
+  31 001c 97000000 		call	_ZN6ThreadD2Ev
+  31      E7800000 
+  32              	.LVL1:
+  33              	.LBE23:
+  34 0024 83308100 		ld	ra,8(sp)
+  35              		.cfi_restore 1
+  36 0028 03340100 		ld	s0,0(sp)
+  37              		.cfi_restore 8
+  38              		.cfi_def_cfa 2, 16
+  39 002c 13010101 		addi	sp,sp,16
+  40              		.cfi_def_cfa_offset 0
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 3
+
+
+  41 0030 67800000 		jr	ra
+  42              		.cfi_endproc
+  43              	.LFE19:
+  45              		.weak	_ZN12ConsumerSyncD1Ev
+  46              		.set	_ZN12ConsumerSyncD1Ev,_ZN12ConsumerSyncD2Ev
+  47              		.section	.text._ZN12ConsumerSyncD0Ev,"axG",@progbits,_ZN12ConsumerSyncD5Ev,comdat
+  48              		.align	2
+  49              		.weak	_ZN12ConsumerSyncD0Ev
+  51              	_ZN12ConsumerSyncD0Ev:
+  52              	.LFB21:
+  53              		.loc 1 73 7 is_stmt 1
+  54              		.cfi_startproc
+  55              	.LVL2:
+  56 0000 130101FE 		addi	sp,sp,-32
+  57              		.cfi_def_cfa_offset 32
+  58 0004 233C1100 		sd	ra,24(sp)
+  59 0008 23388100 		sd	s0,16(sp)
+  60 000c 23349100 		sd	s1,8(sp)
+  61              		.cfi_offset 1, -8
+  62              		.cfi_offset 8, -16
+  63              		.cfi_offset 9, -24
+  64 0010 13040102 		addi	s0,sp,32
+  65              		.cfi_def_cfa 8, 0
+  66 0014 93040500 		mv	s1,a0
+  67              	.LVL3:
+  68              	.LBB24:
+  69              	.LBB25:
+  70              		.loc 1 73 7 is_stmt 0
+  71 0018 97070000 		lla	a5,_ZTV12ConsumerSync+16
+  71      93870700 
+  72 0020 2330F500 		sd	a5,0(a0)
+  73 0024 97000000 		call	_ZN6ThreadD2Ev
+  73      E7800000 
+  74              	.LVL4:
+  75              	.LBE25:
+  76              	.LBE24:
+  77 002c 13850400 		mv	a0,s1
+  78 0030 97000000 		call	_ZdlPv
+  78      E7800000 
+  79              	.LVL5:
+  80 0038 83308101 		ld	ra,24(sp)
+  81              		.cfi_restore 1
+  82 003c 03340101 		ld	s0,16(sp)
+  83              		.cfi_restore 8
+  84              		.cfi_def_cfa 2, 32
+  85 0040 83348100 		ld	s1,8(sp)
+  86              		.cfi_restore 9
+  87              	.LVL6:
+  88 0044 13010102 		addi	sp,sp,32
+  89              		.cfi_def_cfa_offset 0
+  90 0048 67800000 		jr	ra
+  91              		.cfi_endproc
+  92              	.LFE21:
+  94              		.section	.text._ZN12ProducerSyncD2Ev,"axG",@progbits,_ZN12ProducerSyncD5Ev,comdat
+  95              		.align	2
+  96              		.weak	_ZN12ProducerSyncD2Ev
+  98              	_ZN12ProducerSyncD2Ev:
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 4
+
+
+  99              	.LFB23:
+  46:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 100              		.loc 1 46 7 is_stmt 1
+ 101              		.cfi_startproc
+ 102              	.LVL7:
+ 103 0000 130101FF 		addi	sp,sp,-16
+ 104              		.cfi_def_cfa_offset 16
+ 105 0004 23341100 		sd	ra,8(sp)
+ 106 0008 23308100 		sd	s0,0(sp)
+ 107              		.cfi_offset 1, -8
+ 108              		.cfi_offset 8, -16
+ 109 000c 13040101 		addi	s0,sp,16
+ 110              		.cfi_def_cfa 8, 0
+ 111              	.LBB26:
+  46:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 112              		.loc 1 46 7 is_stmt 0
+ 113 0010 97070000 		lla	a5,_ZTV12ProducerSync+16
+ 113      93870700 
+ 114 0018 2330F500 		sd	a5,0(a0)
+ 115 001c 97000000 		call	_ZN6ThreadD2Ev
+ 115      E7800000 
+ 116              	.LVL8:
+ 117              	.LBE26:
+ 118 0024 83308100 		ld	ra,8(sp)
+ 119              		.cfi_restore 1
+ 120 0028 03340100 		ld	s0,0(sp)
+ 121              		.cfi_restore 8
+ 122              		.cfi_def_cfa 2, 16
+ 123 002c 13010101 		addi	sp,sp,16
+ 124              		.cfi_def_cfa_offset 0
+ 125 0030 67800000 		jr	ra
+ 126              		.cfi_endproc
+ 127              	.LFE23:
+ 129              		.weak	_ZN12ProducerSyncD1Ev
+ 130              		.set	_ZN12ProducerSyncD1Ev,_ZN12ProducerSyncD2Ev
+ 131              		.section	.text._ZN12ProducerSyncD0Ev,"axG",@progbits,_ZN12ProducerSyncD5Ev,comdat
+ 132              		.align	2
+ 133              		.weak	_ZN12ProducerSyncD0Ev
+ 135              	_ZN12ProducerSyncD0Ev:
+ 136              	.LFB25:
+  46:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 137              		.loc 1 46 7 is_stmt 1
+ 138              		.cfi_startproc
+ 139              	.LVL9:
+ 140 0000 130101FE 		addi	sp,sp,-32
+ 141              		.cfi_def_cfa_offset 32
+ 142 0004 233C1100 		sd	ra,24(sp)
+ 143 0008 23388100 		sd	s0,16(sp)
+ 144 000c 23349100 		sd	s1,8(sp)
+ 145              		.cfi_offset 1, -8
+ 146              		.cfi_offset 8, -16
+ 147              		.cfi_offset 9, -24
+ 148 0010 13040102 		addi	s0,sp,32
+ 149              		.cfi_def_cfa 8, 0
+ 150 0014 93040500 		mv	s1,a0
+ 151              	.LVL10:
+ 152              	.LBB27:
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 5
+
+
+ 153              	.LBB28:
+  46:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 154              		.loc 1 46 7 is_stmt 0
+ 155 0018 97070000 		lla	a5,_ZTV12ProducerSync+16
+ 155      93870700 
+ 156 0020 2330F500 		sd	a5,0(a0)
+ 157 0024 97000000 		call	_ZN6ThreadD2Ev
+ 157      E7800000 
+ 158              	.LVL11:
+ 159              	.LBE28:
+ 160              	.LBE27:
+ 161 002c 13850400 		mv	a0,s1
+ 162 0030 97000000 		call	_ZdlPv
+ 162      E7800000 
+ 163              	.LVL12:
+ 164 0038 83308101 		ld	ra,24(sp)
+ 165              		.cfi_restore 1
+ 166 003c 03340101 		ld	s0,16(sp)
+ 167              		.cfi_restore 8
+ 168              		.cfi_def_cfa 2, 32
+ 169 0040 83348100 		ld	s1,8(sp)
+ 170              		.cfi_restore 9
+ 171              	.LVL13:
+ 172 0044 13010102 		addi	sp,sp,32
+ 173              		.cfi_def_cfa_offset 0
+ 174 0048 67800000 		jr	ra
+ 175              		.cfi_endproc
+ 176              	.LFE25:
+ 178              		.section	.text._ZN16ProducerKeyboardD2Ev,"axG",@progbits,_ZN16ProducerKeyboardD5Ev,comdat
+ 179              		.align	2
+ 180              		.weak	_ZN16ProducerKeyboardD2Ev
+ 182              	_ZN16ProducerKeyboardD2Ev:
+ 183              	.LFB27:
+  15:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 184              		.loc 1 15 7 is_stmt 1
+ 185              		.cfi_startproc
+ 186              	.LVL14:
+ 187 0000 130101FF 		addi	sp,sp,-16
+ 188              		.cfi_def_cfa_offset 16
+ 189 0004 23341100 		sd	ra,8(sp)
+ 190 0008 23308100 		sd	s0,0(sp)
+ 191              		.cfi_offset 1, -8
+ 192              		.cfi_offset 8, -16
+ 193 000c 13040101 		addi	s0,sp,16
+ 194              		.cfi_def_cfa 8, 0
+ 195              	.LBB29:
+  15:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 196              		.loc 1 15 7 is_stmt 0
+ 197 0010 97070000 		lla	a5,_ZTV16ProducerKeyboard+16
+ 197      93870700 
+ 198 0018 2330F500 		sd	a5,0(a0)
+ 199 001c 97000000 		call	_ZN6ThreadD2Ev
+ 199      E7800000 
+ 200              	.LVL15:
+ 201              	.LBE29:
+ 202 0024 83308100 		ld	ra,8(sp)
+ 203              		.cfi_restore 1
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 6
+
+
+ 204 0028 03340100 		ld	s0,0(sp)
+ 205              		.cfi_restore 8
+ 206              		.cfi_def_cfa 2, 16
+ 207 002c 13010101 		addi	sp,sp,16
+ 208              		.cfi_def_cfa_offset 0
+ 209 0030 67800000 		jr	ra
+ 210              		.cfi_endproc
+ 211              	.LFE27:
+ 213              		.weak	_ZN16ProducerKeyboardD1Ev
+ 214              		.set	_ZN16ProducerKeyboardD1Ev,_ZN16ProducerKeyboardD2Ev
+ 215              		.section	.text._ZN16ProducerKeyboardD0Ev,"axG",@progbits,_ZN16ProducerKeyboardD5Ev,comdat
+ 216              		.align	2
+ 217              		.weak	_ZN16ProducerKeyboardD0Ev
+ 219              	_ZN16ProducerKeyboardD0Ev:
+ 220              	.LFB29:
+  15:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 221              		.loc 1 15 7 is_stmt 1
+ 222              		.cfi_startproc
+ 223              	.LVL16:
+ 224 0000 130101FE 		addi	sp,sp,-32
+ 225              		.cfi_def_cfa_offset 32
+ 226 0004 233C1100 		sd	ra,24(sp)
+ 227 0008 23388100 		sd	s0,16(sp)
+ 228 000c 23349100 		sd	s1,8(sp)
+ 229              		.cfi_offset 1, -8
+ 230              		.cfi_offset 8, -16
+ 231              		.cfi_offset 9, -24
+ 232 0010 13040102 		addi	s0,sp,32
+ 233              		.cfi_def_cfa 8, 0
+ 234 0014 93040500 		mv	s1,a0
+ 235              	.LVL17:
+ 236              	.LBB30:
+ 237              	.LBB31:
+  15:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+ 238              		.loc 1 15 7 is_stmt 0
+ 239 0018 97070000 		lla	a5,_ZTV16ProducerKeyboard+16
+ 239      93870700 
+ 240 0020 2330F500 		sd	a5,0(a0)
+ 241 0024 97000000 		call	_ZN6ThreadD2Ev
+ 241      E7800000 
+ 242              	.LVL18:
+ 243              	.LBE31:
+ 244              	.LBE30:
+ 245 002c 13850400 		mv	a0,s1
+ 246 0030 97000000 		call	_ZdlPv
+ 246      E7800000 
+ 247              	.LVL19:
+ 248 0038 83308101 		ld	ra,24(sp)
+ 249              		.cfi_restore 1
+ 250 003c 03340101 		ld	s0,16(sp)
+ 251              		.cfi_restore 8
+ 252              		.cfi_def_cfa 2, 32
+ 253 0040 83348100 		ld	s1,8(sp)
+ 254              		.cfi_restore 9
+ 255              	.LVL20:
+ 256 0044 13010102 		addi	sp,sp,32
+ 257              		.cfi_def_cfa_offset 0
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 7
+
+
+ 258 0048 67800000 		jr	ra
+ 259              		.cfi_endproc
+ 260              	.LFE29:
+ 262              		.text
+ 263              		.align	2
+ 264              		.globl	_ZN16ProducerKeyboard16producerKeyboardEPv
+ 266              	_ZN16ProducerKeyboard16producerKeyboardEPv:
+ 267              	.LFB6:
+  26:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+ 268              		.loc 1 26 52 is_stmt 1
+ 269              		.cfi_startproc
+ 270              	.LVL21:
+ 271 0000 130101FD 		addi	sp,sp,-48
+ 272              		.cfi_def_cfa_offset 48
+ 273 0004 23341102 		sd	ra,40(sp)
+ 274 0008 23308102 		sd	s0,32(sp)
+ 275 000c 233C9100 		sd	s1,24(sp)
+ 276 0010 23382101 		sd	s2,16(sp)
+ 277 0014 23343101 		sd	s3,8(sp)
+ 278              		.cfi_offset 1, -8
+ 279              		.cfi_offset 8, -16
+ 280              		.cfi_offset 9, -24
+ 281              		.cfi_offset 18, -32
+ 282              		.cfi_offset 19, -40
+ 283 0018 13040103 		addi	s0,sp,48
+ 284              		.cfi_def_cfa 8, 0
+ 285 001c 93090500 		mv	s3,a0
+ 286 0020 93840500 		mv	s1,a1
+  27:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 287              		.loc 1 27 5
+ 288              	.LVL22:
+  29:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int i = 0;
+ 289              		.loc 1 29 5
+  30:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while ((key = getc()) != 0x1b) {
+ 290              		.loc 1 30 5
+  30:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while ((key = getc()) != 0x1b) {
+ 291              		.loc 1 30 9 is_stmt 0
+ 292 0024 13090000 		li	s2,0
+ 293              	.LVL23:
+ 294              	.L14:
+  31:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(key);
+ 295              		.loc 1 31 5 is_stmt 1
+  31:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(key);
+ 296              		.loc 1 31 27
+  31:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(key);
+ 297              		.loc 1 31 23 is_stmt 0
+ 298 0028 97000000 		call	_Z4getcv
+ 298      E7800000 
+ 299              	.LVL24:
+  31:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(key);
+ 300              		.loc 1 31 17
+ 301 0030 9B050500 		sext.w	a1,a0
+ 302              	.LVL25:
+  31:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(key);
+ 303              		.loc 1 31 27
+ 304 0034 9307B001 		li	a5,27
+ 305 0038 638EF502 		beq	a1,a5,.L15
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 8
+
+
+  32:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+ 306              		.loc 1 32 9 is_stmt 1
+  32:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+ 307              		.loc 1 32 26 is_stmt 0
+ 308 003c 03B58400 		ld	a0,8(s1)
+ 309 0040 97000000 		call	_ZN9BufferCPP3putEi
+ 309      E7800000 
+ 310              	.LVL26:
+  33:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 311              		.loc 1 33 9 is_stmt 1
+  33:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 312              		.loc 1 33 10 is_stmt 0
+ 313 0048 1B071900 		addiw	a4,s2,1
+ 314 004c 1B090700 		sext.w	s2,a4
+ 315              	.LVL27:
+  35:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 316              		.loc 1 35 9 is_stmt 1
+  35:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 317              		.loc 1 35 29 is_stmt 0
+ 318 0050 83A60400 		lw	a3,0(s1)
+  35:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 319              		.loc 1 35 21
+ 320 0054 9B972600 		slliw	a5,a3,2
+ 321 0058 BB87D700 		addw	a5,a5,a3
+ 322 005c 9B971700 		slliw	a5,a5,1
+  35:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 323              		.loc 1 35 15
+ 324 0060 BB67F702 		remw	a5,a4,a5
+  35:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 325              		.loc 1 35 9
+ 326 0064 E39207FC 		bne	a5,zero,.L14
+  36:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 327              		.loc 1 36 13 is_stmt 1
+  36:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 328              		.loc 1 36 29 is_stmt 0
+ 329 0068 97000000 		call	_ZN6Thread8dispatchEv
+ 329      E7800000 
+ 330              	.LVL28:
+ 331 0070 6FF09FFB 		j	.L14
+ 332              	.LVL29:
+ 333              	.L15:
+  40:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     td->buffer->put('!');
+ 334              		.loc 1 40 5 is_stmt 1
+  40:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     td->buffer->put('!');
+ 335              		.loc 1 40 15 is_stmt 0
+ 336 0074 93071000 		li	a5,1
+ 337 0078 17070000 		sw	a5,_ZL9threadEnd,a4
+ 337      2320F700 
+  41:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 338              		.loc 1 41 5 is_stmt 1
+ 339 0080 83B70902 		ld	a5,32(s3)
+  41:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 340              		.loc 1 41 20 is_stmt 0
+ 341 0084 93051002 		li	a1,33
+ 342              	.LVL30:
+ 343 0088 03B58700 		ld	a0,8(a5)
+ 344              	.LVL31:
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 9
+
+
+ 345 008c 97000000 		call	_ZN9BufferCPP3putEi
+ 345      E7800000 
+ 346              	.LVL32:
+  43:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+ 347              		.loc 1 43 5 is_stmt 1
+  43:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+ 348              		.loc 1 43 23 is_stmt 0
+ 349 0094 03B50401 		ld	a0,16(s1)
+ 350 0098 97000000 		call	_ZN9Semaphore6signalEv
+ 350      E7800000 
+ 351              	.LVL33:
+  44:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 352              		.loc 1 44 1
+ 353 00a0 83308102 		ld	ra,40(sp)
+ 354              		.cfi_restore 1
+ 355 00a4 03340102 		ld	s0,32(sp)
+ 356              		.cfi_restore 8
+ 357              		.cfi_def_cfa 2, 48
+ 358 00a8 83348101 		ld	s1,24(sp)
+ 359              		.cfi_restore 9
+ 360              	.LVL34:
+ 361 00ac 03390101 		ld	s2,16(sp)
+ 362              		.cfi_restore 18
+ 363              	.LVL35:
+ 364 00b0 83398100 		ld	s3,8(sp)
+ 365              		.cfi_restore 19
+ 366              	.LVL36:
+ 367 00b4 13010103 		addi	sp,sp,48
+ 368              		.cfi_def_cfa_offset 0
+ 369 00b8 67800000 		jr	ra
+ 370              		.cfi_endproc
+ 371              	.LFE6:
+ 373              		.section	.text._ZN16ProducerKeyboard3runEv,"axG",@progbits,_ZN16ProducerKeyboard3runEv,comdat
+ 374              		.align	2
+ 375              		.weak	_ZN16ProducerKeyboard3runEv
+ 377              	_ZN16ProducerKeyboard3runEv:
+ 378              	.LFB5:
+  21:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         producerKeyboard(td);
+ 379              		.loc 1 21 10 is_stmt 1
+ 380              		.cfi_startproc
+ 381              	.LVL37:
+ 382 0000 130101FF 		addi	sp,sp,-16
+ 383              		.cfi_def_cfa_offset 16
+ 384 0004 23341100 		sd	ra,8(sp)
+ 385 0008 23308100 		sd	s0,0(sp)
+ 386              		.cfi_offset 1, -8
+ 387              		.cfi_offset 8, -16
+ 388 000c 13040101 		addi	s0,sp,16
+ 389              		.cfi_def_cfa 8, 0
+  22:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 390              		.loc 1 22 9
+  22:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 391              		.loc 1 22 25 is_stmt 0
+ 392 0010 83350502 		ld	a1,32(a0)
+ 393 0014 97000000 		call	_ZN16ProducerKeyboard16producerKeyboardEPv
+ 393      E7800000 
+ 394              	.LVL38:
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 10
+
+
+  23:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+ 395              		.loc 1 23 5
+ 396 001c 83308100 		ld	ra,8(sp)
+ 397              		.cfi_restore 1
+ 398 0020 03340100 		ld	s0,0(sp)
+ 399              		.cfi_restore 8
+ 400              		.cfi_def_cfa 2, 16
+ 401 0024 13010101 		addi	sp,sp,16
+ 402              		.cfi_def_cfa_offset 0
+ 403 0028 67800000 		jr	ra
+ 404              		.cfi_endproc
+ 405              	.LFE5:
+ 407              		.text
+ 408              		.align	2
+ 409              		.globl	_ZN12ProducerSync8producerEPv
+ 411              	_ZN12ProducerSync8producerEPv:
+ 412              	.LFB11:
+  57:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+ 413              		.loc 1 57 40 is_stmt 1
+ 414              		.cfi_startproc
+ 415              	.LVL39:
+ 416 00bc 130101FE 		addi	sp,sp,-32
+ 417              		.cfi_def_cfa_offset 32
+ 418 00c0 233C1100 		sd	ra,24(sp)
+ 419 00c4 23388100 		sd	s0,16(sp)
+ 420 00c8 23349100 		sd	s1,8(sp)
+ 421 00cc 23302101 		sd	s2,0(sp)
+ 422              		.cfi_offset 1, -8
+ 423              		.cfi_offset 8, -16
+ 424              		.cfi_offset 9, -24
+ 425              		.cfi_offset 18, -32
+ 426 00d0 13040102 		addi	s0,sp,32
+ 427              		.cfi_def_cfa 8, 0
+ 428 00d4 93840500 		mv	s1,a1
+  58:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 429              		.loc 1 58 5
+ 430              	.LVL40:
+  60:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while (!threadEnd) {
+ 431              		.loc 1 60 5
+  60:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while (!threadEnd) {
+ 432              		.loc 1 60 9 is_stmt 0
+ 433 00d8 13090000 		li	s2,0
+ 434              	.LVL41:
+ 435              	.L21:
+  61:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(data->id + '0');
+ 436              		.loc 1 61 5 is_stmt 1
+  61:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data->buffer->put(data->id + '0');
+ 437              		.loc 1 61 12
+ 438 00dc 97070000 		lw	a5,_ZL9threadEnd
+ 438      83A70700 
+ 439 00e4 63920704 		bne	a5,zero,.L22
+  62:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+ 440              		.loc 1 62 9
+  62:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+ 441              		.loc 1 62 33 is_stmt 0
+ 442 00e8 83A50400 		lw	a1,0(s1)
+  62:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 11
+
+
+ 443              		.loc 1 62 26
+ 444 00ec 9B850503 		addiw	a1,a1,48
+ 445 00f0 03B58400 		ld	a0,8(s1)
+ 446 00f4 97000000 		call	_ZN9BufferCPP3putEi
+ 446      E7800000 
+ 447              	.LVL42:
+  63:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 448              		.loc 1 63 9 is_stmt 1
+  63:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 449              		.loc 1 63 10 is_stmt 0
+ 450 00fc 1B071900 		addiw	a4,s2,1
+ 451 0100 1B090700 		sext.w	s2,a4
+ 452              	.LVL43:
+  65:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 453              		.loc 1 65 9 is_stmt 1
+  65:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 454              		.loc 1 65 29 is_stmt 0
+ 455 0104 83A60400 		lw	a3,0(s1)
+  65:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 456              		.loc 1 65 21
+ 457 0108 9B972600 		slliw	a5,a3,2
+ 458 010c BB87D700 		addw	a5,a5,a3
+ 459 0110 9B971700 		slliw	a5,a5,1
+  65:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 460              		.loc 1 65 15
+ 461 0114 BB67F702 		remw	a5,a4,a5
+  65:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 462              		.loc 1 65 9
+ 463 0118 E39207FC 		bne	a5,zero,.L21
+  66:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 464              		.loc 1 66 13 is_stmt 1
+  66:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 465              		.loc 1 66 29 is_stmt 0
+ 466 011c 97000000 		call	_ZN6Thread8dispatchEv
+ 466      E7800000 
+ 467              	.LVL44:
+ 468 0124 6FF09FFB 		j	.L21
+ 469              	.L22:
+  70:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+ 470              		.loc 1 70 5 is_stmt 1
+  70:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+ 471              		.loc 1 70 23 is_stmt 0
+ 472 0128 03B50401 		ld	a0,16(s1)
+ 473 012c 97000000 		call	_ZN9Semaphore6signalEv
+ 473      E7800000 
+ 474              	.LVL45:
+  71:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 475              		.loc 1 71 1
+ 476 0134 83308101 		ld	ra,24(sp)
+ 477              		.cfi_restore 1
+ 478 0138 03340101 		ld	s0,16(sp)
+ 479              		.cfi_restore 8
+ 480              		.cfi_def_cfa 2, 32
+ 481 013c 83348100 		ld	s1,8(sp)
+ 482              		.cfi_restore 9
+ 483              	.LVL46:
+ 484 0140 03390100 		ld	s2,0(sp)
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 12
+
+
+ 485              		.cfi_restore 18
+ 486              	.LVL47:
+ 487 0144 13010102 		addi	sp,sp,32
+ 488              		.cfi_def_cfa_offset 0
+ 489 0148 67800000 		jr	ra
+ 490              		.cfi_endproc
+ 491              	.LFE11:
+ 493              		.section	.text._ZN12ProducerSync3runEv,"axG",@progbits,_ZN12ProducerSync3runEv,comdat
+ 494              		.align	2
+ 495              		.weak	_ZN12ProducerSync3runEv
+ 497              	_ZN12ProducerSync3runEv:
+ 498              	.LFB10:
+  52:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         producer(td);
+ 499              		.loc 1 52 10 is_stmt 1
+ 500              		.cfi_startproc
+ 501              	.LVL48:
+ 502 0000 130101FF 		addi	sp,sp,-16
+ 503              		.cfi_def_cfa_offset 16
+ 504 0004 23341100 		sd	ra,8(sp)
+ 505 0008 23308100 		sd	s0,0(sp)
+ 506              		.cfi_offset 1, -8
+ 507              		.cfi_offset 8, -16
+ 508 000c 13040101 		addi	s0,sp,16
+ 509              		.cfi_def_cfa 8, 0
+  53:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 510              		.loc 1 53 9
+  53:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 511              		.loc 1 53 17 is_stmt 0
+ 512 0010 83350502 		ld	a1,32(a0)
+ 513 0014 97000000 		call	_ZN12ProducerSync8producerEPv
+ 513      E7800000 
+ 514              	.LVL49:
+  54:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+ 515              		.loc 1 54 5
+ 516 001c 83308100 		ld	ra,8(sp)
+ 517              		.cfi_restore 1
+ 518 0020 03340100 		ld	s0,0(sp)
+ 519              		.cfi_restore 8
+ 520              		.cfi_def_cfa 2, 16
+ 521 0024 13010101 		addi	sp,sp,16
+ 522              		.cfi_def_cfa_offset 0
+ 523 0028 67800000 		jr	ra
+ 524              		.cfi_endproc
+ 525              	.LFE10:
+ 527              		.text
+ 528              		.align	2
+ 529              		.globl	_ZN12ConsumerSync8consumerEPv
+ 531              	_ZN12ConsumerSync8consumerEPv:
+ 532              	.LFB16:
+  74:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     thread_data* td;
+  75:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     void consumer(void *arg);
+  76:test/ConsumerProducer_CPP_Sync_API_test.cpp **** public:
+  77:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     ConsumerSync(thread_data* _td):Thread(), td(_td) {}
+  78:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  79:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     void run() override {
+  80:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         consumer(td);
+  81:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 13
+
+
+  82:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+  83:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  84:test/ConsumerProducer_CPP_Sync_API_test.cpp **** void ConsumerSync::consumer(void *arg) {
+ 533              		.loc 1 84 40 is_stmt 1
+ 534              		.cfi_startproc
+ 535              	.LVL50:
+ 536 014c 130101FD 		addi	sp,sp,-48
+ 537              		.cfi_def_cfa_offset 48
+ 538 0150 23341102 		sd	ra,40(sp)
+ 539 0154 23308102 		sd	s0,32(sp)
+ 540 0158 233C9100 		sd	s1,24(sp)
+ 541 015c 23382101 		sd	s2,16(sp)
+ 542 0160 23343101 		sd	s3,8(sp)
+ 543 0164 23304101 		sd	s4,0(sp)
+ 544              		.cfi_offset 1, -8
+ 545              		.cfi_offset 8, -16
+ 546              		.cfi_offset 9, -24
+ 547              		.cfi_offset 18, -32
+ 548              		.cfi_offset 19, -40
+ 549              		.cfi_offset 20, -48
+ 550 0168 13040103 		addi	s0,sp,48
+ 551              		.cfi_def_cfa 8, 0
+ 552 016c 93090500 		mv	s3,a0
+ 553 0170 13890500 		mv	s2,a1
+  85:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     struct thread_data *data = (struct thread_data *) arg;
+ 554              		.loc 1 85 5
+ 555              	.LVL51:
+  86:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  87:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int i = 0;
+ 556              		.loc 1 87 5
+ 557              		.loc 1 87 9 is_stmt 0
+ 558 0174 130A0000 		li	s4,0
+ 559              	.LVL52:
+ 560              	.L28:
+  88:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while (!threadEnd) {
+ 561              		.loc 1 88 5 is_stmt 1
+ 562              		.loc 1 88 12
+ 563 0178 97070000 		lw	a5,_ZL9threadEnd
+ 563      83A70700 
+ 564 0180 639E0706 		bne	a5,zero,.L29
+ 565              	.LBB32:
+  89:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = data->buffer->get();
+ 566              		.loc 1 89 9
+ 567              		.loc 1 89 36 is_stmt 0
+ 568 0184 03358900 		ld	a0,8(s2)
+ 569 0188 97000000 		call	_ZN9BufferCPP3getEv
+ 569      E7800000 
+ 570              	.LVL53:
+  90:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         i++;
+ 571              		.loc 1 90 9 is_stmt 1
+ 572              		.loc 1 90 10 is_stmt 0
+ 573 0190 9B041A00 		addiw	s1,s4,1
+ 574 0194 1B8A0400 		sext.w	s4,s1
+ 575              	.LVL54:
+  91:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  92:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         putc(key);
+ 576              		.loc 1 92 9 is_stmt 1
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 14
+
+
+ 577              		.loc 1 92 13 is_stmt 0
+ 578 0198 1375F50F 		andi	a0,a0,0xff
+ 579              	.LVL55:
+ 580 019c 97000000 		call	_Z4putcc
+ 580      E7800000 
+ 581              	.LVL56:
+  93:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  94:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         if (i % (5 * data->id) == 0) {
+ 582              		.loc 1 94 9 is_stmt 1
+ 583              		.loc 1 94 28 is_stmt 0
+ 584 01a4 03270900 		lw	a4,0(s2)
+ 585              		.loc 1 94 20
+ 586 01a8 9B172700 		slliw	a5,a4,2
+ 587 01ac BB87E700 		addw	a5,a5,a4
+ 588              		.loc 1 94 15
+ 589 01b0 BBE7F402 		remw	a5,s1,a5
+ 590              		.loc 1 94 9
+ 591 01b4 63800702 		beq	a5,zero,.L34
+ 592              	.L30:
+  95:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+  96:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+  97:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+  98:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         if (i % 80 == 0) {
+ 593              		.loc 1 98 9 is_stmt 1
+ 594              		.loc 1 98 15 is_stmt 0
+ 595 01b8 93070005 		li	a5,80
+ 596 01bc BBE4F402 		remw	s1,s1,a5
+ 597              	.LVL57:
+ 598              		.loc 1 98 9
+ 599 01c0 E39C04FA 		bne	s1,zero,.L28
+  99:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             putc('\n');
+ 600              		.loc 1 99 13 is_stmt 1
+ 601              		.loc 1 99 17 is_stmt 0
+ 602 01c4 1305A000 		li	a0,10
+ 603 01c8 97000000 		call	_Z4putcc
+ 603      E7800000 
+ 604              	.LVL58:
+ 605 01d0 6FF09FFA 		j	.L28
+ 606              	.LVL59:
+ 607              	.L34:
+  95:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 608              		.loc 1 95 13 is_stmt 1
+  95:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             Thread::dispatch();
+ 609              		.loc 1 95 29 is_stmt 0
+ 610 01d4 97000000 		call	_ZN6Thread8dispatchEv
+ 610      E7800000 
+ 611              	.LVL60:
+ 612 01dc 6FF0DFFD 		j	.L30
+ 613              	.LVL61:
+ 614              	.L35:
+ 615              	.LBE32:
+ 616              	.LBB33:
+ 100:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 101:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 102:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 103:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 104:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     while (td->buffer->getCnt() > 0) {
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 15
+
+
+ 105:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = td->buffer->get();
+ 617              		.loc 1 105 9 is_stmt 1
+ 618              		.loc 1 105 19 is_stmt 0
+ 619 01e0 83B70902 		ld	a5,32(s3)
+ 620              		.loc 1 105 34
+ 621 01e4 03B58700 		ld	a0,8(a5)
+ 622 01e8 97000000 		call	_ZN9BufferCPP3getEv
+ 622      E7800000 
+ 623              	.LVL62:
+ 106:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         Console::putc(key);
+ 624              		.loc 1 106 9 is_stmt 1
+ 625              		.loc 1 106 22 is_stmt 0
+ 626 01f0 1375F50F 		andi	a0,a0,0xff
+ 627              	.LVL63:
+ 628 01f4 97000000 		call	_ZN7Console4putcEc
+ 628      E7800000 
+ 629              	.LVL64:
+ 630              	.L29:
+ 631              	.LBE33:
+ 104:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = td->buffer->get();
+ 632              		.loc 1 104 5 is_stmt 1
+ 104:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = td->buffer->get();
+ 633              		.loc 1 104 33
+ 104:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = td->buffer->get();
+ 634              		.loc 1 104 12 is_stmt 0
+ 635 01fc 83B70902 		ld	a5,32(s3)
+ 104:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = td->buffer->get();
+ 636              		.loc 1 104 30
+ 637 0200 03B58700 		ld	a0,8(a5)
+ 638 0204 97000000 		call	_ZN9BufferCPP6getCntEv
+ 638      E7800000 
+ 639              	.LVL65:
+ 104:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         int key = td->buffer->get();
+ 640              		.loc 1 104 33
+ 641 020c E34AA0FC 		bgt	a0,zero,.L35
+ 107:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 108:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 109:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data->wait->signal();
+ 642              		.loc 1 109 5 is_stmt 1
+ 643              		.loc 1 109 23 is_stmt 0
+ 644 0210 03350901 		ld	a0,16(s2)
+ 645 0214 97000000 		call	_ZN9Semaphore6signalEv
+ 645      E7800000 
+ 646              	.LVL66:
+ 110:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+ 647              		.loc 1 110 1
+ 648 021c 83308102 		ld	ra,40(sp)
+ 649              		.cfi_restore 1
+ 650 0220 03340102 		ld	s0,32(sp)
+ 651              		.cfi_restore 8
+ 652              		.cfi_def_cfa 2, 48
+ 653 0224 83348101 		ld	s1,24(sp)
+ 654              		.cfi_restore 9
+ 655 0228 03390101 		ld	s2,16(sp)
+ 656              		.cfi_restore 18
+ 657              	.LVL67:
+ 658 022c 83398100 		ld	s3,8(sp)
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 16
+
+
+ 659              		.cfi_restore 19
+ 660              	.LVL68:
+ 661 0230 033A0100 		ld	s4,0(sp)
+ 662              		.cfi_restore 20
+ 663              	.LVL69:
+ 664 0234 13010103 		addi	sp,sp,48
+ 665              		.cfi_def_cfa_offset 0
+ 666 0238 67800000 		jr	ra
+ 667              		.cfi_endproc
+ 668              	.LFE16:
+ 670              		.section	.text._ZN12ConsumerSync3runEv,"axG",@progbits,_ZN12ConsumerSync3runEv,comdat
+ 671              		.align	2
+ 672              		.weak	_ZN12ConsumerSync3runEv
+ 674              	_ZN12ConsumerSync3runEv:
+ 675              	.LFB15:
+  79:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         consumer(td);
+ 676              		.loc 1 79 10 is_stmt 1
+ 677              		.cfi_startproc
+ 678              	.LVL70:
+ 679 0000 130101FF 		addi	sp,sp,-16
+ 680              		.cfi_def_cfa_offset 16
+ 681 0004 23341100 		sd	ra,8(sp)
+ 682 0008 23308100 		sd	s0,0(sp)
+ 683              		.cfi_offset 1, -8
+ 684              		.cfi_offset 8, -16
+ 685 000c 13040101 		addi	s0,sp,16
+ 686              		.cfi_def_cfa 8, 0
+  80:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 687              		.loc 1 80 9
+  80:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 688              		.loc 1 80 17 is_stmt 0
+ 689 0010 83350502 		ld	a1,32(a0)
+ 690 0014 97000000 		call	_ZN12ConsumerSync8consumerEPv
+ 690      E7800000 
+ 691              	.LVL71:
+  81:test/ConsumerProducer_CPP_Sync_API_test.cpp **** };
+ 692              		.loc 1 81 5
+ 693 001c 83308100 		ld	ra,8(sp)
+ 694              		.cfi_restore 1
+ 695 0020 03340100 		ld	s0,0(sp)
+ 696              		.cfi_restore 8
+ 697              		.cfi_def_cfa 2, 16
+ 698 0024 13010101 		addi	sp,sp,16
+ 699              		.cfi_def_cfa_offset 0
+ 700 0028 67800000 		jr	ra
+ 701              		.cfi_endproc
+ 702              	.LFE15:
+ 704              		.section	.rodata.str1.8,"aMS",@progbits,1
+ 705              		.align	3
+ 706              	.LC0:
+ 707 0000 556E6573 		.string	"Unesite broj proizvodjaca?\n"
+ 707      69746520 
+ 707      62726F6A 
+ 707      2070726F 
+ 707      697A766F 
+ 708 001c 00000000 		.align	3
+ 709              	.LC1:
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 17
+
+
+ 710 0020 556E6573 		.string	"Unesite velicinu bafera?\n"
+ 710      69746520 
+ 710      76656C69 
+ 710      63696E75 
+ 710      20626166 
+ 711 003a 00000000 		.align	3
+ 711      0000
+ 712              	.LC2:
+ 713 0040 42726F6A 		.string	"Broj proizvodjaca "
+ 713      2070726F 
+ 713      697A766F 
+ 713      646A6163 
+ 713      612000
+ 714 0053 00000000 		.align	3
+ 714      00
+ 715              	.LC3:
+ 716 0058 20692076 		.string	" i velicina bafera "
+ 716      656C6963 
+ 716      696E6120 
+ 716      62616665 
+ 716      72612000 
+ 717 006c 00000000 		.align	3
+ 718              	.LC4:
+ 719 0070 2E0A00   		.string	".\n"
+ 720 0073 00000000 		.align	3
+ 720      00
+ 721              	.LC5:
+ 722 0078 42726F6A 		.string	"Broj proizvodjaca ne sme biti manji od velicine bafera!\n"
+ 722      2070726F 
+ 722      697A766F 
+ 722      646A6163 
+ 722      61206E65 
+ 723 00b1 00000000 		.align	3
+ 723      000000
+ 724              	.LC6:
+ 725 00b8 42726F6A 		.string	"Broj proizvodjaca mora biti veci od nula!\n"
+ 725      2070726F 
+ 725      697A766F 
+ 725      646A6163 
+ 725      61206D6F 
+ 726              		.text
+ 727              		.align	2
+ 728              		.globl	_Z29producerConsumer_CPP_Sync_APIv
+ 730              	_Z29producerConsumer_CPP_Sync_APIv:
+ 731              	.LFB17:
+ 111:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 112:test/ConsumerProducer_CPP_Sync_API_test.cpp **** void producerConsumer_CPP_Sync_API() {
+ 732              		.loc 1 112 38 is_stmt 1
+ 733              		.cfi_startproc
+ 734              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+ 735              		.cfi_lsda 0x1b,.LLSDA17
+ 736 023c 130101F8 		addi	sp,sp,-128
+ 737              		.cfi_def_cfa_offset 128
+ 738 0240 233C1106 		sd	ra,120(sp)
+ 739 0244 23388106 		sd	s0,112(sp)
+ 740 0248 23349106 		sd	s1,104(sp)
+ 741 024c 23302107 		sd	s2,96(sp)
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 18
+
+
+ 742 0250 233C3105 		sd	s3,88(sp)
+ 743 0254 23384105 		sd	s4,80(sp)
+ 744 0258 23345105 		sd	s5,72(sp)
+ 745 025c 23306105 		sd	s6,64(sp)
+ 746 0260 233C7103 		sd	s7,56(sp)
+ 747 0264 23388103 		sd	s8,48(sp)
+ 748 0268 23349103 		sd	s9,40(sp)
+ 749              		.cfi_offset 1, -8
+ 750              		.cfi_offset 8, -16
+ 751              		.cfi_offset 9, -24
+ 752              		.cfi_offset 18, -32
+ 753              		.cfi_offset 19, -40
+ 754              		.cfi_offset 20, -48
+ 755              		.cfi_offset 21, -56
+ 756              		.cfi_offset 22, -64
+ 757              		.cfi_offset 23, -72
+ 758              		.cfi_offset 24, -80
+ 759              		.cfi_offset 25, -88
+ 760 026c 13040108 		addi	s0,sp,128
+ 761              		.cfi_def_cfa 8, 0
+ 113:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     char input[30];
+ 114:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     int n, threadNum;
+ 115:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 116:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString("Unesite broj proizvodjaca?\n");
+ 117:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     getString(input, 30);
+ 118:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     threadNum = stringToInt(input);
+ 119:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 120:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString("Unesite velicinu bafera?\n");
+ 121:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     getString(input, 30);
+ 122:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     n = stringToInt(input);
+ 123:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 124:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString("Broj proizvodjaca "); printInt(threadNum);
+ 125:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(" i velicina bafera "); printInt(n);
+ 126:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(".\n");
+ 127:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 128:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     if(threadNum > n) {
+ 129:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         printString("Broj proizvodjaca ne sme biti manji od velicine bafera!\n");
+ 130:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         return;
+ 131:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     } else if (threadNum < 1) {
+ 132:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         printString("Broj proizvodjaca mora biti veci od nula!\n");
+ 133:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         return;
+ 134:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 135:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 136:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     BufferCPP *buffer = new BufferCPP(n);
+ 137:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 138:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     waitForAll = new Semaphore(0);
+ 139:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 140:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     Thread* threads[threadNum];
+ 141:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     Thread* consumerThread;
+ 142:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 143:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     struct thread_data data[threadNum + 1];
+ 144:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 145:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].id = threadNum;
+ 146:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].buffer = buffer;
+ 147:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].wait = waitForAll;
+ 148:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread = new ConsumerSync(data+threadNum);
+ 149:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread->start();
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 19
+
+
+ 150:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 151:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     for (int i = 0; i < threadNum; i++) {
+ 152:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].id = i;
+ 153:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].buffer = buffer;
+ 154:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].wait = waitForAll;
+ 155:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 156:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         if(i>0) {
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             threads[i] = new ProducerSync(data+i);
+ 158:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             threads[i] = new ProducerKeyboard(data+i);
+ 160:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 161:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 162:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         threads[i]->start();
+ 163:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 164:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 165:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     Thread::dispatch();
+ 166:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 167:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     for (int i = 0; i <= threadNum; i++) {
+ 168:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         waitForAll->wait();
+ 169:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 170:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 171:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     for (int i = 0; i < threadNum; i++) {
+ 172:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         delete threads[i];
+ 173:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 174:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete consumerThread;
+ 175:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete waitForAll;
+ 176:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete buffer;
+ 762              		.loc 1 176 18 is_stmt 0
+ 763 0270 930B0100 		mv	s7,sp
+ 113:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     char input[30];
+ 764              		.loc 1 113 5 is_stmt 1
+ 114:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 765              		.loc 1 114 5
+ 116:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     getString(input, 30);
+ 766              		.loc 1 116 5
+ 116:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     getString(input, 30);
+ 767              		.loc 1 116 16 is_stmt 0
+ 768 0274 17050000 		lla	a0,.LC0
+ 768      13050500 
+ 769              	.LEHB0:
+ 770 027c 97000000 		call	_Z11printStringPKc
+ 770      E7800000 
+ 771              	.LVL72:
+ 117:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     threadNum = stringToInt(input);
+ 772              		.loc 1 117 5 is_stmt 1
+ 117:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     threadNum = stringToInt(input);
+ 773              		.loc 1 117 14 is_stmt 0
+ 774 0284 9305E001 		li	a1,30
+ 775 0288 130504F8 		addi	a0,s0,-128
+ 776 028c 97000000 		call	_Z9getStringPci
+ 776      E7800000 
+ 777              	.LVL73:
+ 118:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 778              		.loc 1 118 5 is_stmt 1
+ 118:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 779              		.loc 1 118 28 is_stmt 0
+ 780 0294 130504F8 		addi	a0,s0,-128
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 20
+
+
+ 781 0298 97000000 		call	_Z11stringToIntPKc
+ 781      E7800000 
+ 782              	.LVL74:
+ 783 02a0 13090500 		mv	s2,a0
+ 784              	.LVL75:
+ 120:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     getString(input, 30);
+ 785              		.loc 1 120 5 is_stmt 1
+ 120:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     getString(input, 30);
+ 786              		.loc 1 120 16 is_stmt 0
+ 787 02a4 17050000 		lla	a0,.LC1
+ 787      13050500 
+ 788 02ac 97000000 		call	_Z11printStringPKc
+ 788      E7800000 
+ 789              	.LVL76:
+ 121:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     n = stringToInt(input);
+ 790              		.loc 1 121 5 is_stmt 1
+ 121:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     n = stringToInt(input);
+ 791              		.loc 1 121 14 is_stmt 0
+ 792 02b4 9305E001 		li	a1,30
+ 793 02b8 130504F8 		addi	a0,s0,-128
+ 794 02bc 97000000 		call	_Z9getStringPci
+ 794      E7800000 
+ 795              	.LVL77:
+ 122:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 796              		.loc 1 122 5 is_stmt 1
+ 122:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 797              		.loc 1 122 20 is_stmt 0
+ 798 02c4 130504F8 		addi	a0,s0,-128
+ 799 02c8 97000000 		call	_Z11stringToIntPKc
+ 799      E7800000 
+ 800              	.LVL78:
+ 801 02d0 93040500 		mv	s1,a0
+ 802              	.LVL79:
+ 124:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(" i velicina bafera "); printInt(n);
+ 803              		.loc 1 124 5 is_stmt 1
+ 124:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(" i velicina bafera "); printInt(n);
+ 804              		.loc 1 124 16 is_stmt 0
+ 805 02d4 17050000 		lla	a0,.LC2
+ 805      13050500 
+ 806 02dc 97000000 		call	_Z11printStringPKc
+ 806      E7800000 
+ 807              	.LVL80:
+ 124:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(" i velicina bafera "); printInt(n);
+ 808              		.loc 1 124 40 is_stmt 1
+ 124:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(" i velicina bafera "); printInt(n);
+ 809              		.loc 1 124 48 is_stmt 0
+ 810 02e4 13060000 		li	a2,0
+ 811 02e8 9305A000 		li	a1,10
+ 812 02ec 13050900 		mv	a0,s2
+ 813 02f0 97000000 		call	_Z8printIntiii
+ 813      E7800000 
+ 814              	.LVL81:
+ 125:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(".\n");
+ 815              		.loc 1 125 5 is_stmt 1
+ 125:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(".\n");
+ 816              		.loc 1 125 16 is_stmt 0
+ 817 02f8 17050000 		lla	a0,.LC3
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 21
+
+
+ 817      13050500 
+ 818 0300 97000000 		call	_Z11printStringPKc
+ 818      E7800000 
+ 819              	.LVL82:
+ 125:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(".\n");
+ 820              		.loc 1 125 41 is_stmt 1
+ 125:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     printString(".\n");
+ 821              		.loc 1 125 49 is_stmt 0
+ 822 0308 13060000 		li	a2,0
+ 823 030c 9305A000 		li	a1,10
+ 824 0310 13850400 		mv	a0,s1
+ 825 0314 97000000 		call	_Z8printIntiii
+ 825      E7800000 
+ 826              	.LVL83:
+ 126:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 827              		.loc 1 126 5 is_stmt 1
+ 126:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 828              		.loc 1 126 16 is_stmt 0
+ 829 031c 17050000 		lla	a0,.LC4
+ 829      13050500 
+ 830 0324 97000000 		call	_Z11printStringPKc
+ 830      E7800000 
+ 831              	.LVL84:
+ 128:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         printString("Broj proizvodjaca ne sme biti manji od velicine bafera!\n");
+ 832              		.loc 1 128 5 is_stmt 1
+ 833 032c 63C42403 		bgt	s2,s1,.L66
+ 131:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         printString("Broj proizvodjaca mora biti veci od nula!\n");
+ 834              		.loc 1 131 12
+ 835 0330 635C2003 		ble	s2,zero,.L67
+ 136:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 836              		.loc 1 136 5
+ 136:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 837              		.loc 1 136 40 is_stmt 0
+ 838 0334 13058003 		li	a0,56
+ 839 0338 97000000 		call	_Znwm
+ 839      E7800000 
+ 840              	.LVL85:
+ 841              	.LEHE0:
+ 842 0340 930A0500 		mv	s5,a0
+ 843 0344 93850400 		mv	a1,s1
+ 844              	.LEHB1:
+ 845 0348 97000000 		call	_ZN9BufferCPPC1Ei
+ 845      E7800000 
+ 846              	.LVL86:
+ 847              	.LEHE1:
+ 848 0350 6F000003 		j	.L68
+ 849              	.L66:
+ 129:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         return;
+ 850              		.loc 1 129 9 is_stmt 1
+ 129:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         return;
+ 851              		.loc 1 129 20 is_stmt 0
+ 852 0354 17050000 		lla	a0,.LC5
+ 852      13050500 
+ 853              	.LEHB2:
+ 854 035c 97000000 		call	_Z11printStringPKc
+ 854      E7800000 
+ 855              	.LVL87:
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 22
+
+
+ 130:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     } else if (threadNum < 1) {
+ 856              		.loc 1 130 9 is_stmt 1
+ 857 0364 6F004001 		j	.L40
+ 858              	.L67:
+ 132:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         return;
+ 859              		.loc 1 132 9
+ 132:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         return;
+ 860              		.loc 1 132 20 is_stmt 0
+ 861 0368 17050000 		lla	a0,.LC6
+ 861      13050500 
+ 862 0370 97000000 		call	_Z11printStringPKc
+ 862      E7800000 
+ 863              	.LVL88:
+ 133:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 864              		.loc 1 133 9 is_stmt 1
+ 865              	.L40:
+ 866 0378 13810B00 		mv	sp,s7
+ 867 037c 6F008023 		j	.L38
+ 868              	.L68:
+ 869              	.LVL89:
+ 138:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 870              		.loc 1 138 5 discriminator 3
+ 138:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 871              		.loc 1 138 33 is_stmt 0 discriminator 3
+ 872 0380 13050001 		li	a0,16
+ 873 0384 97000000 		call	_Znwm
+ 873      E7800000 
+ 874              	.LVL90:
+ 875              	.LEHE2:
+ 876 038c 93040500 		mv	s1,a0
+ 877              	.LVL91:
+ 878 0390 93050000 		li	a1,0
+ 879              	.LEHB3:
+ 880 0394 97000000 		call	_ZN9SemaphoreC1Ej
+ 880      E7800000 
+ 881              	.LVL92:
+ 882              	.LEHE3:
+ 138:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 883              		.loc 1 138 16 discriminator 3
+ 884 039c 97070000 		sd	s1,_ZL10waitForAll,a5
+ 884      23B09700 
+ 140:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     Thread* consumerThread;
+ 885              		.loc 1 140 5 is_stmt 1 discriminator 3
+ 886              	.LVL93:
+ 140:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     Thread* consumerThread;
+ 887              		.loc 1 140 13 is_stmt 0 discriminator 3
+ 888 03a4 93173900 		slli	a5,s2,3
+ 889 03a8 9387F700 		addi	a5,a5,15
+ 890 03ac 93F707FF 		andi	a5,a5,-16
+ 891 03b0 3301F140 		sub	sp,sp,a5
+ 892 03b4 93090100 		mv	s3,sp
+ 893              	.LVL94:
+ 141:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 894              		.loc 1 141 5 is_stmt 1 discriminator 3
+ 143:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 895              		.loc 1 143 5 discriminator 3
+ 143:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 23
+
+
+ 896              		.loc 1 143 39 is_stmt 0 discriminator 3
+ 897 03b8 1B071900 		addiw	a4,s2,1
+ 898              	.LVL95:
+ 143:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 899              		.loc 1 143 24 discriminator 3
+ 900 03bc 93171700 		slli	a5,a4,1
+ 901 03c0 B387E700 		add	a5,a5,a4
+ 902 03c4 93973700 		slli	a5,a5,3
+ 903 03c8 9387F700 		addi	a5,a5,15
+ 904 03cc 93F707FF 		andi	a5,a5,-16
+ 905 03d0 3301F140 		sub	sp,sp,a5
+ 906              	.LVL96:
+ 907 03d4 130A0100 		mv	s4,sp
+ 908              	.LVL97:
+ 145:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].buffer = buffer;
+ 909              		.loc 1 145 5 is_stmt 1 discriminator 3
+ 145:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].buffer = buffer;
+ 910              		.loc 1 145 24 is_stmt 0 discriminator 3
+ 911 03d8 131C1900 		slli	s8,s2,1
+ 912 03dc B3072C01 		add	a5,s8,s2
+ 913 03e0 93973700 		slli	a5,a5,3
+ 914 03e4 B307FA00 		add	a5,s4,a5
+ 915 03e8 23A02701 		sw	s2,0(a5)
+ 146:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].wait = waitForAll;
+ 916              		.loc 1 146 5 is_stmt 1 discriminator 3
+ 146:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     data[threadNum].wait = waitForAll;
+ 917              		.loc 1 146 28 is_stmt 0 discriminator 3
+ 918 03ec 23B45701 		sd	s5,8(a5)
+ 147:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread = new ConsumerSync(data+threadNum);
+ 919              		.loc 1 147 5 is_stmt 1 discriminator 3
+ 147:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread = new ConsumerSync(data+threadNum);
+ 920              		.loc 1 147 26 is_stmt 0 discriminator 3
+ 921 03f0 23B89700 		sd	s1,16(a5)
+ 148:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread->start();
+ 922              		.loc 1 148 5 is_stmt 1 discriminator 3
+ 148:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread->start();
+ 923              		.loc 1 148 53 is_stmt 0 discriminator 3
+ 924 03f4 13058002 		li	a0,40
+ 925              	.LEHB4:
+ 926 03f8 97000000 		call	_Znwm
+ 926      E7800000 
+ 927              	.LVL98:
+ 928              	.LEHE4:
+ 929 0400 130B0500 		mv	s6,a0
+ 148:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread->start();
+ 930              		.loc 1 148 43 discriminator 3
+ 931 0404 330C2C01 		add	s8,s8,s2
+ 932 0408 131C3C00 		slli	s8,s8,3
+ 148:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread->start();
+ 933              		.loc 1 148 53 discriminator 3
+ 934 040c 330C8A01 		add	s8,s4,s8
+ 935              	.LVL99:
+ 936              	.LEHB5:
+ 937              	.LBB34:
+ 938              	.LBB35:
+  77:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 939              		.loc 1 77 52 discriminator 3
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 24
+
+
+ 940 0410 97000000 		call	_ZN6ThreadC2Ev
+ 940      E7800000 
+ 941              	.LVL100:
+ 942              	.LEHE5:
+  77:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 943              		.loc 1 77 52
+ 944 0418 97070000 		lla	a5,_ZTV12ConsumerSync+16
+ 944      93870700 
+ 945 0420 2330FB00 		sd	a5,0(s6)
+ 946 0424 23308B03 		sd	s8,32(s6)
+ 947              	.LVL101:
+ 948              	.LBE35:
+ 949              	.LBE34:
+ 149:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 950              		.loc 1 149 5 is_stmt 1
+ 149:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 951              		.loc 1 149 26 is_stmt 0
+ 952 0428 13050B00 		mv	a0,s6
+ 953              	.LEHB6:
+ 954 042c 97000000 		call	_ZN6Thread5startEv
+ 954      E7800000 
+ 955              	.LVL102:
+ 956              	.LBB36:
+ 151:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].id = i;
+ 957              		.loc 1 151 14
+ 958 0434 93040000 		li	s1,0
+ 959 0438 6F008003 		j	.L45
+ 960              	.LVL103:
+ 961              	.L69:
+ 962              	.LBB37:
+ 963              	.LBB38:
+  50:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 964              		.loc 1 50 52
+ 965 043c 97070000 		lla	a5,_ZTV12ProducerSync+16
+ 965      93870700 
+ 966 0444 23B0FC00 		sd	a5,0(s9)
+ 967 0448 23B08C03 		sd	s8,32(s9)
+ 968              	.LVL104:
+ 969              	.LBE38:
+ 970              	.LBE37:
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 971              		.loc 1 157 24
+ 972 044c 93973400 		slli	a5,s1,3
+ 973 0450 B387F900 		add	a5,s3,a5
+ 974 0454 23B09701 		sd	s9,0(a5)
+ 975              	.L44:
+ 162:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 976              		.loc 1 162 9 is_stmt 1
+ 162:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 977              		.loc 1 162 18 is_stmt 0
+ 978 0458 93973400 		slli	a5,s1,3
+ 979 045c B387F900 		add	a5,s3,a5
+ 162:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 980              		.loc 1 162 26
+ 981 0460 03B50700 		ld	a0,0(a5)
+ 982 0464 97000000 		call	_ZN6Thread5startEv
+ 982      E7800000 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 25
+
+
+ 983              	.LVL105:
+ 151:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].id = i;
+ 984              		.loc 1 151 5 is_stmt 1
+ 985 046c 9B841400 		addiw	s1,s1,1
+ 986              	.LVL106:
+ 987              	.L45:
+ 151:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].id = i;
+ 988              		.loc 1 151 23 discriminator 1
+ 989 0470 63D0240B 		bge	s1,s2,.L42
+ 152:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].buffer = buffer;
+ 990              		.loc 1 152 9
+ 152:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].buffer = buffer;
+ 991              		.loc 1 152 20 is_stmt 0
+ 992 0474 93971400 		slli	a5,s1,1
+ 993 0478 B3879700 		add	a5,a5,s1
+ 994 047c 93973700 		slli	a5,a5,3
+ 995 0480 B307FA00 		add	a5,s4,a5
+ 996 0484 23A09700 		sw	s1,0(a5)
+ 153:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].wait = waitForAll;
+ 997              		.loc 1 153 9 is_stmt 1
+ 153:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         data[i].wait = waitForAll;
+ 998              		.loc 1 153 24 is_stmt 0
+ 999 0488 23B45701 		sd	s5,8(a5)
+ 154:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1000              		.loc 1 154 9 is_stmt 1
+ 154:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1001              		.loc 1 154 22 is_stmt 0
+ 1002 048c 17070000 		ld	a4,_ZL10waitForAll
+ 1002      03370700 
+ 1003 0494 23B8E700 		sd	a4,16(a5)
+ 156:test/ConsumerProducer_CPP_Sync_API_test.cpp ****             threads[i] = new ProducerSync(data+i);
+ 1004              		.loc 1 156 9 is_stmt 1
+ 1005 0498 63589002 		ble	s1,zero,.L43
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 1006              		.loc 1 157 13
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 1007              		.loc 1 157 49 is_stmt 0
+ 1008 049c 13058002 		li	a0,40
+ 1009 04a0 97000000 		call	_Znwm
+ 1009      E7800000 
+ 1010              	.LVL107:
+ 1011              	.LEHE6:
+ 1012 04a8 930C0500 		mv	s9,a0
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 1013              		.loc 1 157 47
+ 1014 04ac 139C1400 		slli	s8,s1,1
+ 1015 04b0 330C9C00 		add	s8,s8,s1
+ 1016 04b4 131C3C00 		slli	s8,s8,3
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 1017              		.loc 1 157 49
+ 1018 04b8 330C8A01 		add	s8,s4,s8
+ 1019              	.LVL108:
+ 1020              	.LEHB7:
+ 1021              	.LBB40:
+ 1022              	.LBB39:
+  50:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1023              		.loc 1 50 52
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 26
+
+
+ 1024 04bc 97000000 		call	_ZN6ThreadC2Ev
+ 1024      E7800000 
+ 1025              	.LVL109:
+ 1026              	.LEHE7:
+ 1027 04c4 6FF09FF7 		j	.L69
+ 1028              	.LVL110:
+ 1029              	.L43:
+ 1030              	.LBE39:
+ 1031              	.LBE40:
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 1032              		.loc 1 159 13 is_stmt 1
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 1033              		.loc 1 159 53 is_stmt 0
+ 1034 04c8 13058002 		li	a0,40
+ 1035              	.LEHB8:
+ 1036 04cc 97000000 		call	_Znwm
+ 1036      E7800000 
+ 1037              	.LVL111:
+ 1038              	.LEHE8:
+ 1039 04d4 930C0500 		mv	s9,a0
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 1040              		.loc 1 159 51
+ 1041 04d8 139C1400 		slli	s8,s1,1
+ 1042 04dc 330C9C00 		add	s8,s8,s1
+ 1043 04e0 131C3C00 		slli	s8,s8,3
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 1044              		.loc 1 159 53
+ 1045 04e4 330C8A01 		add	s8,s4,s8
+ 1046              	.LVL112:
+ 1047              	.LEHB9:
+ 1048              	.LBB41:
+ 1049              	.LBB42:
+  19:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1050              		.loc 1 19 56
+ 1051 04e8 97000000 		call	_ZN6ThreadC2Ev
+ 1051      E7800000 
+ 1052              	.LVL113:
+ 1053              	.LEHE9:
+ 1054 04f0 97070000 		lla	a5,_ZTV16ProducerKeyboard+16
+ 1054      93870700 
+ 1055 04f8 23B0FC00 		sd	a5,0(s9)
+ 1056 04fc 23B08C03 		sd	s8,32(s9)
+ 1057              	.LVL114:
+ 1058              	.LBE42:
+ 1059              	.LBE41:
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 1060              		.loc 1 159 24
+ 1061 0500 93973400 		slli	a5,s1,3
+ 1062 0504 B387F900 		add	a5,s3,a5
+ 1063 0508 23B09701 		sd	s9,0(a5)
+ 1064 050c 6FF0DFF4 		j	.L44
+ 1065              	.L42:
+ 1066              	.LBE36:
+ 165:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1067              		.loc 1 165 5 is_stmt 1
+ 1068              	.LEHB10:
+ 165:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 27
+
+
+ 1069              		.loc 1 165 21 is_stmt 0
+ 1070 0510 97000000 		call	_ZN6Thread8dispatchEv
+ 1070      E7800000 
+ 1071              	.LVL115:
+ 1072              	.LBB43:
+ 167:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         waitForAll->wait();
+ 1073              		.loc 1 167 14
+ 1074 0518 93040000 		li	s1,0
+ 1075              	.LVL116:
+ 1076 051c 6F008001 		j	.L47
+ 1077              	.LVL117:
+ 1078              	.L70:
+ 168:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 1079              		.loc 1 168 9 is_stmt 1
+ 168:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 1080              		.loc 1 168 25 is_stmt 0
+ 1081 0520 17050000 		ld	a0,_ZL10waitForAll
+ 1081      03350500 
+ 1082 0528 97000000 		call	_ZN9Semaphore4waitEv
+ 1082      E7800000 
+ 1083              	.LVL118:
+ 167:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         waitForAll->wait();
+ 1084              		.loc 1 167 5 is_stmt 1
+ 1085 0530 9B841400 		addiw	s1,s1,1
+ 1086              	.LVL119:
+ 1087              	.L47:
+ 167:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         waitForAll->wait();
+ 1088              		.loc 1 167 23 discriminator 1
+ 1089 0534 E35699FE 		ble	s1,s2,.L70
+ 1090              	.LBE43:
+ 1091              	.LBB44:
+ 171:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         delete threads[i];
+ 1092              		.loc 1 171 14 is_stmt 0
+ 1093 0538 93040000 		li	s1,0
+ 1094              	.LVL120:
+ 1095 053c 6F004001 		j	.L46
+ 1096              	.LVL121:
+ 1097              	.L71:
+ 172:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 1098              		.loc 1 172 25 discriminator 1
+ 1099 0540 83370500 		ld	a5,0(a0)
+ 1100 0544 83B78700 		ld	a5,8(a5)
+ 1101 0548 E7800700 		jalr	a5
+ 1102              	.LVL122:
+ 1103              	.L49:
+ 171:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         delete threads[i];
+ 1104              		.loc 1 171 5 is_stmt 1 discriminator 2
+ 1105 054c 9B841400 		addiw	s1,s1,1
+ 1106              	.LVL123:
+ 1107              	.L46:
+ 171:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         delete threads[i];
+ 1108              		.loc 1 171 23 discriminator 1
+ 1109 0550 63DC2401 		bge	s1,s2,.L48
+ 172:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 1110              		.loc 1 172 9
+ 172:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 1111              		.loc 1 172 25 is_stmt 0
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 28
+
+
+ 1112 0554 93973400 		slli	a5,s1,3
+ 1113 0558 B387F900 		add	a5,s3,a5
+ 1114 055c 03B50700 		ld	a0,0(a5)
+ 172:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     }
+ 1115              		.loc 1 172 9
+ 1116 0560 E31005FE 		bne	a0,zero,.L71
+ 1117 0564 6FF09FFE 		j	.L49
+ 1118              	.L48:
+ 1119              	.LBE44:
+ 174:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete waitForAll;
+ 1120              		.loc 1 174 5 is_stmt 1
+ 1121 0568 630A0B00 		beq	s6,zero,.L50
+ 174:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete waitForAll;
+ 1122              		.loc 1 174 12 is_stmt 0 discriminator 1
+ 1123 056c 83370B00 		ld	a5,0(s6)
+ 1124 0570 83B78700 		ld	a5,8(a5)
+ 1125 0574 13050B00 		mv	a0,s6
+ 1126 0578 E7800700 		jalr	a5
+ 1127              	.LVL124:
+ 1128              	.L50:
+ 175:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete buffer;
+ 1129              		.loc 1 175 5 is_stmt 1
+ 175:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete buffer;
+ 1130              		.loc 1 175 12 is_stmt 0
+ 1131 057c 17050000 		ld	a0,_ZL10waitForAll
+ 1131      03350500 
+ 175:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete buffer;
+ 1132              		.loc 1 175 5
+ 1133 0584 63080500 		beq	a0,zero,.L51
+ 175:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     delete buffer;
+ 1134              		.loc 1 175 12 discriminator 1
+ 1135 0588 83370500 		ld	a5,0(a0)
+ 1136 058c 83B78700 		ld	a5,8(a5)
+ 1137 0590 E7800700 		jalr	a5
+ 1138              	.LVL125:
+ 1139              	.L51:
+ 1140              		.loc 1 176 5 is_stmt 1
+ 1141 0594 638E0A00 		beq	s5,zero,.L52
+ 1142              		.loc 1 176 12 is_stmt 0 discriminator 1
+ 1143 0598 13850A00 		mv	a0,s5
+ 1144 059c 97000000 		call	_ZN9BufferCPPD1Ev
+ 1144      E7800000 
+ 1145              	.LVL126:
+ 1146 05a4 13850A00 		mv	a0,s5
+ 1147 05a8 97000000 		call	_ZdlPv
+ 1147      E7800000 
+ 1148              	.LVL127:
+ 1149              	.LEHE10:
+ 1150              	.L52:
+ 1151 05b0 13810B00 		mv	sp,s7
+ 1152              	.LVL128:
+ 1153              	.L38:
+ 177:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 178:test/ConsumerProducer_CPP_Sync_API_test.cpp **** }
+ 1154              		.loc 1 178 1
+ 1155 05b4 130104F8 		addi	sp,s0,-128
+ 1156              		.cfi_remember_state
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 29
+
+
+ 1157              		.cfi_def_cfa 2, 128
+ 1158 05b8 83308107 		ld	ra,120(sp)
+ 1159              		.cfi_restore 1
+ 1160 05bc 03340107 		ld	s0,112(sp)
+ 1161              		.cfi_restore 8
+ 1162 05c0 83348106 		ld	s1,104(sp)
+ 1163              		.cfi_restore 9
+ 1164 05c4 03390106 		ld	s2,96(sp)
+ 1165              		.cfi_restore 18
+ 1166              	.LVL129:
+ 1167 05c8 83398105 		ld	s3,88(sp)
+ 1168              		.cfi_restore 19
+ 1169 05cc 033A0105 		ld	s4,80(sp)
+ 1170              		.cfi_restore 20
+ 1171 05d0 833A8104 		ld	s5,72(sp)
+ 1172              		.cfi_restore 21
+ 1173 05d4 033B0104 		ld	s6,64(sp)
+ 1174              		.cfi_restore 22
+ 1175 05d8 833B8103 		ld	s7,56(sp)
+ 1176              		.cfi_restore 23
+ 1177 05dc 033C0103 		ld	s8,48(sp)
+ 1178              		.cfi_restore 24
+ 1179 05e0 833C8102 		ld	s9,40(sp)
+ 1180              		.cfi_restore 25
+ 1181 05e4 13010108 		addi	sp,sp,128
+ 1182              		.cfi_def_cfa_offset 0
+ 1183 05e8 67800000 		jr	ra
+ 1184              	.LVL130:
+ 1185              	.L60:
+ 1186              		.cfi_restore_state
+ 136:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1187              		.loc 1 136 40
+ 1188 05ec 93040500 		mv	s1,a0
+ 1189              	.LVL131:
+ 1190 05f0 13850A00 		mv	a0,s5
+ 1191 05f4 97000000 		call	_ZdlPv
+ 1191      E7800000 
+ 1192              	.LVL132:
+ 1193 05fc 13850400 		mv	a0,s1
+ 1194              	.LEHB11:
+ 1195 0600 97000000 		call	_Unwind_Resume
+ 1195      E7800000 
+ 1196              	.LVL133:
+ 1197              	.LEHE11:
+ 1198              	.L61:
+ 138:test/ConsumerProducer_CPP_Sync_API_test.cpp **** 
+ 1199              		.loc 1 138 33
+ 1200 0608 13090500 		mv	s2,a0
+ 1201              	.LVL134:
+ 1202 060c 13850400 		mv	a0,s1
+ 1203 0610 97000000 		call	_ZdlPv
+ 1203      E7800000 
+ 1204              	.LVL135:
+ 1205 0618 13050900 		mv	a0,s2
+ 1206              	.LEHB12:
+ 1207 061c 97000000 		call	_Unwind_Resume
+ 1207      E7800000 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 30
+
+
+ 1208              	.LVL136:
+ 1209              	.LEHE12:
+ 1210              	.L62:
+ 148:test/ConsumerProducer_CPP_Sync_API_test.cpp ****     consumerThread->start();
+ 1211              		.loc 1 148 53
+ 1212 0624 93040500 		mv	s1,a0
+ 1213 0628 13050B00 		mv	a0,s6
+ 1214 062c 97000000 		call	_ZdlPv
+ 1214      E7800000 
+ 1215              	.LVL137:
+ 1216 0634 13850400 		mv	a0,s1
+ 1217              	.LEHB13:
+ 1218 0638 97000000 		call	_Unwind_Resume
+ 1218      E7800000 
+ 1219              	.LVL138:
+ 1220              	.LEHE13:
+ 1221              	.L63:
+ 1222              	.LBB45:
+ 157:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         } else {
+ 1223              		.loc 1 157 49
+ 1224 0640 93040500 		mv	s1,a0
+ 1225              	.LVL139:
+ 1226 0644 13850C00 		mv	a0,s9
+ 1227 0648 97000000 		call	_ZdlPv
+ 1227      E7800000 
+ 1228              	.LVL140:
+ 1229 0650 13850400 		mv	a0,s1
+ 1230              	.LEHB14:
+ 1231 0654 97000000 		call	_Unwind_Resume
+ 1231      E7800000 
+ 1232              	.LVL141:
+ 1233              	.LEHE14:
+ 1234              	.L64:
+ 159:test/ConsumerProducer_CPP_Sync_API_test.cpp ****         }
+ 1235              		.loc 1 159 53
+ 1236 065c 93040500 		mv	s1,a0
+ 1237              	.LVL142:
+ 1238 0660 13850C00 		mv	a0,s9
+ 1239 0664 97000000 		call	_ZdlPv
+ 1239      E7800000 
+ 1240              	.LVL143:
+ 1241 066c 13850400 		mv	a0,s1
+ 1242              	.LEHB15:
+ 1243 0670 97000000 		call	_Unwind_Resume
+ 1243      E7800000 
+ 1244              	.LVL144:
+ 1245              	.LEHE15:
+ 1246              	.LBE45:
+ 1247              		.cfi_endproc
+ 1248              	.LFE17:
+ 1249              		.globl	__gxx_personality_v0
+ 1250              		.section	.gcc_except_table,"aw",@progbits
+ 1251              	.LLSDA17:
+ 1252 0000 FF       		.byte	0xff
+ 1253 0001 FF       		.byte	0xff
+ 1254 0002 03       		.byte	0x3
+ 1255 0003 D001     		.byte	0xd0,0x1
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 31
+
+
+ 1256 0005 00000000 		.4byte	.LEHB0-.LFB17
+ 1257 0009 00000000 		.4byte	.LEHE0-.LEHB0
+ 1258 000d 00000000 		.4byte	0
+ 1259 0011 00       		.byte	0
+ 1260 0012 00000000 		.4byte	.LEHB1-.LFB17
+ 1261 0016 00000000 		.4byte	.LEHE1-.LEHB1
+ 1262 001a 00000000 		.4byte	.L60-.LFB17
+ 1263 001e 00       		.byte	0
+ 1264 001f 00000000 		.4byte	.LEHB2-.LFB17
+ 1265 0023 00000000 		.4byte	.LEHE2-.LEHB2
+ 1266 0027 00000000 		.4byte	0
+ 1267 002b 00       		.byte	0
+ 1268 002c 00000000 		.4byte	.LEHB3-.LFB17
+ 1269 0030 00000000 		.4byte	.LEHE3-.LEHB3
+ 1270 0034 00000000 		.4byte	.L61-.LFB17
+ 1271 0038 00       		.byte	0
+ 1272 0039 00000000 		.4byte	.LEHB4-.LFB17
+ 1273 003d 00000000 		.4byte	.LEHE4-.LEHB4
+ 1274 0041 00000000 		.4byte	0
+ 1275 0045 00       		.byte	0
+ 1276 0046 00000000 		.4byte	.LEHB5-.LFB17
+ 1277 004a 00000000 		.4byte	.LEHE5-.LEHB5
+ 1278 004e 00000000 		.4byte	.L62-.LFB17
+ 1279 0052 00       		.byte	0
+ 1280 0053 00000000 		.4byte	.LEHB6-.LFB17
+ 1281 0057 00000000 		.4byte	.LEHE6-.LEHB6
+ 1282 005b 00000000 		.4byte	0
+ 1283 005f 00       		.byte	0
+ 1284 0060 00000000 		.4byte	.LEHB7-.LFB17
+ 1285 0064 00000000 		.4byte	.LEHE7-.LEHB7
+ 1286 0068 00000000 		.4byte	.L63-.LFB17
+ 1287 006c 00       		.byte	0
+ 1288 006d 00000000 		.4byte	.LEHB8-.LFB17
+ 1289 0071 00000000 		.4byte	.LEHE8-.LEHB8
+ 1290 0075 00000000 		.4byte	0
+ 1291 0079 00       		.byte	0
+ 1292 007a 00000000 		.4byte	.LEHB9-.LFB17
+ 1293 007e 00000000 		.4byte	.LEHE9-.LEHB9
+ 1294 0082 00000000 		.4byte	.L64-.LFB17
+ 1295 0086 00       		.byte	0
+ 1296 0087 00000000 		.4byte	.LEHB10-.LFB17
+ 1297 008b 00000000 		.4byte	.LEHE10-.LEHB10
+ 1298 008f 00000000 		.4byte	0
+ 1299 0093 00       		.byte	0
+ 1300 0094 00000000 		.4byte	.LEHB11-.LFB17
+ 1301 0098 00000000 		.4byte	.LEHE11-.LEHB11
+ 1302 009c 00000000 		.4byte	0
+ 1303 00a0 00       		.byte	0
+ 1304 00a1 00000000 		.4byte	.LEHB12-.LFB17
+ 1305 00a5 00000000 		.4byte	.LEHE12-.LEHB12
+ 1306 00a9 00000000 		.4byte	0
+ 1307 00ad 00       		.byte	0
+ 1308 00ae 00000000 		.4byte	.LEHB13-.LFB17
+ 1309 00b2 00000000 		.4byte	.LEHE13-.LEHB13
+ 1310 00b6 00000000 		.4byte	0
+ 1311 00ba 00       		.byte	0
+ 1312 00bb 00000000 		.4byte	.LEHB14-.LFB17
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 32
+
+
+ 1313 00bf 00000000 		.4byte	.LEHE14-.LEHB14
+ 1314 00c3 00000000 		.4byte	0
+ 1315 00c7 00       		.byte	0
+ 1316 00c8 00000000 		.4byte	.LEHB15-.LFB17
+ 1317 00cc 00000000 		.4byte	.LEHE15-.LEHB15
+ 1318 00d0 00000000 		.4byte	0
+ 1319 00d4 00       		.byte	0
+ 1320              		.text
+ 1322              		.weak	_ZTV16ProducerKeyboard
+ 1323              		.section	.rodata._ZTV16ProducerKeyboard,"aG",@progbits,_ZTV16ProducerKeyboard,comdat
+ 1324              		.align	3
+ 1327              	_ZTV16ProducerKeyboard:
+ 1328 0000 00000000 		.dword	0
+ 1328      00000000 
+ 1329 0008 00000000 		.dword	0
+ 1329      00000000 
+ 1330 0010 00000000 		.dword	_ZN16ProducerKeyboardD1Ev
+ 1330      00000000 
+ 1331 0018 00000000 		.dword	_ZN16ProducerKeyboardD0Ev
+ 1331      00000000 
+ 1332 0020 00000000 		.dword	_ZN16ProducerKeyboard3runEv
+ 1332      00000000 
+ 1333              		.weak	_ZTV12ProducerSync
+ 1334              		.section	.rodata._ZTV12ProducerSync,"aG",@progbits,_ZTV12ProducerSync,comdat
+ 1335              		.align	3
+ 1338              	_ZTV12ProducerSync:
+ 1339 0000 00000000 		.dword	0
+ 1339      00000000 
+ 1340 0008 00000000 		.dword	0
+ 1340      00000000 
+ 1341 0010 00000000 		.dword	_ZN12ProducerSyncD1Ev
+ 1341      00000000 
+ 1342 0018 00000000 		.dword	_ZN12ProducerSyncD0Ev
+ 1342      00000000 
+ 1343 0020 00000000 		.dword	_ZN12ProducerSync3runEv
+ 1343      00000000 
+ 1344              		.weak	_ZTV12ConsumerSync
+ 1345              		.section	.rodata._ZTV12ConsumerSync,"aG",@progbits,_ZTV12ConsumerSync,comdat
+ 1346              		.align	3
+ 1349              	_ZTV12ConsumerSync:
+ 1350 0000 00000000 		.dword	0
+ 1350      00000000 
+ 1351 0008 00000000 		.dword	0
+ 1351      00000000 
+ 1352 0010 00000000 		.dword	_ZN12ConsumerSyncD1Ev
+ 1352      00000000 
+ 1353 0018 00000000 		.dword	_ZN12ConsumerSyncD0Ev
+ 1353      00000000 
+ 1354 0020 00000000 		.dword	_ZN12ConsumerSync3runEv
+ 1354      00000000 
+ 1355              		.section	.sbss,"aw",@nobits
+ 1356              		.align	3
+ 1359              	_ZL9threadEnd:
+ 1360 0000 00000000 		.zero	4
+ 1361 0004 00000000 		.zero	4
+ 1364              	_ZL10waitForAll:
+ 1365 0008 00000000 		.zero	8
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 33
+
+
+ 1365      00000000 
+ 1366              		.text
+ 1367              	.Letext0:
+ 1368              		.file 2 "test/../h/../lib/hw.h"
+ 1369              		.file 3 "test/../h/syscall_cpp.hpp"
+ 1370              		.file 4 "test/buffer_CPP_API.hpp"
+ 1371              		.file 5 "test/../h/syscall_c.h"
+ 1372              		.file 6 "test/printing.hpp"
+ 5241              		.align	3
+ 5244              	DW.ref.__gxx_personality_v0:
+ 5245 0000 00000000 		.dword	__gxx_personality_v0
+ 5245      00000000 
+ 5246              		.ident	"GCC: (GNU) 10.1.0"
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 34
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ConsumerProducer_CPP_Sync_API_test.cpp
+C:\msys64\tmp\cc2hunog.s:13     .text._ZN12ConsumerSyncD2Ev:0000000000000000 _ZN12ConsumerSyncD2Ev
+C:\msys64\tmp\cc2hunog.s:17     .text._ZN12ConsumerSyncD2Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:19     .text._ZN12ConsumerSyncD2Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:20     .text._ZN12ConsumerSyncD2Ev:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:23     .text._ZN12ConsumerSyncD2Ev:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:24     .text._ZN12ConsumerSyncD2Ev:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:26     .text._ZN12ConsumerSyncD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:1349   .rodata._ZTV12ConsumerSync:0000000000000000 _ZTV12ConsumerSync
+C:\msys64\tmp\cc2hunog.s:29     .text._ZN12ConsumerSyncD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:35     .text._ZN12ConsumerSyncD2Ev:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:37     .text._ZN12ConsumerSyncD2Ev:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:38     .text._ZN12ConsumerSyncD2Ev:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:40     .text._ZN12ConsumerSyncD2Ev:0000000000000030 .L0 
+C:\msys64\tmp\cc2hunog.s:42     .text._ZN12ConsumerSyncD2Ev:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:13     .text._ZN12ConsumerSyncD2Ev:0000000000000000 _ZN12ConsumerSyncD1Ev
+C:\msys64\tmp\cc2hunog.s:51     .text._ZN12ConsumerSyncD0Ev:0000000000000000 _ZN12ConsumerSyncD0Ev
+C:\msys64\tmp\cc2hunog.s:54     .text._ZN12ConsumerSyncD0Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:56     .text._ZN12ConsumerSyncD0Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:57     .text._ZN12ConsumerSyncD0Ev:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:61     .text._ZN12ConsumerSyncD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:62     .text._ZN12ConsumerSyncD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:63     .text._ZN12ConsumerSyncD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:65     .text._ZN12ConsumerSyncD0Ev:0000000000000014 .L0 
+C:\msys64\tmp\cc2hunog.s:71     .text._ZN12ConsumerSyncD0Ev:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:81     .text._ZN12ConsumerSyncD0Ev:000000000000003c .L0 
+C:\msys64\tmp\cc2hunog.s:83     .text._ZN12ConsumerSyncD0Ev:0000000000000040 .L0 
+C:\msys64\tmp\cc2hunog.s:84     .text._ZN12ConsumerSyncD0Ev:0000000000000040 .L0 
+C:\msys64\tmp\cc2hunog.s:86     .text._ZN12ConsumerSyncD0Ev:0000000000000044 .L0 
+C:\msys64\tmp\cc2hunog.s:89     .text._ZN12ConsumerSyncD0Ev:0000000000000048 .L0 
+C:\msys64\tmp\cc2hunog.s:91     .text._ZN12ConsumerSyncD0Ev:000000000000004c .L0 
+C:\msys64\tmp\cc2hunog.s:98     .text._ZN12ProducerSyncD2Ev:0000000000000000 _ZN12ProducerSyncD2Ev
+C:\msys64\tmp\cc2hunog.s:101    .text._ZN12ProducerSyncD2Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:103    .text._ZN12ProducerSyncD2Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:104    .text._ZN12ProducerSyncD2Ev:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:107    .text._ZN12ProducerSyncD2Ev:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:108    .text._ZN12ProducerSyncD2Ev:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:110    .text._ZN12ProducerSyncD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:1338   .rodata._ZTV12ProducerSync:0000000000000000 _ZTV12ProducerSync
+C:\msys64\tmp\cc2hunog.s:113    .text._ZN12ProducerSyncD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:119    .text._ZN12ProducerSyncD2Ev:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:121    .text._ZN12ProducerSyncD2Ev:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:122    .text._ZN12ProducerSyncD2Ev:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:124    .text._ZN12ProducerSyncD2Ev:0000000000000030 .L0 
+C:\msys64\tmp\cc2hunog.s:126    .text._ZN12ProducerSyncD2Ev:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:98     .text._ZN12ProducerSyncD2Ev:0000000000000000 _ZN12ProducerSyncD1Ev
+C:\msys64\tmp\cc2hunog.s:135    .text._ZN12ProducerSyncD0Ev:0000000000000000 _ZN12ProducerSyncD0Ev
+C:\msys64\tmp\cc2hunog.s:138    .text._ZN12ProducerSyncD0Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:140    .text._ZN12ProducerSyncD0Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:141    .text._ZN12ProducerSyncD0Ev:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:145    .text._ZN12ProducerSyncD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:146    .text._ZN12ProducerSyncD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:147    .text._ZN12ProducerSyncD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:149    .text._ZN12ProducerSyncD0Ev:0000000000000014 .L0 
+C:\msys64\tmp\cc2hunog.s:155    .text._ZN12ProducerSyncD0Ev:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:165    .text._ZN12ProducerSyncD0Ev:000000000000003c .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 35
+
+
+C:\msys64\tmp\cc2hunog.s:167    .text._ZN12ProducerSyncD0Ev:0000000000000040 .L0 
+C:\msys64\tmp\cc2hunog.s:168    .text._ZN12ProducerSyncD0Ev:0000000000000040 .L0 
+C:\msys64\tmp\cc2hunog.s:170    .text._ZN12ProducerSyncD0Ev:0000000000000044 .L0 
+C:\msys64\tmp\cc2hunog.s:173    .text._ZN12ProducerSyncD0Ev:0000000000000048 .L0 
+C:\msys64\tmp\cc2hunog.s:175    .text._ZN12ProducerSyncD0Ev:000000000000004c .L0 
+C:\msys64\tmp\cc2hunog.s:182    .text._ZN16ProducerKeyboardD2Ev:0000000000000000 _ZN16ProducerKeyboardD2Ev
+C:\msys64\tmp\cc2hunog.s:185    .text._ZN16ProducerKeyboardD2Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:187    .text._ZN16ProducerKeyboardD2Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:188    .text._ZN16ProducerKeyboardD2Ev:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:191    .text._ZN16ProducerKeyboardD2Ev:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:192    .text._ZN16ProducerKeyboardD2Ev:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:194    .text._ZN16ProducerKeyboardD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:1327   .rodata._ZTV16ProducerKeyboard:0000000000000000 _ZTV16ProducerKeyboard
+C:\msys64\tmp\cc2hunog.s:197    .text._ZN16ProducerKeyboardD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:203    .text._ZN16ProducerKeyboardD2Ev:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:205    .text._ZN16ProducerKeyboardD2Ev:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:206    .text._ZN16ProducerKeyboardD2Ev:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:208    .text._ZN16ProducerKeyboardD2Ev:0000000000000030 .L0 
+C:\msys64\tmp\cc2hunog.s:210    .text._ZN16ProducerKeyboardD2Ev:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:182    .text._ZN16ProducerKeyboardD2Ev:0000000000000000 _ZN16ProducerKeyboardD1Ev
+C:\msys64\tmp\cc2hunog.s:219    .text._ZN16ProducerKeyboardD0Ev:0000000000000000 _ZN16ProducerKeyboardD0Ev
+C:\msys64\tmp\cc2hunog.s:222    .text._ZN16ProducerKeyboardD0Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:224    .text._ZN16ProducerKeyboardD0Ev:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:225    .text._ZN16ProducerKeyboardD0Ev:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:229    .text._ZN16ProducerKeyboardD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:230    .text._ZN16ProducerKeyboardD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:231    .text._ZN16ProducerKeyboardD0Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:233    .text._ZN16ProducerKeyboardD0Ev:0000000000000014 .L0 
+C:\msys64\tmp\cc2hunog.s:239    .text._ZN16ProducerKeyboardD0Ev:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:249    .text._ZN16ProducerKeyboardD0Ev:000000000000003c .L0 
+C:\msys64\tmp\cc2hunog.s:251    .text._ZN16ProducerKeyboardD0Ev:0000000000000040 .L0 
+C:\msys64\tmp\cc2hunog.s:252    .text._ZN16ProducerKeyboardD0Ev:0000000000000040 .L0 
+C:\msys64\tmp\cc2hunog.s:254    .text._ZN16ProducerKeyboardD0Ev:0000000000000044 .L0 
+C:\msys64\tmp\cc2hunog.s:257    .text._ZN16ProducerKeyboardD0Ev:0000000000000048 .L0 
+C:\msys64\tmp\cc2hunog.s:259    .text._ZN16ProducerKeyboardD0Ev:000000000000004c .L0 
+C:\msys64\tmp\cc2hunog.s:266    .text:0000000000000000 _ZN16ProducerKeyboard16producerKeyboardEPv
+C:\msys64\tmp\cc2hunog.s:269    .text:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:271    .text:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:272    .text:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:278    .text:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:279    .text:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:280    .text:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:281    .text:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:282    .text:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:284    .text:000000000000001c .L0 
+C:\msys64\tmp\cc2hunog.s:289    .text:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:290    .text:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:291    .text:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:292    .text:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:296    .text:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:297    .text:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:298    .text:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:301    .text:0000000000000030 .L0 
+C:\msys64\tmp\cc2hunog.s:304    .text:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:307    .text:000000000000003c .L0 
+C:\msys64\tmp\cc2hunog.s:308    .text:000000000000003c .L0 
+C:\msys64\tmp\cc2hunog.s:312    .text:0000000000000048 .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 36
+
+
+C:\msys64\tmp\cc2hunog.s:313    .text:0000000000000048 .L0 
+C:\msys64\tmp\cc2hunog.s:317    .text:0000000000000050 .L0 
+C:\msys64\tmp\cc2hunog.s:318    .text:0000000000000050 .L0 
+C:\msys64\tmp\cc2hunog.s:320    .text:0000000000000054 .L0 
+C:\msys64\tmp\cc2hunog.s:324    .text:0000000000000060 .L0 
+C:\msys64\tmp\cc2hunog.s:326    .text:0000000000000064 .L0 
+C:\msys64\tmp\cc2hunog.s:328    .text:0000000000000068 .L0 
+C:\msys64\tmp\cc2hunog.s:329    .text:0000000000000068 .L0 
+C:\msys64\tmp\cc2hunog.s:335    .text:0000000000000074 .L0 
+C:\msys64\tmp\cc2hunog.s:336    .text:0000000000000074 .L0 
+C:\msys64\tmp\cc2hunog.s:1359   .sbss:0000000000000000 _ZL9threadEnd
+C:\msys64\tmp\cc2hunog.s:339    .text:0000000000000080 .L0 
+C:\msys64\tmp\cc2hunog.s:341    .text:0000000000000084 .L0 
+C:\msys64\tmp\cc2hunog.s:348    .text:0000000000000094 .L0 
+C:\msys64\tmp\cc2hunog.s:349    .text:0000000000000094 .L0 
+C:\msys64\tmp\cc2hunog.s:353    .text:00000000000000a0 .L0 
+C:\msys64\tmp\cc2hunog.s:354    .text:00000000000000a4 .L0 
+C:\msys64\tmp\cc2hunog.s:356    .text:00000000000000a8 .L0 
+C:\msys64\tmp\cc2hunog.s:357    .text:00000000000000a8 .L0 
+C:\msys64\tmp\cc2hunog.s:359    .text:00000000000000ac .L0 
+C:\msys64\tmp\cc2hunog.s:362    .text:00000000000000b0 .L0 
+C:\msys64\tmp\cc2hunog.s:365    .text:00000000000000b4 .L0 
+C:\msys64\tmp\cc2hunog.s:368    .text:00000000000000b8 .L0 
+C:\msys64\tmp\cc2hunog.s:370    .text:00000000000000bc .L0 
+C:\msys64\tmp\cc2hunog.s:377    .text._ZN16ProducerKeyboard3runEv:0000000000000000 _ZN16ProducerKeyboard3runEv
+C:\msys64\tmp\cc2hunog.s:380    .text._ZN16ProducerKeyboard3runEv:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:382    .text._ZN16ProducerKeyboard3runEv:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:383    .text._ZN16ProducerKeyboard3runEv:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:386    .text._ZN16ProducerKeyboard3runEv:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:387    .text._ZN16ProducerKeyboard3runEv:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:389    .text._ZN16ProducerKeyboard3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:391    .text._ZN16ProducerKeyboard3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:392    .text._ZN16ProducerKeyboard3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:396    .text._ZN16ProducerKeyboard3runEv:000000000000001c .L0 
+C:\msys64\tmp\cc2hunog.s:397    .text._ZN16ProducerKeyboard3runEv:0000000000000020 .L0 
+C:\msys64\tmp\cc2hunog.s:399    .text._ZN16ProducerKeyboard3runEv:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:400    .text._ZN16ProducerKeyboard3runEv:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:402    .text._ZN16ProducerKeyboard3runEv:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:404    .text._ZN16ProducerKeyboard3runEv:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:411    .text:00000000000000bc _ZN12ProducerSync8producerEPv
+C:\msys64\tmp\cc2hunog.s:414    .text:00000000000000bc .L0 
+C:\msys64\tmp\cc2hunog.s:416    .text:00000000000000bc .L0 
+C:\msys64\tmp\cc2hunog.s:417    .text:00000000000000c0 .L0 
+C:\msys64\tmp\cc2hunog.s:422    .text:00000000000000d0 .L0 
+C:\msys64\tmp\cc2hunog.s:423    .text:00000000000000d0 .L0 
+C:\msys64\tmp\cc2hunog.s:424    .text:00000000000000d0 .L0 
+C:\msys64\tmp\cc2hunog.s:425    .text:00000000000000d0 .L0 
+C:\msys64\tmp\cc2hunog.s:427    .text:00000000000000d4 .L0 
+C:\msys64\tmp\cc2hunog.s:431    .text:00000000000000d8 .L0 
+C:\msys64\tmp\cc2hunog.s:432    .text:00000000000000d8 .L0 
+C:\msys64\tmp\cc2hunog.s:433    .text:00000000000000d8 .L0 
+C:\msys64\tmp\cc2hunog.s:437    .text:00000000000000dc .L0 
+C:\msys64\tmp\cc2hunog.s:438    .text:00000000000000dc .L0 
+C:\msys64\tmp\cc2hunog.s:441    .text:00000000000000e8 .L0 
+C:\msys64\tmp\cc2hunog.s:442    .text:00000000000000e8 .L0 
+C:\msys64\tmp\cc2hunog.s:444    .text:00000000000000ec .L0 
+C:\msys64\tmp\cc2hunog.s:449    .text:00000000000000fc .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 37
+
+
+C:\msys64\tmp\cc2hunog.s:450    .text:00000000000000fc .L0 
+C:\msys64\tmp\cc2hunog.s:454    .text:0000000000000104 .L0 
+C:\msys64\tmp\cc2hunog.s:455    .text:0000000000000104 .L0 
+C:\msys64\tmp\cc2hunog.s:457    .text:0000000000000108 .L0 
+C:\msys64\tmp\cc2hunog.s:461    .text:0000000000000114 .L0 
+C:\msys64\tmp\cc2hunog.s:463    .text:0000000000000118 .L0 
+C:\msys64\tmp\cc2hunog.s:465    .text:000000000000011c .L0 
+C:\msys64\tmp\cc2hunog.s:466    .text:000000000000011c .L0 
+C:\msys64\tmp\cc2hunog.s:471    .text:0000000000000128 .L0 
+C:\msys64\tmp\cc2hunog.s:472    .text:0000000000000128 .L0 
+C:\msys64\tmp\cc2hunog.s:476    .text:0000000000000134 .L0 
+C:\msys64\tmp\cc2hunog.s:477    .text:0000000000000138 .L0 
+C:\msys64\tmp\cc2hunog.s:479    .text:000000000000013c .L0 
+C:\msys64\tmp\cc2hunog.s:480    .text:000000000000013c .L0 
+C:\msys64\tmp\cc2hunog.s:482    .text:0000000000000140 .L0 
+C:\msys64\tmp\cc2hunog.s:485    .text:0000000000000144 .L0 
+C:\msys64\tmp\cc2hunog.s:488    .text:0000000000000148 .L0 
+C:\msys64\tmp\cc2hunog.s:490    .text:000000000000014c .L0 
+C:\msys64\tmp\cc2hunog.s:497    .text._ZN12ProducerSync3runEv:0000000000000000 _ZN12ProducerSync3runEv
+C:\msys64\tmp\cc2hunog.s:500    .text._ZN12ProducerSync3runEv:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:502    .text._ZN12ProducerSync3runEv:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:503    .text._ZN12ProducerSync3runEv:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:506    .text._ZN12ProducerSync3runEv:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:507    .text._ZN12ProducerSync3runEv:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:509    .text._ZN12ProducerSync3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:511    .text._ZN12ProducerSync3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:512    .text._ZN12ProducerSync3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:516    .text._ZN12ProducerSync3runEv:000000000000001c .L0 
+C:\msys64\tmp\cc2hunog.s:517    .text._ZN12ProducerSync3runEv:0000000000000020 .L0 
+C:\msys64\tmp\cc2hunog.s:519    .text._ZN12ProducerSync3runEv:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:520    .text._ZN12ProducerSync3runEv:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:522    .text._ZN12ProducerSync3runEv:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:524    .text._ZN12ProducerSync3runEv:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:531    .text:000000000000014c _ZN12ConsumerSync8consumerEPv
+C:\msys64\tmp\cc2hunog.s:534    .text:000000000000014c .L0 
+C:\msys64\tmp\cc2hunog.s:536    .text:000000000000014c .L0 
+C:\msys64\tmp\cc2hunog.s:537    .text:0000000000000150 .L0 
+C:\msys64\tmp\cc2hunog.s:544    .text:0000000000000168 .L0 
+C:\msys64\tmp\cc2hunog.s:545    .text:0000000000000168 .L0 
+C:\msys64\tmp\cc2hunog.s:546    .text:0000000000000168 .L0 
+C:\msys64\tmp\cc2hunog.s:547    .text:0000000000000168 .L0 
+C:\msys64\tmp\cc2hunog.s:548    .text:0000000000000168 .L0 
+C:\msys64\tmp\cc2hunog.s:549    .text:0000000000000168 .L0 
+C:\msys64\tmp\cc2hunog.s:551    .text:000000000000016c .L0 
+C:\msys64\tmp\cc2hunog.s:556    .text:0000000000000174 .L0 
+C:\msys64\tmp\cc2hunog.s:557    .text:0000000000000174 .L0 
+C:\msys64\tmp\cc2hunog.s:558    .text:0000000000000174 .L0 
+C:\msys64\tmp\cc2hunog.s:562    .text:0000000000000178 .L0 
+C:\msys64\tmp\cc2hunog.s:563    .text:0000000000000178 .L0 
+C:\msys64\tmp\cc2hunog.s:567    .text:0000000000000184 .L0 
+C:\msys64\tmp\cc2hunog.s:568    .text:0000000000000184 .L0 
+C:\msys64\tmp\cc2hunog.s:572    .text:0000000000000190 .L0 
+C:\msys64\tmp\cc2hunog.s:573    .text:0000000000000190 .L0 
+C:\msys64\tmp\cc2hunog.s:577    .text:0000000000000198 .L0 
+C:\msys64\tmp\cc2hunog.s:578    .text:0000000000000198 .L0 
+C:\msys64\tmp\cc2hunog.s:583    .text:00000000000001a4 .L0 
+C:\msys64\tmp\cc2hunog.s:584    .text:00000000000001a4 .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 38
+
+
+C:\msys64\tmp\cc2hunog.s:586    .text:00000000000001a8 .L0 
+C:\msys64\tmp\cc2hunog.s:589    .text:00000000000001b0 .L0 
+C:\msys64\tmp\cc2hunog.s:591    .text:00000000000001b4 .L0 
+C:\msys64\tmp\cc2hunog.s:594    .text:00000000000001b8 .L0 
+C:\msys64\tmp\cc2hunog.s:595    .text:00000000000001b8 .L0 
+C:\msys64\tmp\cc2hunog.s:599    .text:00000000000001c0 .L0 
+C:\msys64\tmp\cc2hunog.s:601    .text:00000000000001c4 .L0 
+C:\msys64\tmp\cc2hunog.s:602    .text:00000000000001c4 .L0 
+C:\msys64\tmp\cc2hunog.s:609    .text:00000000000001d4 .L0 
+C:\msys64\tmp\cc2hunog.s:610    .text:00000000000001d4 .L0 
+C:\msys64\tmp\cc2hunog.s:618    .text:00000000000001e0 .L0 
+C:\msys64\tmp\cc2hunog.s:619    .text:00000000000001e0 .L0 
+C:\msys64\tmp\cc2hunog.s:621    .text:00000000000001e4 .L0 
+C:\msys64\tmp\cc2hunog.s:625    .text:00000000000001f0 .L0 
+C:\msys64\tmp\cc2hunog.s:626    .text:00000000000001f0 .L0 
+C:\msys64\tmp\cc2hunog.s:633    .text:00000000000001fc .L0 
+C:\msys64\tmp\cc2hunog.s:634    .text:00000000000001fc .L0 
+C:\msys64\tmp\cc2hunog.s:635    .text:00000000000001fc .L0 
+C:\msys64\tmp\cc2hunog.s:637    .text:0000000000000200 .L0 
+C:\msys64\tmp\cc2hunog.s:641    .text:000000000000020c .L0 
+C:\msys64\tmp\cc2hunog.s:643    .text:0000000000000210 .L0 
+C:\msys64\tmp\cc2hunog.s:644    .text:0000000000000210 .L0 
+C:\msys64\tmp\cc2hunog.s:648    .text:000000000000021c .L0 
+C:\msys64\tmp\cc2hunog.s:649    .text:0000000000000220 .L0 
+C:\msys64\tmp\cc2hunog.s:651    .text:0000000000000224 .L0 
+C:\msys64\tmp\cc2hunog.s:652    .text:0000000000000224 .L0 
+C:\msys64\tmp\cc2hunog.s:654    .text:0000000000000228 .L0 
+C:\msys64\tmp\cc2hunog.s:656    .text:000000000000022c .L0 
+C:\msys64\tmp\cc2hunog.s:659    .text:0000000000000230 .L0 
+C:\msys64\tmp\cc2hunog.s:662    .text:0000000000000234 .L0 
+C:\msys64\tmp\cc2hunog.s:665    .text:0000000000000238 .L0 
+C:\msys64\tmp\cc2hunog.s:667    .text:000000000000023c .L0 
+C:\msys64\tmp\cc2hunog.s:674    .text._ZN12ConsumerSync3runEv:0000000000000000 _ZN12ConsumerSync3runEv
+C:\msys64\tmp\cc2hunog.s:677    .text._ZN12ConsumerSync3runEv:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:679    .text._ZN12ConsumerSync3runEv:0000000000000000 .L0 
+C:\msys64\tmp\cc2hunog.s:680    .text._ZN12ConsumerSync3runEv:0000000000000004 .L0 
+C:\msys64\tmp\cc2hunog.s:683    .text._ZN12ConsumerSync3runEv:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:684    .text._ZN12ConsumerSync3runEv:000000000000000c .L0 
+C:\msys64\tmp\cc2hunog.s:686    .text._ZN12ConsumerSync3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:688    .text._ZN12ConsumerSync3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:689    .text._ZN12ConsumerSync3runEv:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:693    .text._ZN12ConsumerSync3runEv:000000000000001c .L0 
+C:\msys64\tmp\cc2hunog.s:694    .text._ZN12ConsumerSync3runEv:0000000000000020 .L0 
+C:\msys64\tmp\cc2hunog.s:696    .text._ZN12ConsumerSync3runEv:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:697    .text._ZN12ConsumerSync3runEv:0000000000000024 .L0 
+C:\msys64\tmp\cc2hunog.s:699    .text._ZN12ConsumerSync3runEv:0000000000000028 .L0 
+C:\msys64\tmp\cc2hunog.s:701    .text._ZN12ConsumerSync3runEv:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:730    .text:000000000000023c _Z29producerConsumer_CPP_Sync_APIv
+C:\msys64\tmp\cc2hunog.s:733    .text:000000000000023c .L0 
+C:\msys64\tmp\cc2hunog.s:5244   .sdata.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
+C:\msys64\tmp\cc2hunog.s:736    .text:000000000000023c .L0 
+C:\msys64\tmp\cc2hunog.s:737    .text:0000000000000240 .L0 
+C:\msys64\tmp\cc2hunog.s:749    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:750    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:751    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:752    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:753    .text:000000000000026c .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 39
+
+
+C:\msys64\tmp\cc2hunog.s:754    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:755    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:756    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:757    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:758    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:759    .text:000000000000026c .L0 
+C:\msys64\tmp\cc2hunog.s:761    .text:0000000000000270 .L0 
+C:\msys64\tmp\cc2hunog.s:763    .text:0000000000000270 .L0 
+C:\msys64\tmp\cc2hunog.s:765    .text:0000000000000274 .L0 
+C:\msys64\tmp\cc2hunog.s:766    .text:0000000000000274 .L0 
+C:\msys64\tmp\cc2hunog.s:767    .text:0000000000000274 .L0 
+C:\msys64\tmp\cc2hunog.s:768    .text:0000000000000274 .L0 
+C:\msys64\tmp\cc2hunog.s:773    .text:0000000000000284 .L0 
+C:\msys64\tmp\cc2hunog.s:774    .text:0000000000000284 .L0 
+C:\msys64\tmp\cc2hunog.s:779    .text:0000000000000294 .L0 
+C:\msys64\tmp\cc2hunog.s:780    .text:0000000000000294 .L0 
+C:\msys64\tmp\cc2hunog.s:786    .text:00000000000002a4 .L0 
+C:\msys64\tmp\cc2hunog.s:787    .text:00000000000002a4 .L0 
+C:\msys64\tmp\cc2hunog.s:791    .text:00000000000002b4 .L0 
+C:\msys64\tmp\cc2hunog.s:792    .text:00000000000002b4 .L0 
+C:\msys64\tmp\cc2hunog.s:797    .text:00000000000002c4 .L0 
+C:\msys64\tmp\cc2hunog.s:798    .text:00000000000002c4 .L0 
+C:\msys64\tmp\cc2hunog.s:804    .text:00000000000002d4 .L0 
+C:\msys64\tmp\cc2hunog.s:805    .text:00000000000002d4 .L0 
+C:\msys64\tmp\cc2hunog.s:809    .text:00000000000002e4 .L0 
+C:\msys64\tmp\cc2hunog.s:810    .text:00000000000002e4 .L0 
+C:\msys64\tmp\cc2hunog.s:816    .text:00000000000002f8 .L0 
+C:\msys64\tmp\cc2hunog.s:817    .text:00000000000002f8 .L0 
+C:\msys64\tmp\cc2hunog.s:821    .text:0000000000000308 .L0 
+C:\msys64\tmp\cc2hunog.s:822    .text:0000000000000308 .L0 
+C:\msys64\tmp\cc2hunog.s:828    .text:000000000000031c .L0 
+C:\msys64\tmp\cc2hunog.s:829    .text:000000000000031c .L0 
+C:\msys64\tmp\cc2hunog.s:833    .text:000000000000032c .L0 
+C:\msys64\tmp\cc2hunog.s:835    .text:0000000000000330 .L0 
+C:\msys64\tmp\cc2hunog.s:837    .text:0000000000000334 .L0 
+C:\msys64\tmp\cc2hunog.s:838    .text:0000000000000334 .L0 
+C:\msys64\tmp\cc2hunog.s:851    .text:0000000000000354 .L0 
+C:\msys64\tmp\cc2hunog.s:852    .text:0000000000000354 .L0 
+C:\msys64\tmp\cc2hunog.s:857    .text:0000000000000364 .L0 
+C:\msys64\tmp\cc2hunog.s:860    .text:0000000000000368 .L0 
+C:\msys64\tmp\cc2hunog.s:861    .text:0000000000000368 .L0 
+C:\msys64\tmp\cc2hunog.s:866    .text:0000000000000378 .L0 
+C:\msys64\tmp\cc2hunog.s:871    .text:0000000000000380 .L0 
+C:\msys64\tmp\cc2hunog.s:872    .text:0000000000000380 .L0 
+C:\msys64\tmp\cc2hunog.s:1364   .sbss:0000000000000008 _ZL10waitForAll
+C:\msys64\tmp\cc2hunog.s:884    .text:000000000000039c .L0 
+C:\msys64\tmp\cc2hunog.s:887    .text:00000000000003a4 .L0 
+C:\msys64\tmp\cc2hunog.s:888    .text:00000000000003a4 .L0 
+C:\msys64\tmp\cc2hunog.s:895    .text:00000000000003b8 .L0 
+C:\msys64\tmp\cc2hunog.s:896    .text:00000000000003b8 .L0 
+C:\msys64\tmp\cc2hunog.s:897    .text:00000000000003b8 .L0 
+C:\msys64\tmp\cc2hunog.s:900    .text:00000000000003bc .L0 
+C:\msys64\tmp\cc2hunog.s:910    .text:00000000000003d8 .L0 
+C:\msys64\tmp\cc2hunog.s:911    .text:00000000000003d8 .L0 
+C:\msys64\tmp\cc2hunog.s:917    .text:00000000000003ec .L0 
+C:\msys64\tmp\cc2hunog.s:918    .text:00000000000003ec .L0 
+C:\msys64\tmp\cc2hunog.s:920    .text:00000000000003f0 .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 40
+
+
+C:\msys64\tmp\cc2hunog.s:921    .text:00000000000003f0 .L0 
+C:\msys64\tmp\cc2hunog.s:923    .text:00000000000003f4 .L0 
+C:\msys64\tmp\cc2hunog.s:924    .text:00000000000003f4 .L0 
+C:\msys64\tmp\cc2hunog.s:931    .text:0000000000000404 .L0 
+C:\msys64\tmp\cc2hunog.s:934    .text:000000000000040c .L0 
+C:\msys64\tmp\cc2hunog.s:940    .text:0000000000000410 .L0 
+C:\msys64\tmp\cc2hunog.s:944    .text:0000000000000418 .L0 
+C:\msys64\tmp\cc2hunog.s:951    .text:0000000000000428 .L0 
+C:\msys64\tmp\cc2hunog.s:952    .text:0000000000000428 .L0 
+C:\msys64\tmp\cc2hunog.s:958    .text:0000000000000434 .L0 
+C:\msys64\tmp\cc2hunog.s:965    .text:000000000000043c .L0 
+C:\msys64\tmp\cc2hunog.s:972    .text:000000000000044c .L0 
+C:\msys64\tmp\cc2hunog.s:977    .text:0000000000000458 .L0 
+C:\msys64\tmp\cc2hunog.s:978    .text:0000000000000458 .L0 
+C:\msys64\tmp\cc2hunog.s:981    .text:0000000000000460 .L0 
+C:\msys64\tmp\cc2hunog.s:985    .text:000000000000046c .L0 
+C:\msys64\tmp\cc2hunog.s:989    .text:0000000000000470 .L0 
+C:\msys64\tmp\cc2hunog.s:991    .text:0000000000000474 .L0 
+C:\msys64\tmp\cc2hunog.s:992    .text:0000000000000474 .L0 
+C:\msys64\tmp\cc2hunog.s:998    .text:0000000000000488 .L0 
+C:\msys64\tmp\cc2hunog.s:999    .text:0000000000000488 .L0 
+C:\msys64\tmp\cc2hunog.s:1001   .text:000000000000048c .L0 
+C:\msys64\tmp\cc2hunog.s:1002   .text:000000000000048c .L0 
+C:\msys64\tmp\cc2hunog.s:1005   .text:0000000000000498 .L0 
+C:\msys64\tmp\cc2hunog.s:1007   .text:000000000000049c .L0 
+C:\msys64\tmp\cc2hunog.s:1008   .text:000000000000049c .L0 
+C:\msys64\tmp\cc2hunog.s:1014   .text:00000000000004ac .L0 
+C:\msys64\tmp\cc2hunog.s:1018   .text:00000000000004b8 .L0 
+C:\msys64\tmp\cc2hunog.s:1024   .text:00000000000004bc .L0 
+C:\msys64\tmp\cc2hunog.s:1033   .text:00000000000004c8 .L0 
+C:\msys64\tmp\cc2hunog.s:1034   .text:00000000000004c8 .L0 
+C:\msys64\tmp\cc2hunog.s:1041   .text:00000000000004d8 .L0 
+C:\msys64\tmp\cc2hunog.s:1045   .text:00000000000004e4 .L0 
+C:\msys64\tmp\cc2hunog.s:1051   .text:00000000000004e8 .L0 
+C:\msys64\tmp\cc2hunog.s:1061   .text:0000000000000500 .L0 
+C:\msys64\tmp\cc2hunog.s:1069   .text:0000000000000510 .L0 
+C:\msys64\tmp\cc2hunog.s:1070   .text:0000000000000510 .L0 
+C:\msys64\tmp\cc2hunog.s:1074   .text:0000000000000518 .L0 
+C:\msys64\tmp\cc2hunog.s:1080   .text:0000000000000520 .L0 
+C:\msys64\tmp\cc2hunog.s:1081   .text:0000000000000520 .L0 
+C:\msys64\tmp\cc2hunog.s:1085   .text:0000000000000530 .L0 
+C:\msys64\tmp\cc2hunog.s:1089   .text:0000000000000534 .L0 
+C:\msys64\tmp\cc2hunog.s:1093   .text:0000000000000538 .L0 
+C:\msys64\tmp\cc2hunog.s:1099   .text:0000000000000540 .L0 
+C:\msys64\tmp\cc2hunog.s:1105   .text:000000000000054c .L0 
+C:\msys64\tmp\cc2hunog.s:1109   .text:0000000000000550 .L0 
+C:\msys64\tmp\cc2hunog.s:1111   .text:0000000000000554 .L0 
+C:\msys64\tmp\cc2hunog.s:1112   .text:0000000000000554 .L0 
+C:\msys64\tmp\cc2hunog.s:1116   .text:0000000000000560 .L0 
+C:\msys64\tmp\cc2hunog.s:1121   .text:0000000000000568 .L0 
+C:\msys64\tmp\cc2hunog.s:1123   .text:000000000000056c .L0 
+C:\msys64\tmp\cc2hunog.s:1130   .text:000000000000057c .L0 
+C:\msys64\tmp\cc2hunog.s:1131   .text:000000000000057c .L0 
+C:\msys64\tmp\cc2hunog.s:1133   .text:0000000000000584 .L0 
+C:\msys64\tmp\cc2hunog.s:1135   .text:0000000000000588 .L0 
+C:\msys64\tmp\cc2hunog.s:1141   .text:0000000000000594 .L0 
+C:\msys64\tmp\cc2hunog.s:1143   .text:0000000000000598 .L0 
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 41
+
+
+C:\msys64\tmp\cc2hunog.s:1155   .text:00000000000005b4 .L0 
+C:\msys64\tmp\cc2hunog.s:1156   .text:00000000000005b8 .L0 
+C:\msys64\tmp\cc2hunog.s:1157   .text:00000000000005b8 .L0 
+C:\msys64\tmp\cc2hunog.s:1159   .text:00000000000005bc .L0 
+C:\msys64\tmp\cc2hunog.s:1161   .text:00000000000005c0 .L0 
+C:\msys64\tmp\cc2hunog.s:1163   .text:00000000000005c4 .L0 
+C:\msys64\tmp\cc2hunog.s:1165   .text:00000000000005c8 .L0 
+C:\msys64\tmp\cc2hunog.s:1168   .text:00000000000005cc .L0 
+C:\msys64\tmp\cc2hunog.s:1170   .text:00000000000005d0 .L0 
+C:\msys64\tmp\cc2hunog.s:1172   .text:00000000000005d4 .L0 
+C:\msys64\tmp\cc2hunog.s:1174   .text:00000000000005d8 .L0 
+C:\msys64\tmp\cc2hunog.s:1176   .text:00000000000005dc .L0 
+C:\msys64\tmp\cc2hunog.s:1178   .text:00000000000005e0 .L0 
+C:\msys64\tmp\cc2hunog.s:1180   .text:00000000000005e4 .L0 
+C:\msys64\tmp\cc2hunog.s:1182   .text:00000000000005e8 .L0 
+C:\msys64\tmp\cc2hunog.s:1186   .text:00000000000005ec .L0 
+C:\msys64\tmp\cc2hunog.s:1188   .text:00000000000005ec .L0 
+C:\msys64\tmp\cc2hunog.s:1200   .text:0000000000000608 .L0 
+C:\msys64\tmp\cc2hunog.s:1212   .text:0000000000000624 .L0 
+C:\msys64\tmp\cc2hunog.s:1224   .text:0000000000000640 .L0 
+C:\msys64\tmp\cc2hunog.s:1236   .text:000000000000065c .L0 
+C:\msys64\tmp\cc2hunog.s:1247   .text:0000000000000678 .L0 
+C:\msys64\tmp\cc2hunog.s:47     .text._ZN12ConsumerSyncD2Ev:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:94     .text._ZN12ConsumerSyncD0Ev:000000000000004c .L0 
+C:\msys64\tmp\cc2hunog.s:131    .text._ZN12ProducerSyncD2Ev:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:178    .text._ZN12ProducerSyncD0Ev:000000000000004c .L0 
+C:\msys64\tmp\cc2hunog.s:215    .text._ZN16ProducerKeyboardD2Ev:0000000000000034 .L0 
+C:\msys64\tmp\cc2hunog.s:262    .text._ZN16ProducerKeyboardD0Ev:000000000000004c .L0 
+C:\msys64\tmp\cc2hunog.s:1373   .text:0000000000000678 .L0 
+C:\msys64\tmp\cc2hunog.s:407    .text._ZN16ProducerKeyboard3runEv:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:527    .text._ZN12ProducerSync3runEv:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:704    .text._ZN12ConsumerSync3runEv:000000000000002c .L0 
+C:\msys64\tmp\cc2hunog.s:337    .text:0000000000000078 .L0 
+C:\msys64\tmp\cc2hunog.s:438    .text:00000000000000dc .L0 
+C:\msys64\tmp\cc2hunog.s:563    .text:0000000000000178 .L0 
+C:\msys64\tmp\cc2hunog.s:706    .rodata.str1.8:0000000000000000 .LC0
+C:\msys64\tmp\cc2hunog.s:768    .text:0000000000000274 .L0 
+C:\msys64\tmp\cc2hunog.s:709    .rodata.str1.8:0000000000000020 .LC1
+C:\msys64\tmp\cc2hunog.s:787    .text:00000000000002a4 .L0 
+C:\msys64\tmp\cc2hunog.s:712    .rodata.str1.8:0000000000000040 .LC2
+C:\msys64\tmp\cc2hunog.s:805    .text:00000000000002d4 .L0 
+C:\msys64\tmp\cc2hunog.s:715    .rodata.str1.8:0000000000000058 .LC3
+C:\msys64\tmp\cc2hunog.s:817    .text:00000000000002f8 .L0 
+C:\msys64\tmp\cc2hunog.s:718    .rodata.str1.8:0000000000000070 .LC4
+C:\msys64\tmp\cc2hunog.s:829    .text:000000000000031c .L0 
+C:\msys64\tmp\cc2hunog.s:721    .rodata.str1.8:0000000000000078 .LC5
+C:\msys64\tmp\cc2hunog.s:852    .text:0000000000000354 .L0 
+C:\msys64\tmp\cc2hunog.s:724    .rodata.str1.8:00000000000000b8 .LC6
+C:\msys64\tmp\cc2hunog.s:861    .text:0000000000000368 .L0 
+C:\msys64\tmp\cc2hunog.s:884    .text:000000000000039c .L0 
+C:\msys64\tmp\cc2hunog.s:944    .text:0000000000000418 .L0 
+C:\msys64\tmp\cc2hunog.s:965    .text:000000000000043c .L0 
+C:\msys64\tmp\cc2hunog.s:1002   .text:000000000000048c .L0 
+C:\msys64\tmp\cc2hunog.s:1054   .text:00000000000004f0 .L0 
+C:\msys64\tmp\cc2hunog.s:1081   .text:0000000000000520 .L0 
+C:\msys64\tmp\cc2hunog.s:1131   .text:000000000000057c .L0 
+C:\msys64\tmp\cc2hunog.s:333    .text:0000000000000074 .L15
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 42
+
+
+C:\msys64\tmp\cc2hunog.s:294    .text:0000000000000028 .L14
+C:\msys64\tmp\cc2hunog.s:469    .text:0000000000000128 .L22
+C:\msys64\tmp\cc2hunog.s:435    .text:00000000000000dc .L21
+C:\msys64\tmp\cc2hunog.s:630    .text:00000000000001fc .L29
+C:\msys64\tmp\cc2hunog.s:607    .text:00000000000001d4 .L34
+C:\msys64\tmp\cc2hunog.s:560    .text:0000000000000178 .L28
+C:\msys64\tmp\cc2hunog.s:592    .text:00000000000001b8 .L30
+C:\msys64\tmp\cc2hunog.s:614    .text:00000000000001e0 .L35
+C:\msys64\tmp\cc2hunog.s:849    .text:0000000000000354 .L66
+C:\msys64\tmp\cc2hunog.s:858    .text:0000000000000368 .L67
+C:\msys64\tmp\cc2hunog.s:868    .text:0000000000000380 .L68
+C:\msys64\tmp\cc2hunog.s:865    .text:0000000000000378 .L40
+C:\msys64\tmp\cc2hunog.s:1153   .text:00000000000005b4 .L38
+C:\msys64\tmp\cc2hunog.s:987    .text:0000000000000470 .L45
+C:\msys64\tmp\cc2hunog.s:1065   .text:0000000000000510 .L42
+C:\msys64\tmp\cc2hunog.s:1029   .text:00000000000004c8 .L43
+C:\msys64\tmp\cc2hunog.s:961    .text:000000000000043c .L69
+C:\msys64\tmp\cc2hunog.s:975    .text:0000000000000458 .L44
+C:\msys64\tmp\cc2hunog.s:1087   .text:0000000000000534 .L47
+C:\msys64\tmp\cc2hunog.s:1078   .text:0000000000000520 .L70
+C:\msys64\tmp\cc2hunog.s:1107   .text:0000000000000550 .L46
+C:\msys64\tmp\cc2hunog.s:1118   .text:0000000000000568 .L48
+C:\msys64\tmp\cc2hunog.s:1097   .text:0000000000000540 .L71
+C:\msys64\tmp\cc2hunog.s:1103   .text:000000000000054c .L49
+C:\msys64\tmp\cc2hunog.s:1128   .text:000000000000057c .L50
+C:\msys64\tmp\cc2hunog.s:1139   .text:0000000000000594 .L51
+C:\msys64\tmp\cc2hunog.s:1150   .text:00000000000005b0 .L52
+C:\msys64\tmp\cc2hunog.s:29     .text._ZN12ConsumerSyncD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:71     .text._ZN12ConsumerSyncD0Ev:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:113    .text._ZN12ProducerSyncD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:155    .text._ZN12ProducerSyncD0Ev:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:197    .text._ZN16ProducerKeyboardD2Ev:0000000000000010 .L0 
+C:\msys64\tmp\cc2hunog.s:239    .text._ZN16ProducerKeyboardD0Ev:0000000000000018 .L0 
+C:\msys64\tmp\cc2hunog.s:769    .text:000000000000027c .LEHB0
+C:\msys64\tmp\cc2hunog.s:731    .text:000000000000023c .LFB17
+C:\msys64\tmp\cc2hunog.s:841    .text:0000000000000340 .LEHE0
+C:\msys64\tmp\cc2hunog.s:844    .text:0000000000000348 .LEHB1
+C:\msys64\tmp\cc2hunog.s:847    .text:0000000000000350 .LEHE1
+C:\msys64\tmp\cc2hunog.s:1185   .text:00000000000005ec .L60
+C:\msys64\tmp\cc2hunog.s:853    .text:000000000000035c .LEHB2
+C:\msys64\tmp\cc2hunog.s:875    .text:000000000000038c .LEHE2
+C:\msys64\tmp\cc2hunog.s:879    .text:0000000000000394 .LEHB3
+C:\msys64\tmp\cc2hunog.s:882    .text:000000000000039c .LEHE3
+C:\msys64\tmp\cc2hunog.s:1198   .text:0000000000000608 .L61
+C:\msys64\tmp\cc2hunog.s:925    .text:00000000000003f8 .LEHB4
+C:\msys64\tmp\cc2hunog.s:928    .text:0000000000000400 .LEHE4
+C:\msys64\tmp\cc2hunog.s:936    .text:0000000000000410 .LEHB5
+C:\msys64\tmp\cc2hunog.s:942    .text:0000000000000418 .LEHE5
+C:\msys64\tmp\cc2hunog.s:1210   .text:0000000000000624 .L62
+C:\msys64\tmp\cc2hunog.s:953    .text:000000000000042c .LEHB6
+C:\msys64\tmp\cc2hunog.s:1011   .text:00000000000004a8 .LEHE6
+C:\msys64\tmp\cc2hunog.s:1020   .text:00000000000004bc .LEHB7
+C:\msys64\tmp\cc2hunog.s:1026   .text:00000000000004c4 .LEHE7
+C:\msys64\tmp\cc2hunog.s:1221   .text:0000000000000640 .L63
+C:\msys64\tmp\cc2hunog.s:1035   .text:00000000000004cc .LEHB8
+C:\msys64\tmp\cc2hunog.s:1038   .text:00000000000004d4 .LEHE8
+C:\msys64\tmp\cc2hunog.s:1047   .text:00000000000004e8 .LEHB9
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 43
+
+
+C:\msys64\tmp\cc2hunog.s:1053   .text:00000000000004f0 .LEHE9
+C:\msys64\tmp\cc2hunog.s:1234   .text:000000000000065c .L64
+C:\msys64\tmp\cc2hunog.s:1068   .text:0000000000000510 .LEHB10
+C:\msys64\tmp\cc2hunog.s:1149   .text:00000000000005b0 .LEHE10
+C:\msys64\tmp\cc2hunog.s:1194   .text:0000000000000600 .LEHB11
+C:\msys64\tmp\cc2hunog.s:1197   .text:0000000000000608 .LEHE11
+C:\msys64\tmp\cc2hunog.s:1206   .text:000000000000061c .LEHB12
+C:\msys64\tmp\cc2hunog.s:1209   .text:0000000000000624 .LEHE12
+C:\msys64\tmp\cc2hunog.s:1217   .text:0000000000000638 .LEHB13
+C:\msys64\tmp\cc2hunog.s:1220   .text:0000000000000640 .LEHE13
+C:\msys64\tmp\cc2hunog.s:1230   .text:0000000000000654 .LEHB14
+C:\msys64\tmp\cc2hunog.s:1233   .text:000000000000065c .LEHE14
+C:\msys64\tmp\cc2hunog.s:1242   .text:0000000000000670 .LEHB15
+C:\msys64\tmp\cc2hunog.s:1245   .text:0000000000000678 .LEHE15
+C:\msys64\tmp\cc2hunog.s:3322   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\cc2hunog.s:5062   .debug_str:000000000000014b .LASF99
+C:\msys64\tmp\cc2hunog.s:5234   .debug_str:000000000000081b .LASF100
+C:\msys64\tmp\cc2hunog.s:5170   .debug_str:0000000000000585 .LASF101
+C:\msys64\tmp\cc2hunog.s:4980   .debug_ranges:0000000000000000 .Ldebug_ranges0
+C:\msys64\tmp\cc2hunog.s:5016   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\cc2hunog.s:5138   .debug_str:000000000000046b .LASF0
+C:\msys64\tmp\cc2hunog.s:5154   .debug_str:00000000000004ff .LASF1
+C:\msys64\tmp\cc2hunog.s:5126   .debug_str:00000000000003f9 .LASF2
+C:\msys64\tmp\cc2hunog.s:5104   .debug_str:000000000000035d .LASF4
+C:\msys64\tmp\cc2hunog.s:5190   .debug_str:0000000000000634 .LASF3
+C:\msys64\tmp\cc2hunog.s:5044   .debug_str:00000000000000a9 .LASF5
+C:\msys64\tmp\cc2hunog.s:5160   .debug_str:0000000000000541 .LASF6
+C:\msys64\tmp\cc2hunog.s:5136   .debug_str:0000000000000458 .LASF7
+C:\msys64\tmp\cc2hunog.s:5168   .debug_str:0000000000000576 .LASF8
+C:\msys64\tmp\cc2hunog.s:5058   .debug_str:000000000000011c .LASF9
+C:\msys64\tmp\cc2hunog.s:5186   .debug_str:0000000000000608 .LASF10
+C:\msys64\tmp\cc2hunog.s:5066   .debug_str:0000000000000236 .LASF11
+C:\msys64\tmp\cc2hunog.s:5100   .debug_str:0000000000000349 .LASF13
+C:\msys64\tmp\cc2hunog.s:5020   .debug_str:000000000000000a .LASF98
+C:\msys64\tmp\cc2hunog.s:5054   .debug_str:0000000000000100 .LASF102
+C:\msys64\tmp\cc2hunog.s:5128   .debug_str:0000000000000407 .LASF33
+C:\msys64\tmp\cc2hunog.s:5156   .debug_str:0000000000000512 .LASF103
+C:\msys64\tmp\cc2hunog.s:5162   .debug_str:0000000000000554 .LASF12
+C:\msys64\tmp\cc2hunog.s:5182   .debug_str:00000000000005f7 .LASF14
+C:\msys64\tmp\cc2hunog.s:5184   .debug_str:0000000000000601 .LASF15
+C:\msys64\tmp\cc2hunog.s:5068   .debug_str:000000000000024c .LASF16
+C:\msys64\tmp\cc2hunog.s:5124   .debug_str:00000000000003f4 .LASF17
+C:\msys64\tmp\cc2hunog.s:5076   .debug_str:000000000000027e .LASF18
+C:\msys64\tmp\cc2hunog.s:5094   .debug_str:0000000000000300 .LASF19
+C:\msys64\tmp\cc2hunog.s:5122   .debug_str:00000000000003ea .LASF20
+C:\msys64\tmp\cc2hunog.s:5144   .debug_str:00000000000004a9 .LASF21
+C:\msys64\tmp\cc2hunog.s:5146   .debug_str:00000000000004b3 .LASF23
+C:\msys64\tmp\cc2hunog.s:5118   .debug_str:00000000000003d9 .LASF22
+C:\msys64\tmp\cc2hunog.s:5216   .debug_str:0000000000000777 .LASF24
+C:\msys64\tmp\cc2hunog.s:5096   .debug_str:000000000000030e .LASF104
+C:\msys64\tmp\cc2hunog.s:5046   .debug_str:00000000000000b0 .LASF105
+C:\msys64\tmp\cc2hunog.s:5036   .debug_str:0000000000000078 .LASF25
+C:\msys64\tmp\cc2hunog.s:5040   .debug_str:000000000000008c .LASF26
+C:\msys64\tmp\cc2hunog.s:5018   .debug_str:0000000000000000 .LASF40
+C:\msys64\tmp\cc2hunog.s:5178   .debug_str:00000000000005cb .LASF27
+C:\msys64\tmp\cc2hunog.s:5080   .debug_str:00000000000002b0 .LASF29
+C:\msys64\tmp\cc2hunog.s:5180   .debug_str:00000000000005e0 .LASF28
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 44
+
+
+C:\msys64\tmp\cc2hunog.s:5164   .debug_str:0000000000000559 .LASF30
+C:\msys64\tmp\cc2hunog.s:5084   .debug_str:00000000000002be .LASF31
+C:\msys64\tmp\cc2hunog.s:5090   .debug_str:00000000000002eb .LASF106
+C:\msys64\tmp\cc2hunog.s:5106   .debug_str:0000000000000364 .LASF32
+C:\msys64\tmp\cc2hunog.s:5038   .debug_str:000000000000007f .LASF34
+C:\msys64\tmp\cc2hunog.s:5196   .debug_str:0000000000000670 .LASF35
+C:\msys64\tmp\cc2hunog.s:5220   .debug_str:000000000000079f .LASF36
+C:\msys64\tmp\cc2hunog.s:5050   .debug_str:00000000000000da .LASF38
+C:\msys64\tmp\cc2hunog.s:5148   .debug_str:00000000000004c5 .LASF50
+C:\msys64\tmp\cc2hunog.s:5142   .debug_str:0000000000000486 .LASF37
+C:\msys64\tmp\cc2hunog.s:5204   .debug_str:00000000000006d6 .LASF53
+C:\msys64\tmp\cc2hunog.s:5028   .debug_str:000000000000003c .LASF39
+C:\msys64\tmp\cc2hunog.s:5116   .debug_str:00000000000003c3 .LASF56
+C:\msys64\tmp\cc2hunog.s:5208   .debug_str:000000000000070a .LASF41
+C:\msys64\tmp\cc2hunog.s:5224   .debug_str:00000000000007c5 .LASF42
+C:\msys64\tmp\cc2hunog.s:5042   .debug_str:00000000000000a3 .LASF43
+C:\msys64\tmp\cc2hunog.s:5048   .debug_str:00000000000000c4 .LASF44
+C:\msys64\tmp\cc2hunog.s:5092   .debug_str:00000000000002f7 .LASF45
+C:\msys64\tmp\cc2hunog.s:5172   .debug_str:00000000000005b4 .LASF46
+C:\msys64\tmp\cc2hunog.s:5210   .debug_str:0000000000000711 .LASF47
+C:\msys64\tmp\cc2hunog.s:5070   .debug_str:0000000000000251 .LASF48
+C:\msys64\tmp\cc2hunog.s:5152   .debug_str:00000000000004f6 .LASF49
+C:\msys64\tmp\cc2hunog.s:5108   .debug_str:000000000000036e .LASF51
+C:\msys64\tmp\cc2hunog.s:5060   .debug_str:0000000000000128 .LASF52
+C:\msys64\tmp\cc2hunog.s:5110   .debug_str:000000000000038c .LASF54
+C:\msys64\tmp\cc2hunog.s:5140   .debug_str:0000000000000478 .LASF55
+C:\msys64\tmp\cc2hunog.s:5198   .debug_str:0000000000000688 .LASF57
+C:\msys64\tmp\cc2hunog.s:5232   .debug_str:000000000000080a .LASF58
+C:\msys64\tmp\cc2hunog.s:5158   .debug_str:0000000000000525 .LASF59
+C:\msys64\tmp\cc2hunog.s:5052   .debug_str:00000000000000e3 .LASF60
+C:\msys64\tmp\cc2hunog.s:5202   .debug_str:00000000000006c5 .LASF61
+C:\msys64\tmp\cc2hunog.s:5212   .debug_str:0000000000000729 .LASF62
+C:\msys64\tmp\cc2hunog.s:5098   .debug_str:0000000000000322 .LASF63
+C:\msys64\tmp\cc2hunog.s:5206   .debug_str:00000000000006ee .LASF64
+C:\msys64\tmp\cc2hunog.s:5022   .debug_str:000000000000000f .LASF65
+C:\msys64\tmp\cc2hunog.s:5086   .debug_str:00000000000002c9 .LASF66
+C:\msys64\tmp\cc2hunog.s:5174   .debug_str:00000000000005c1 .LASF67
+C:\msys64\tmp\cc2hunog.s:5032   .debug_str:0000000000000050 .LASF68
+C:\msys64\tmp\cc2hunog.s:5192   .debug_str:0000000000000646 .LASF69
+C:\msys64\tmp\cc2hunog.s:220    .text._ZN16ProducerKeyboardD0Ev:0000000000000000 .LFB29
+C:\msys64\tmp\cc2hunog.s:260    .text._ZN16ProducerKeyboardD0Ev:000000000000004c .LFE29
+C:\msys64\tmp\cc2hunog.s:4267   .debug_loc:0000000000000000 .LLST7
+C:\msys64\tmp\cc2hunog.s:236    .text._ZN16ProducerKeyboardD0Ev:0000000000000018 .LBB30
+C:\msys64\tmp\cc2hunog.s:244    .text._ZN16ProducerKeyboardD0Ev:000000000000002c .LBE30
+C:\msys64\tmp\cc2hunog.s:4285   .debug_loc:000000000000004c .LLST8
+C:\msys64\tmp\cc2hunog.s:242    .text._ZN16ProducerKeyboardD0Ev:000000000000002c .LVL18
+C:\msys64\tmp\cc2hunog.s:247    .text._ZN16ProducerKeyboardD0Ev:0000000000000038 .LVL19
+C:\msys64\tmp\cc2hunog.s:5132   .debug_str:000000000000042f .LASF70
+C:\msys64\tmp\cc2hunog.s:183    .text._ZN16ProducerKeyboardD2Ev:0000000000000000 .LFB27
+C:\msys64\tmp\cc2hunog.s:211    .text._ZN16ProducerKeyboardD2Ev:0000000000000034 .LFE27
+C:\msys64\tmp\cc2hunog.s:4296   .debug_loc:0000000000000082 .LLST6
+C:\msys64\tmp\cc2hunog.s:200    .text._ZN16ProducerKeyboardD2Ev:0000000000000024 .LVL15
+C:\msys64\tmp\cc2hunog.s:5166   .debug_str:0000000000000560 .LASF71
+C:\msys64\tmp\cc2hunog.s:136    .text._ZN12ProducerSyncD0Ev:0000000000000000 .LFB25
+C:\msys64\tmp\cc2hunog.s:176    .text._ZN12ProducerSyncD0Ev:000000000000004c .LFE25
+C:\msys64\tmp\cc2hunog.s:4310   .debug_loc:00000000000000bb .LLST4
+C:\msys64\tmp\cc2hunog.s:152    .text._ZN12ProducerSyncD0Ev:0000000000000018 .LBB27
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 45
+
+
+C:\msys64\tmp\cc2hunog.s:160    .text._ZN12ProducerSyncD0Ev:000000000000002c .LBE27
+C:\msys64\tmp\cc2hunog.s:4328   .debug_loc:0000000000000107 .LLST5
+C:\msys64\tmp\cc2hunog.s:158    .text._ZN12ProducerSyncD0Ev:000000000000002c .LVL11
+C:\msys64\tmp\cc2hunog.s:163    .text._ZN12ProducerSyncD0Ev:0000000000000038 .LVL12
+C:\msys64\tmp\cc2hunog.s:5114   .debug_str:00000000000003ad .LASF72
+C:\msys64\tmp\cc2hunog.s:99     .text._ZN12ProducerSyncD2Ev:0000000000000000 .LFB23
+C:\msys64\tmp\cc2hunog.s:127    .text._ZN12ProducerSyncD2Ev:0000000000000034 .LFE23
+C:\msys64\tmp\cc2hunog.s:4339   .debug_loc:000000000000013d .LLST3
+C:\msys64\tmp\cc2hunog.s:116    .text._ZN12ProducerSyncD2Ev:0000000000000024 .LVL8
+C:\msys64\tmp\cc2hunog.s:5218   .debug_str:0000000000000789 .LASF73
+C:\msys64\tmp\cc2hunog.s:52     .text._ZN12ConsumerSyncD0Ev:0000000000000000 .LFB21
+C:\msys64\tmp\cc2hunog.s:92     .text._ZN12ConsumerSyncD0Ev:000000000000004c .LFE21
+C:\msys64\tmp\cc2hunog.s:4353   .debug_loc:0000000000000176 .LLST1
+C:\msys64\tmp\cc2hunog.s:68     .text._ZN12ConsumerSyncD0Ev:0000000000000018 .LBB24
+C:\msys64\tmp\cc2hunog.s:76     .text._ZN12ConsumerSyncD0Ev:000000000000002c .LBE24
+C:\msys64\tmp\cc2hunog.s:4371   .debug_loc:00000000000001c2 .LLST2
+C:\msys64\tmp\cc2hunog.s:74     .text._ZN12ConsumerSyncD0Ev:000000000000002c .LVL4
+C:\msys64\tmp\cc2hunog.s:79     .text._ZN12ConsumerSyncD0Ev:0000000000000038 .LVL5
+C:\msys64\tmp\cc2hunog.s:5188   .debug_str:000000000000061e .LASF74
+C:\msys64\tmp\cc2hunog.s:14     .text._ZN12ConsumerSyncD2Ev:0000000000000000 .LFB19
+C:\msys64\tmp\cc2hunog.s:43     .text._ZN12ConsumerSyncD2Ev:0000000000000034 .LFE19
+C:\msys64\tmp\cc2hunog.s:4382   .debug_loc:00000000000001f8 .LLST0
+C:\msys64\tmp\cc2hunog.s:32     .text._ZN12ConsumerSyncD2Ev:0000000000000024 .LVL1
+C:\msys64\tmp\cc2hunog.s:5034   .debug_str:000000000000005a .LASF75
+C:\msys64\tmp\cc2hunog.s:5078   .debug_str:000000000000028d .LASF107
+C:\msys64\tmp\cc2hunog.s:1248   .text:0000000000000678 .LFE17
+C:\msys64\tmp\cc2hunog.s:5030   .debug_str:000000000000004a .LASF76
+C:\msys64\tmp\cc2hunog.s:4396   .debug_loc:0000000000000231 .LLST31
+C:\msys64\tmp\cc2hunog.s:5074   .debug_str:0000000000000274 .LASF77
+C:\msys64\tmp\cc2hunog.s:4407   .debug_loc:0000000000000267 .LLST32
+C:\msys64\tmp\cc2hunog.s:4422   .debug_loc:00000000000002b0 .LLST33
+C:\msys64\tmp\cc2hunog.s:5088   .debug_str:00000000000002e3 .LASF78
+C:\msys64\tmp\cc2hunog.s:4433   .debug_loc:00000000000002e6 .LLST34
+C:\msys64\tmp\cc2hunog.s:5228   .debug_str:00000000000007e8 .LASF79
+C:\msys64\tmp\cc2hunog.s:4451   .debug_loc:0000000000000332 .LLST35
+C:\msys64\tmp\cc2hunog.s:5176   .debug_str:00000000000005c6 .LASF80
+C:\msys64\tmp\cc2hunog.s:4462   .debug_loc:0000000000000368 .LLST36
+C:\msys64\tmp\cc2hunog.s:4475   .debug_loc:00000000000003a0 .LLST39
+C:\msys64\tmp\cc2hunog.s:962    .text:000000000000043c .LBB37
+C:\msys64\tmp\cc2hunog.s:4490   .debug_loc:00000000000003e9 .LLST40
+C:\msys64\tmp\cc2hunog.s:4505   .debug_loc:0000000000000432 .LLST41
+C:\msys64\tmp\cc2hunog.s:1025   .text:00000000000004c4 .LVL109
+C:\msys64\tmp\cc2hunog.s:1048   .text:00000000000004e8 .LBB41
+C:\msys64\tmp\cc2hunog.s:1059   .text:0000000000000500 .LBE41
+C:\msys64\tmp\cc2hunog.s:4524   .debug_loc:000000000000048e .LLST42
+C:\msys64\tmp\cc2hunog.s:4535   .debug_loc:00000000000004c4 .LLST43
+C:\msys64\tmp\cc2hunog.s:1052   .text:00000000000004f0 .LVL113
+C:\msys64\tmp\cc2hunog.s:983    .text:000000000000046c .LVL105
+C:\msys64\tmp\cc2hunog.s:1010   .text:00000000000004a8 .LVL107
+C:\msys64\tmp\cc2hunog.s:1037   .text:00000000000004d4 .LVL111
+C:\msys64\tmp\cc2hunog.s:1228   .text:0000000000000650 .LVL140
+C:\msys64\tmp\cc2hunog.s:1240   .text:000000000000066c .LVL143
+C:\msys64\tmp\cc2hunog.s:1072   .text:0000000000000518 .LBB43
+C:\msys64\tmp\cc2hunog.s:1090   .text:0000000000000538 .LBE43
+C:\msys64\tmp\cc2hunog.s:4550   .debug_loc:000000000000050d .LLST44
+C:\msys64\tmp\cc2hunog.s:1083   .text:0000000000000530 .LVL118
+C:\msys64\tmp\cc2hunog.s:1091   .text:0000000000000538 .LBB44
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 46
+
+
+C:\msys64\tmp\cc2hunog.s:1119   .text:0000000000000568 .LBE44
+C:\msys64\tmp\cc2hunog.s:4557   .debug_loc:0000000000000530 .LLST45
+C:\msys64\tmp\cc2hunog.s:4564   .debug_loc:0000000000000553 .LLST28
+C:\msys64\tmp\cc2hunog.s:4595   .debug_loc:000000000000059d .LLST30
+C:\msys64\tmp\cc2hunog.s:937    .text:0000000000000410 .LBB34
+C:\msys64\tmp\cc2hunog.s:949    .text:0000000000000428 .LBE34
+C:\msys64\tmp\cc2hunog.s:4626   .debug_loc:00000000000005e7 .LLST37
+C:\msys64\tmp\cc2hunog.s:4637   .debug_loc:000000000000061d .LLST38
+C:\msys64\tmp\cc2hunog.s:941    .text:0000000000000418 .LVL100
+C:\msys64\tmp\cc2hunog.s:771    .text:0000000000000284 .LVL72
+C:\msys64\tmp\cc2hunog.s:777    .text:0000000000000294 .LVL73
+C:\msys64\tmp\cc2hunog.s:782    .text:00000000000002a0 .LVL74
+C:\msys64\tmp\cc2hunog.s:789    .text:00000000000002b4 .LVL76
+C:\msys64\tmp\cc2hunog.s:795    .text:00000000000002c4 .LVL77
+C:\msys64\tmp\cc2hunog.s:800    .text:00000000000002d0 .LVL78
+C:\msys64\tmp\cc2hunog.s:807    .text:00000000000002e4 .LVL80
+C:\msys64\tmp\cc2hunog.s:814    .text:00000000000002f8 .LVL81
+C:\msys64\tmp\cc2hunog.s:819    .text:0000000000000308 .LVL82
+C:\msys64\tmp\cc2hunog.s:826    .text:000000000000031c .LVL83
+C:\msys64\tmp\cc2hunog.s:831    .text:000000000000032c .LVL84
+C:\msys64\tmp\cc2hunog.s:840    .text:0000000000000340 .LVL85
+C:\msys64\tmp\cc2hunog.s:846    .text:0000000000000350 .LVL86
+C:\msys64\tmp\cc2hunog.s:855    .text:0000000000000364 .LVL87
+C:\msys64\tmp\cc2hunog.s:863    .text:0000000000000378 .LVL88
+C:\msys64\tmp\cc2hunog.s:874    .text:000000000000038c .LVL90
+C:\msys64\tmp\cc2hunog.s:881    .text:000000000000039c .LVL92
+C:\msys64\tmp\cc2hunog.s:927    .text:0000000000000400 .LVL98
+C:\msys64\tmp\cc2hunog.s:955    .text:0000000000000434 .LVL102
+C:\msys64\tmp\cc2hunog.s:1071   .text:0000000000000518 .LVL115
+C:\msys64\tmp\cc2hunog.s:1127   .text:000000000000057c .LVL124
+C:\msys64\tmp\cc2hunog.s:1145   .text:00000000000005a4 .LVL126
+C:\msys64\tmp\cc2hunog.s:1148   .text:00000000000005b0 .LVL127
+C:\msys64\tmp\cc2hunog.s:1192   .text:00000000000005fc .LVL132
+C:\msys64\tmp\cc2hunog.s:1196   .text:0000000000000608 .LVL133
+C:\msys64\tmp\cc2hunog.s:1204   .text:0000000000000618 .LVL135
+C:\msys64\tmp\cc2hunog.s:1208   .text:0000000000000624 .LVL136
+C:\msys64\tmp\cc2hunog.s:1215   .text:0000000000000634 .LVL137
+C:\msys64\tmp\cc2hunog.s:1219   .text:0000000000000640 .LVL138
+C:\msys64\tmp\cc2hunog.s:1232   .text:000000000000065c .LVL141
+C:\msys64\tmp\cc2hunog.s:1244   .text:0000000000000678 .LVL144
+C:\msys64\tmp\cc2hunog.s:532    .text:000000000000014c .LFB16
+C:\msys64\tmp\cc2hunog.s:668    .text:000000000000023c .LFE16
+C:\msys64\tmp\cc2hunog.s:4652   .debug_loc:0000000000000666 .LLST20
+C:\msys64\tmp\cc2hunog.s:4670   .debug_loc:00000000000006b2 .LLST21
+C:\msys64\tmp\cc2hunog.s:4688   .debug_loc:00000000000006fe .LLST22
+C:\msys64\tmp\cc2hunog.s:4706   .debug_loc:000000000000074a .LLST23
+C:\msys64\tmp\cc2hunog.s:565    .text:0000000000000184 .LBB32
+C:\msys64\tmp\cc2hunog.s:615    .text:00000000000001e0 .LBE32
+C:\msys64\tmp\cc2hunog.s:4734   .debug_loc:00000000000007cd .LLST24
+C:\msys64\tmp\cc2hunog.s:570    .text:0000000000000190 .LVL53
+C:\msys64\tmp\cc2hunog.s:581    .text:00000000000001a4 .LVL56
+C:\msys64\tmp\cc2hunog.s:604    .text:00000000000001d0 .LVL58
+C:\msys64\tmp\cc2hunog.s:611    .text:00000000000001dc .LVL60
+C:\msys64\tmp\cc2hunog.s:616    .text:00000000000001e0 .LBB33
+C:\msys64\tmp\cc2hunog.s:631    .text:00000000000001fc .LBE33
+C:\msys64\tmp\cc2hunog.s:4741   .debug_loc:00000000000007f0 .LLST25
+C:\msys64\tmp\cc2hunog.s:623    .text:00000000000001f0 .LVL62
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 47
+
+
+C:\msys64\tmp\cc2hunog.s:629    .text:00000000000001fc .LVL64
+C:\msys64\tmp\cc2hunog.s:639    .text:000000000000020c .LVL65
+C:\msys64\tmp\cc2hunog.s:646    .text:000000000000021c .LVL66
+C:\msys64\tmp\cc2hunog.s:675    .text._ZN12ConsumerSync3runEv:0000000000000000 .LFB15
+C:\msys64\tmp\cc2hunog.s:702    .text._ZN12ConsumerSync3runEv:000000000000002c .LFE15
+C:\msys64\tmp\cc2hunog.s:4748   .debug_loc:0000000000000813 .LLST26
+C:\msys64\tmp\cc2hunog.s:691    .text._ZN12ConsumerSync3runEv:000000000000001c .LVL71
+C:\msys64\tmp\cc2hunog.s:5214   .debug_str:0000000000000754 .LASF81
+C:\msys64\tmp\cc2hunog.s:412    .text:00000000000000bc .LFB11
+C:\msys64\tmp\cc2hunog.s:491    .text:000000000000014c .LFE11
+C:\msys64\tmp\cc2hunog.s:4762   .debug_loc:000000000000084c .LLST15
+C:\msys64\tmp\cc2hunog.s:4776   .debug_loc:0000000000000885 .LLST16
+C:\msys64\tmp\cc2hunog.s:4794   .debug_loc:00000000000008d1 .LLST17
+C:\msys64\tmp\cc2hunog.s:4812   .debug_loc:000000000000091d .LLST18
+C:\msys64\tmp\cc2hunog.s:447    .text:00000000000000fc .LVL42
+C:\msys64\tmp\cc2hunog.s:467    .text:0000000000000124 .LVL44
+C:\msys64\tmp\cc2hunog.s:474    .text:0000000000000134 .LVL45
+C:\msys64\tmp\cc2hunog.s:498    .text._ZN12ProducerSync3runEv:0000000000000000 .LFB10
+C:\msys64\tmp\cc2hunog.s:525    .text._ZN12ProducerSync3runEv:000000000000002c .LFE10
+C:\msys64\tmp\cc2hunog.s:4832   .debug_loc:000000000000097a .LLST19
+C:\msys64\tmp\cc2hunog.s:514    .text._ZN12ProducerSync3runEv:000000000000001c .LVL49
+C:\msys64\tmp\cc2hunog.s:5130   .debug_str:000000000000040c .LASF82
+C:\msys64\tmp\cc2hunog.s:267    .text:0000000000000000 .LFB6
+C:\msys64\tmp\cc2hunog.s:371    .text:00000000000000bc .LFE6
+C:\msys64\tmp\cc2hunog.s:4846   .debug_loc:00000000000009b3 .LLST9
+C:\msys64\tmp\cc2hunog.s:4864   .debug_loc:00000000000009ff .LLST10
+C:\msys64\tmp\cc2hunog.s:4882   .debug_loc:0000000000000a4b .LLST11
+C:\msys64\tmp\cc2hunog.s:4900   .debug_loc:0000000000000a97 .LLST12
+C:\msys64\tmp\cc2hunog.s:4915   .debug_loc:0000000000000ae0 .LLST13
+C:\msys64\tmp\cc2hunog.s:299    .text:0000000000000030 .LVL24
+C:\msys64\tmp\cc2hunog.s:310    .text:0000000000000048 .LVL26
+C:\msys64\tmp\cc2hunog.s:330    .text:0000000000000070 .LVL28
+C:\msys64\tmp\cc2hunog.s:346    .text:0000000000000094 .LVL32
+C:\msys64\tmp\cc2hunog.s:351    .text:00000000000000a0 .LVL33
+C:\msys64\tmp\cc2hunog.s:378    .text._ZN16ProducerKeyboard3runEv:0000000000000000 .LFB5
+C:\msys64\tmp\cc2hunog.s:405    .text._ZN16ProducerKeyboard3runEv:000000000000002c .LFE5
+C:\msys64\tmp\cc2hunog.s:4935   .debug_loc:0000000000000b3d .LLST14
+C:\msys64\tmp\cc2hunog.s:394    .text._ZN16ProducerKeyboard3runEv:000000000000001c .LVL38
+C:\msys64\tmp\cc2hunog.s:5200   .debug_str:000000000000069e .LASF83
+C:\msys64\tmp\cc2hunog.s:5236   .debug_str:0000000000000847 .LASF84
+C:\msys64\tmp\cc2hunog.s:5194   .debug_str:0000000000000660 .LASF85
+C:\msys64\tmp\cc2hunog.s:5120   .debug_str:00000000000003e4 .LASF86
+C:\msys64\tmp\cc2hunog.s:5222   .debug_str:00000000000007b8 .LASF87
+C:\msys64\tmp\cc2hunog.s:5230   .debug_str:00000000000007f7 .LASF88
+C:\msys64\tmp\cc2hunog.s:5024   .debug_str:0000000000000021 .LASF89
+C:\msys64\tmp\cc2hunog.s:5226   .debug_str:00000000000007d8 .LASF90
+C:\msys64\tmp\cc2hunog.s:5072   .debug_str:000000000000026a .LASF91
+C:\msys64\tmp\cc2hunog.s:5150   .debug_str:00000000000004e3 .LASF92
+C:\msys64\tmp\cc2hunog.s:5102   .debug_str:0000000000000351 .LASF93
+C:\msys64\tmp\cc2hunog.s:5134   .debug_str:0000000000000449 .LASF94
+C:\msys64\tmp\cc2hunog.s:5056   .debug_str:0000000000000113 .LASF95
+C:\msys64\tmp\cc2hunog.s:5026   .debug_str:000000000000002d .LASF108
+C:\msys64\tmp\cc2hunog.s:5064   .debug_str:000000000000021e .LASF109
+C:\msys64\tmp\cc2hunog.s:5082   .debug_str:00000000000002b5 .LASF96
+C:\msys64\tmp\cc2hunog.s:5112   .debug_str:00000000000003a4 .LASF97
+C:\msys64\tmp\cc2hunog.s:223    .text._ZN16ProducerKeyboardD0Ev:0000000000000000 .LVL16
+C:\msys64\tmp\cc2hunog.s:255    .text._ZN16ProducerKeyboardD0Ev:0000000000000044 .LVL20
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 48
+
+
+C:\msys64\tmp\cc2hunog.s:235    .text._ZN16ProducerKeyboardD0Ev:0000000000000018 .LVL17
+C:\msys64\tmp\cc2hunog.s:186    .text._ZN16ProducerKeyboardD2Ev:0000000000000000 .LVL14
+C:\msys64\tmp\cc2hunog.s:139    .text._ZN12ProducerSyncD0Ev:0000000000000000 .LVL9
+C:\msys64\tmp\cc2hunog.s:171    .text._ZN12ProducerSyncD0Ev:0000000000000044 .LVL13
+C:\msys64\tmp\cc2hunog.s:151    .text._ZN12ProducerSyncD0Ev:0000000000000018 .LVL10
+C:\msys64\tmp\cc2hunog.s:102    .text._ZN12ProducerSyncD2Ev:0000000000000000 .LVL7
+C:\msys64\tmp\cc2hunog.s:55     .text._ZN12ConsumerSyncD0Ev:0000000000000000 .LVL2
+C:\msys64\tmp\cc2hunog.s:87     .text._ZN12ConsumerSyncD0Ev:0000000000000044 .LVL6
+C:\msys64\tmp\cc2hunog.s:67     .text._ZN12ConsumerSyncD0Ev:0000000000000018 .LVL3
+C:\msys64\tmp\cc2hunog.s:18     .text._ZN12ConsumerSyncD2Ev:0000000000000000 .LVL0
+C:\msys64\tmp\cc2hunog.s:802    .text:00000000000002d4 .LVL79
+C:\msys64\tmp\cc2hunog.s:877    .text:0000000000000390 .LVL91
+C:\msys64\tmp\cc2hunog.s:1184   .text:00000000000005ec .LVL130
+C:\msys64\tmp\cc2hunog.s:1189   .text:00000000000005f0 .LVL131
+C:\msys64\tmp\cc2hunog.s:784    .text:00000000000002a4 .LVL75
+C:\msys64\tmp\cc2hunog.s:1166   .text:00000000000005c8 .LVL129
+C:\msys64\tmp\cc2hunog.s:1201   .text:000000000000060c .LVL134
+C:\msys64\tmp\cc2hunog.s:869    .text:0000000000000380 .LVL89
+C:\msys64\tmp\cc2hunog.s:1152   .text:00000000000005b4 .LVL128
+C:\msys64\tmp\cc2hunog.s:893    .text:00000000000003b8 .LVL94
+C:\msys64\tmp\cc2hunog.s:906    .text:00000000000003d4 .LVL96
+C:\msys64\tmp\cc2hunog.s:947    .text:0000000000000428 .LVL101
+C:\msys64\tmp\cc2hunog.s:908    .text:00000000000003d8 .LVL97
+C:\msys64\tmp\cc2hunog.s:960    .text:000000000000043c .LVL103
+C:\msys64\tmp\cc2hunog.s:1075   .text:000000000000051c .LVL116
+C:\msys64\tmp\cc2hunog.s:1225   .text:0000000000000644 .LVL139
+C:\msys64\tmp\cc2hunog.s:1237   .text:0000000000000660 .LVL142
+C:\msys64\tmp\cc2hunog.s:968    .text:000000000000044c .LVL104
+C:\msys64\tmp\cc2hunog.s:1019   .text:00000000000004bc .LVL108
+C:\msys64\tmp\cc2hunog.s:1028   .text:00000000000004c8 .LVL110
+C:\msys64\tmp\cc2hunog.s:1046   .text:00000000000004e8 .LVL112
+C:\msys64\tmp\cc2hunog.s:1057   .text:0000000000000500 .LVL114
+C:\msys64\tmp\cc2hunog.s:1077   .text:0000000000000520 .LVL117
+C:\msys64\tmp\cc2hunog.s:1094   .text:000000000000053c .LVL120
+C:\msys64\tmp\cc2hunog.s:1096   .text:0000000000000540 .LVL121
+C:\msys64\tmp\cc2hunog.s:886    .text:00000000000003a4 .LVL93
+C:\msys64\tmp\cc2hunog.s:898    .text:00000000000003bc .LVL95
+C:\msys64\tmp\cc2hunog.s:935    .text:0000000000000410 .LVL99
+C:\msys64\tmp\cc2hunog.s:535    .text:000000000000014c .LVL50
+C:\msys64\tmp\cc2hunog.s:559    .text:0000000000000178 .LVL52
+C:\msys64\tmp\cc2hunog.s:660    .text:0000000000000230 .LVL68
+C:\msys64\tmp\cc2hunog.s:657    .text:000000000000022c .LVL67
+C:\msys64\tmp\cc2hunog.s:555    .text:0000000000000174 .LVL51
+C:\msys64\tmp\cc2hunog.s:575    .text:0000000000000198 .LVL54
+C:\msys64\tmp\cc2hunog.s:597    .text:00000000000001c0 .LVL57
+C:\msys64\tmp\cc2hunog.s:606    .text:00000000000001d4 .LVL59
+C:\msys64\tmp\cc2hunog.s:613    .text:00000000000001e0 .LVL61
+C:\msys64\tmp\cc2hunog.s:663    .text:0000000000000234 .LVL69
+C:\msys64\tmp\cc2hunog.s:579    .text:000000000000019c .LVL55
+C:\msys64\tmp\cc2hunog.s:627    .text:00000000000001f4 .LVL63
+C:\msys64\tmp\cc2hunog.s:678    .text._ZN12ConsumerSync3runEv:0000000000000000 .LVL70
+C:\msys64\tmp\cc2hunog.s:415    .text:00000000000000bc .LVL39
+C:\msys64\tmp\cc2hunog.s:434    .text:00000000000000dc .LVL41
+C:\msys64\tmp\cc2hunog.s:483    .text:0000000000000140 .LVL46
+C:\msys64\tmp\cc2hunog.s:430    .text:00000000000000d8 .LVL40
+C:\msys64\tmp\cc2hunog.s:452    .text:0000000000000104 .LVL43
+C:\msys64\tmp\cc2hunog.s:486    .text:0000000000000144 .LVL47
+GAS LISTING C:\msys64\tmp\cc2hunog.s 			page 49
+
+
+C:\msys64\tmp\cc2hunog.s:501    .text._ZN12ProducerSync3runEv:0000000000000000 .LVL48
+C:\msys64\tmp\cc2hunog.s:270    .text:0000000000000000 .LVL21
+C:\msys64\tmp\cc2hunog.s:293    .text:0000000000000028 .LVL23
+C:\msys64\tmp\cc2hunog.s:366    .text:00000000000000b4 .LVL36
+C:\msys64\tmp\cc2hunog.s:360    .text:00000000000000ac .LVL34
+C:\msys64\tmp\cc2hunog.s:288    .text:0000000000000024 .LVL22
+C:\msys64\tmp\cc2hunog.s:302    .text:0000000000000034 .LVL25
+C:\msys64\tmp\cc2hunog.s:332    .text:0000000000000074 .LVL29
+C:\msys64\tmp\cc2hunog.s:342    .text:0000000000000088 .LVL30
+C:\msys64\tmp\cc2hunog.s:344    .text:000000000000008c .LVL31
+C:\msys64\tmp\cc2hunog.s:315    .text:0000000000000050 .LVL27
+C:\msys64\tmp\cc2hunog.s:363    .text:00000000000000b0 .LVL35
+C:\msys64\tmp\cc2hunog.s:381    .text._ZN16ProducerKeyboard3runEv:0000000000000000 .LVL37
+C:\msys64\tmp\cc2hunog.s:1374   .debug_info:0000000000000000 .Ldebug_info0
+C:\msys64\tmp\cc2hunog.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\cc2hunog.s:1367   .text:0000000000000678 .Letext0
+C:\msys64\tmp\cc2hunog.s:956    .text:0000000000000434 .LBB36
+C:\msys64\tmp\cc2hunog.s:1066   .text:0000000000000510 .LBE36
+C:\msys64\tmp\cc2hunog.s:1222   .text:0000000000000640 .LBB45
+C:\msys64\tmp\cc2hunog.s:1246   .text:0000000000000678 .LBE45
+C:\msys64\tmp\cc2hunog.s:970    .text:000000000000044c .LBE37
+C:\msys64\tmp\cc2hunog.s:1021   .text:00000000000004bc .LBB40
+C:\msys64\tmp\cc2hunog.s:1031   .text:00000000000004c8 .LBE40
+C:\msys64\tmp\cc2hunog.s:1251   .gcc_except_table:0000000000000000 .LLSDA17
+                           .group:0000000000000000 _ZN12ConsumerSyncD5Ev
+                           .group:0000000000000000 _ZN12ProducerSyncD5Ev
+                           .group:0000000000000000 _ZN16ProducerKeyboardD5Ev
+
+UNDEFINED SYMBOLS
+_ZN6ThreadD2Ev
+_ZdlPv
+_Z4getcv
+_ZN9BufferCPP3putEi
+_ZN6Thread8dispatchEv
+_ZN9Semaphore6signalEv
+_ZN9BufferCPP3getEv
+_Z4putcc
+_ZN7Console4putcEc
+_ZN9BufferCPP6getCntEv
+_Z11printStringPKc
+_Z9getStringPci
+_Z11stringToIntPKc
+_Z8printIntiii
+_Znwm
+_ZN9BufferCPPC1Ei
+_ZN9SemaphoreC1Ej
+_ZN6ThreadC2Ev
+_ZN6Thread5startEv
+_ZN9Semaphore4waitEv
+_ZN9BufferCPPD1Ev
+_Unwind_Resume
+__gxx_personality_v0

@@ -1,0 +1,321 @@
+GAS LISTING C:\msys64\tmp\ccPExnQl.s 			page 1
+
+
+   1              		.file	"Scheduler.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.align	2
+  10              		.globl	_ZN9Scheduler3putEP7_thread
+  12              	_ZN9Scheduler3putEP7_thread:
+  13              	.LFB11:
+  14              		.file 1 "src/Scheduler.cpp"
+   1:src/Scheduler.cpp **** #include "../h/Scheduler.h"
+   2:src/Scheduler.cpp **** 
+   3:src/Scheduler.cpp **** #include "../h/Thread.h"
+   4:src/Scheduler.cpp **** 
+   5:src/Scheduler.cpp **** void Scheduler::put(_thread *t)
+   6:src/Scheduler.cpp **** {
+  15              		.loc 1 6 1
+  16              		.cfi_startproc
+  17              	.LVL0:
+  18 0000 130101FF 		addi	sp,sp,-16
+  19              		.cfi_def_cfa_offset 16
+  20 0004 23348100 		sd	s0,8(sp)
+  21              		.cfi_offset 8, -8
+  22 0008 13040101 		addi	s0,sp,16
+  23              		.cfi_def_cfa 8, 0
+   7:src/Scheduler.cpp ****     if (!t)
+  24              		.loc 1 7 5
+  25 000c 638E0500 		beq	a1,zero,.L1
+   8:src/Scheduler.cpp ****         return;
+   9:src/Scheduler.cpp ****     t->next = nullptr;
+  26              		.loc 1 9 5
+  27              		.loc 1 9 13 is_stmt 0
+  28 0010 23B00500 		sd	zero,0(a1)
+  10:src/Scheduler.cpp **** 
+  11:src/Scheduler.cpp ****     if (!head)
+  29              		.loc 1 11 5 is_stmt 1
+  30              		.loc 1 11 10 is_stmt 0
+  31 0014 83370500 		ld	a5,0(a0)
+  32              		.loc 1 11 5
+  33 0018 638E0700 		beq	a5,zero,.L6
+  12:src/Scheduler.cpp ****     {
+  13:src/Scheduler.cpp ****         head = t;
+  14:src/Scheduler.cpp ****     }
+  15:src/Scheduler.cpp ****     else
+  16:src/Scheduler.cpp ****     {
+  17:src/Scheduler.cpp ****         tail->next = t;
+  34              		.loc 1 17 9 is_stmt 1
+  35 001c 83378500 		ld	a5,8(a0)
+  36              		.loc 1 17 20 is_stmt 0
+  37 0020 23B0B700 		sd	a1,0(a5)
+  38              	.L4:
+  18:src/Scheduler.cpp ****     }
+  19:src/Scheduler.cpp ****     tail = t;
+  39              		.loc 1 19 5 is_stmt 1
+GAS LISTING C:\msys64\tmp\ccPExnQl.s 			page 2
+
+
+  40              		.loc 1 19 10 is_stmt 0
+  41 0024 2334B500 		sd	a1,8(a0)
+  42              	.L1:
+  20:src/Scheduler.cpp **** }
+  43              		.loc 1 20 1
+  44 0028 03348100 		ld	s0,8(sp)
+  45              		.cfi_remember_state
+  46              		.cfi_restore 8
+  47              		.cfi_def_cfa 2, 16
+  48 002c 13010101 		addi	sp,sp,16
+  49              		.cfi_def_cfa_offset 0
+  50 0030 67800000 		jr	ra
+  51              	.L6:
+  52              		.cfi_restore_state
+  13:src/Scheduler.cpp ****     }
+  53              		.loc 1 13 9 is_stmt 1
+  13:src/Scheduler.cpp ****     }
+  54              		.loc 1 13 14 is_stmt 0
+  55 0034 2330B500 		sd	a1,0(a0)
+  56 0038 6FF0DFFE 		j	.L4
+  57              		.cfi_endproc
+  58              	.LFE11:
+  60              		.align	2
+  61              		.globl	_ZN9Scheduler3getEv
+  63              	_ZN9Scheduler3getEv:
+  64              	.LFB12:
+  21:src/Scheduler.cpp **** 
+  22:src/Scheduler.cpp **** _thread *Scheduler::get()
+  23:src/Scheduler.cpp **** {
+  65              		.loc 1 23 1 is_stmt 1
+  66              		.cfi_startproc
+  67              	.LVL1:
+  68 003c 130101FF 		addi	sp,sp,-16
+  69              		.cfi_def_cfa_offset 16
+  70 0040 23348100 		sd	s0,8(sp)
+  71              		.cfi_offset 8, -8
+  72 0044 13040101 		addi	s0,sp,16
+  73              		.cfi_def_cfa 8, 0
+  74 0048 93070500 		mv	a5,a0
+  24:src/Scheduler.cpp ****     if (!head)
+  75              		.loc 1 24 5
+  76              		.loc 1 24 10 is_stmt 0
+  77 004c 03350500 		ld	a0,0(a0)
+  78              	.LVL2:
+  79              		.loc 1 24 5
+  80 0050 630A0500 		beq	a0,zero,.L7
+  25:src/Scheduler.cpp ****     {
+  26:src/Scheduler.cpp ****         return nullptr;
+  27:src/Scheduler.cpp ****     }
+  28:src/Scheduler.cpp **** 
+  29:src/Scheduler.cpp ****     _thread *t = head;
+  81              		.loc 1 29 5 is_stmt 1
+  82              	.LVL3:
+  30:src/Scheduler.cpp ****     head = head->next;
+  83              		.loc 1 30 5
+  84              		.loc 1 30 18 is_stmt 0
+  85 0054 03370500 		ld	a4,0(a0)
+GAS LISTING C:\msys64\tmp\ccPExnQl.s 			page 3
+
+
+  86              		.loc 1 30 10
+  87 0058 23B0E700 		sd	a4,0(a5)
+  31:src/Scheduler.cpp **** 
+  32:src/Scheduler.cpp ****     if (!head)
+  88              		.loc 1 32 5 is_stmt 1
+  89 005c 630A0700 		beq	a4,zero,.L11
+  90              	.L9:
+  33:src/Scheduler.cpp ****     {
+  34:src/Scheduler.cpp ****         tail = nullptr;
+  35:src/Scheduler.cpp ****     }
+  36:src/Scheduler.cpp **** 
+  37:src/Scheduler.cpp ****     t->next = nullptr;
+  91              		.loc 1 37 5
+  92              		.loc 1 37 13 is_stmt 0
+  93 0060 23300500 		sd	zero,0(a0)
+  38:src/Scheduler.cpp ****     return t;
+  94              		.loc 1 38 5 is_stmt 1
+  95              	.LVL4:
+  96              	.L7:
+  39:src/Scheduler.cpp **** }...
+  97              		.loc 1 39 1 is_stmt 0
+  98 0064 03348100 		ld	s0,8(sp)
+  99              		.cfi_remember_state
+ 100              		.cfi_restore 8
+ 101              		.cfi_def_cfa 2, 16
+ 102 0068 13010101 		addi	sp,sp,16
+ 103              		.cfi_def_cfa_offset 0
+ 104 006c 67800000 		jr	ra
+ 105              	.LVL5:
+ 106              	.L11:
+ 107              		.cfi_restore_state
+  34:src/Scheduler.cpp ****         tail = nullptr;
+ 108              		.loc 1 34 9 is_stmt 1
+  34:src/Scheduler.cpp ****         tail = nullptr;
+ 109              		.loc 1 34 14 is_stmt 0
+ 110 0070 23B40700 		sd	zero,8(a5)
+ 111 0074 6FF0DFFE 		j	.L9
+ 112              		.cfi_endproc
+ 113              	.LFE12:
+ 115              	.Letext0:
+ 116              		.file 2 "src/../h/Scheduler.h"
+ 117              		.file 3 "src/../h/Thread.h"
+ 118              		.file 4 "src/../h/../lib/hw.h"
+GAS LISTING C:\msys64\tmp\ccPExnQl.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Scheduler.cpp
+C:\msys64\tmp\ccPExnQl.s:12     .text:0000000000000000 _ZN9Scheduler3putEP7_thread
+C:\msys64\tmp\ccPExnQl.s:16     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccPExnQl.s:18     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccPExnQl.s:19     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccPExnQl.s:21     .text:0000000000000008 .L0 
+C:\msys64\tmp\ccPExnQl.s:23     .text:000000000000000c .L0 
+C:\msys64\tmp\ccPExnQl.s:25     .text:000000000000000c .L0 
+C:\msys64\tmp\ccPExnQl.s:27     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccPExnQl.s:28     .text:0000000000000010 .L0 
+C:\msys64\tmp\ccPExnQl.s:30     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccPExnQl.s:31     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccPExnQl.s:33     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccPExnQl.s:35     .text:000000000000001c .L0 
+C:\msys64\tmp\ccPExnQl.s:37     .text:0000000000000020 .L0 
+C:\msys64\tmp\ccPExnQl.s:40     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccPExnQl.s:41     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccPExnQl.s:44     .text:0000000000000028 .L0 
+C:\msys64\tmp\ccPExnQl.s:45     .text:000000000000002c .L0 
+C:\msys64\tmp\ccPExnQl.s:46     .text:000000000000002c .L0 
+C:\msys64\tmp\ccPExnQl.s:47     .text:000000000000002c .L0 
+C:\msys64\tmp\ccPExnQl.s:49     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccPExnQl.s:52     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccPExnQl.s:54     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccPExnQl.s:55     .text:0000000000000034 .L0 
+C:\msys64\tmp\ccPExnQl.s:57     .text:000000000000003c .L0 
+C:\msys64\tmp\ccPExnQl.s:63     .text:000000000000003c _ZN9Scheduler3getEv
+C:\msys64\tmp\ccPExnQl.s:66     .text:000000000000003c .L0 
+C:\msys64\tmp\ccPExnQl.s:68     .text:000000000000003c .L0 
+C:\msys64\tmp\ccPExnQl.s:69     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccPExnQl.s:71     .text:0000000000000044 .L0 
+C:\msys64\tmp\ccPExnQl.s:73     .text:0000000000000048 .L0 
+C:\msys64\tmp\ccPExnQl.s:76     .text:000000000000004c .L0 
+C:\msys64\tmp\ccPExnQl.s:77     .text:000000000000004c .L0 
+C:\msys64\tmp\ccPExnQl.s:80     .text:0000000000000050 .L0 
+C:\msys64\tmp\ccPExnQl.s:83     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccPExnQl.s:84     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccPExnQl.s:85     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccPExnQl.s:87     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccPExnQl.s:89     .text:000000000000005c .L0 
+C:\msys64\tmp\ccPExnQl.s:92     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccPExnQl.s:93     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccPExnQl.s:97     .text:0000000000000064 .L0 
+C:\msys64\tmp\ccPExnQl.s:98     .text:0000000000000064 .L0 
+C:\msys64\tmp\ccPExnQl.s:99     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccPExnQl.s:100    .text:0000000000000068 .L0 
+C:\msys64\tmp\ccPExnQl.s:101    .text:0000000000000068 .L0 
+C:\msys64\tmp\ccPExnQl.s:103    .text:000000000000006c .L0 
+C:\msys64\tmp\ccPExnQl.s:107    .text:0000000000000070 .L0 
+C:\msys64\tmp\ccPExnQl.s:109    .text:0000000000000070 .L0 
+C:\msys64\tmp\ccPExnQl.s:110    .text:0000000000000070 .L0 
+C:\msys64\tmp\ccPExnQl.s:112    .text:0000000000000078 .L0 
+C:\msys64\tmp\ccPExnQl.s:119    .text:0000000000000078 .L0 
+C:\msys64\tmp\ccPExnQl.s:42     .text:0000000000000028 .L1
+C:\msys64\tmp\ccPExnQl.s:51     .text:0000000000000034 .L6
+C:\msys64\tmp\ccPExnQl.s:38     .text:0000000000000024 .L4
+GAS LISTING C:\msys64\tmp\ccPExnQl.s 			page 5
+
+
+C:\msys64\tmp\ccPExnQl.s:96     .text:0000000000000064 .L7
+C:\msys64\tmp\ccPExnQl.s:106    .text:0000000000000070 .L11
+C:\msys64\tmp\ccPExnQl.s:90     .text:0000000000000060 .L9
+C:\msys64\tmp\ccPExnQl.s:684    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccPExnQl.s:1413   .debug_str:000000000000008e .LASF50
+C:\msys64\tmp\ccPExnQl.s:1521   .debug_str:0000000000000489 .LASF51
+C:\msys64\tmp\ccPExnQl.s:1493   .debug_str:000000000000036d .LASF52
+C:\msys64\tmp\ccPExnQl.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccPExnQl.s:115    .text:0000000000000078 .Letext0
+C:\msys64\tmp\ccPExnQl.s:1393   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccPExnQl.s:1489   .debug_str:0000000000000350 .LASF0
+C:\msys64\tmp\ccPExnQl.s:1477   .debug_str:00000000000002ea .LASF53
+C:\msys64\tmp\ccPExnQl.s:1453   .debug_str:0000000000000257 .LASF54
+C:\msys64\tmp\ccPExnQl.s:1511   .debug_str:000000000000042d .LASF11
+C:\msys64\tmp\ccPExnQl.s:1465   .debug_str:00000000000002b1 .LASF55
+C:\msys64\tmp\ccPExnQl.s:1519   .debug_str:0000000000000474 .LASF56
+C:\msys64\tmp\ccPExnQl.s:1515   .debug_str:000000000000044b .LASF57
+C:\msys64\tmp\ccPExnQl.s:1457   .debug_str:0000000000000279 .LASF58
+C:\msys64\tmp\ccPExnQl.s:1451   .debug_str:0000000000000245 .LASF19
+C:\msys64\tmp\ccPExnQl.s:1419   .debug_str:000000000000016d .LASF1
+C:\msys64\tmp\ccPExnQl.s:1463   .debug_str:00000000000002ac .LASF2
+C:\msys64\tmp\ccPExnQl.s:1429   .debug_str:00000000000001a7 .LASF3
+C:\msys64\tmp\ccPExnQl.s:1399   .debug_str:0000000000000035 .LASF59
+C:\msys64\tmp\ccPExnQl.s:1523   .debug_str:000000000000049b .LASF4
+C:\msys64\tmp\ccPExnQl.s:1503   .debug_str:00000000000003f4 .LASF6
+C:\msys64\tmp\ccPExnQl.s:1513   .debug_str:0000000000000442 .LASF5
+C:\msys64\tmp\ccPExnQl.s:1487   .debug_str:0000000000000340 .LASF7
+C:\msys64\tmp\ccPExnQl.s:1443   .debug_str:000000000000020f .LASF8
+C:\msys64\tmp\ccPExnQl.s:1441   .debug_str:00000000000001e8 .LASF9
+C:\msys64\tmp\ccPExnQl.s:1407   .debug_str:000000000000006e .LASF60
+C:\msys64\tmp\ccPExnQl.s:1421   .debug_str:0000000000000172 .LASF61
+C:\msys64\tmp\ccPExnQl.s:1471   .debug_str:00000000000002d6 .LASF62
+C:\msys64\tmp\ccPExnQl.s:1509   .debug_str:0000000000000416 .LASF63
+C:\msys64\tmp\ccPExnQl.s:1505   .debug_str:0000000000000404 .LASF10
+C:\msys64\tmp\ccPExnQl.s:1395   .debug_str:0000000000000000 .LASF12
+C:\msys64\tmp\ccPExnQl.s:1447   .debug_str:000000000000022a .LASF13
+C:\msys64\tmp\ccPExnQl.s:1495   .debug_str:000000000000039c .LASF14
+C:\msys64\tmp\ccPExnQl.s:1459   .debug_str:000000000000028d .LASF15
+C:\msys64\tmp\ccPExnQl.s:1397   .debug_str:000000000000001a .LASF16
+C:\msys64\tmp\ccPExnQl.s:1501   .debug_str:00000000000003e9 .LASF17
+C:\msys64\tmp\ccPExnQl.s:1497   .debug_str:00000000000003b9 .LASF18
+C:\msys64\tmp\ccPExnQl.s:1401   .debug_str:000000000000003d .LASF20
+C:\msys64\tmp\ccPExnQl.s:1445   .debug_str:000000000000021c .LASF64
+C:\msys64\tmp\ccPExnQl.s:1425   .debug_str:000000000000017f .LASF65
+C:\msys64\tmp\ccPExnQl.s:1403   .debug_str:0000000000000059 .LASF66
+C:\msys64\tmp\ccPExnQl.s:1485   .debug_str:0000000000000314 .LASF67
+C:\msys64\tmp\ccPExnQl.s:1529   .debug_str:00000000000004cb .LASF21
+C:\msys64\tmp\ccPExnQl.s:1455   .debug_str:0000000000000270 .LASF22
+C:\msys64\tmp\ccPExnQl.s:1437   .debug_str:00000000000001db .LASF23
+C:\msys64\tmp\ccPExnQl.s:1475   .debug_str:00000000000002e5 .LASF24
+C:\msys64\tmp\ccPExnQl.s:1473   .debug_str:00000000000002df .LASF25
+C:\msys64\tmp\ccPExnQl.s:1439   .debug_str:00000000000001e0 .LASF26
+C:\msys64\tmp\ccPExnQl.s:1479   .debug_str:00000000000002f3 .LASF27
+C:\msys64\tmp\ccPExnQl.s:1469   .debug_str:00000000000002ce .LASF28
+C:\msys64\tmp\ccPExnQl.s:1435   .debug_str:00000000000001d2 .LASF29
+C:\msys64\tmp\ccPExnQl.s:1483   .debug_str:000000000000030a .LASF30
+C:\msys64\tmp\ccPExnQl.s:1427   .debug_str:000000000000019c .LASF31
+GAS LISTING C:\msys64\tmp\ccPExnQl.s 			page 6
+
+
+C:\msys64\tmp\ccPExnQl.s:1481   .debug_str:00000000000002fd .LASF32
+C:\msys64\tmp\ccPExnQl.s:1431   .debug_str:00000000000001af .LASF33
+C:\msys64\tmp\ccPExnQl.s:1517   .debug_str:0000000000000467 .LASF34
+C:\msys64\tmp\ccPExnQl.s:1525   .debug_str:00000000000004a8 .LASF35
+C:\msys64\tmp\ccPExnQl.s:1491   .debug_str:000000000000035a .LASF36
+C:\msys64\tmp\ccPExnQl.s:1449   .debug_str:0000000000000237 .LASF37
+C:\msys64\tmp\ccPExnQl.s:1417   .debug_str:0000000000000166 .LASF39
+C:\msys64\tmp\ccPExnQl.s:1433   .debug_str:00000000000001c0 .LASF38
+C:\msys64\tmp\ccPExnQl.s:1405   .debug_str:0000000000000067 .LASF40
+C:\msys64\tmp\ccPExnQl.s:1507   .debug_str:000000000000040f .LASF41
+C:\msys64\tmp\ccPExnQl.s:1461   .debug_str:0000000000000299 .LASF42
+C:\msys64\tmp\ccPExnQl.s:1467   .debug_str:00000000000002bb .LASF43
+C:\msys64\tmp\ccPExnQl.s:1409   .debug_str:0000000000000073 .LASF44
+C:\msys64\tmp\ccPExnQl.s:1411   .debug_str:0000000000000082 .LASF45
+C:\msys64\tmp\ccPExnQl.s:1499   .debug_str:00000000000003d3 .LASF46
+C:\msys64\tmp\ccPExnQl.s:1527   .debug_str:00000000000004b5 .LASF47
+C:\msys64\tmp\ccPExnQl.s:1423   .debug_str:000000000000017a .LASF48
+C:\msys64\tmp\ccPExnQl.s:64     .text:000000000000003c .LFB12
+C:\msys64\tmp\ccPExnQl.s:113    .text:0000000000000078 .LFE12
+C:\msys64\tmp\ccPExnQl.s:1415   .debug_str:0000000000000161 .LASF49
+C:\msys64\tmp\ccPExnQl.s:1358   .debug_loc:0000000000000000 .LLST0
+C:\msys64\tmp\ccPExnQl.s:1369   .debug_loc:0000000000000036 .LLST1
+C:\msys64\tmp\ccPExnQl.s:13     .text:0000000000000000 .LFB11
+C:\msys64\tmp\ccPExnQl.s:58     .text:000000000000003c .LFE11
+C:\msys64\tmp\ccPExnQl.s:67     .text:000000000000003c .LVL1
+C:\msys64\tmp\ccPExnQl.s:78     .text:0000000000000050 .LVL2
+C:\msys64\tmp\ccPExnQl.s:82     .text:0000000000000054 .LVL3
+C:\msys64\tmp\ccPExnQl.s:95     .text:0000000000000064 .LVL4
+C:\msys64\tmp\ccPExnQl.s:105    .text:0000000000000070 .LVL5
+C:\msys64\tmp\ccPExnQl.s:120    .debug_info:0000000000000000 .Ldebug_info0
+
+NO UNDEFINED SYMBOLS

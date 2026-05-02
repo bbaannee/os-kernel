@@ -1,0 +1,1844 @@
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 1
+
+
+   1              		.file	"Threads_C_API_test.cpp"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.attribute arch, "rv64i2p0_m2p0_a2p0"
+   5              		.attribute unaligned_access, 0
+   6              		.attribute stack_align, 16
+   7              		.text
+   8              	.Ltext0:
+   9              		.align	2
+  11              	_ZL9fibonaccim:
+  12              	.LFB0:
+  13              		.file 1 "test/Threads_C_API_test.cpp"
+   1:test/Threads_C_API_test.cpp **** 
+   2:test/Threads_C_API_test.cpp **** #include "../h/syscall_c.h"
+   3:test/Threads_C_API_test.cpp **** #include "Threads_C_API_test.hpp"
+   4:test/Threads_C_API_test.cpp **** 
+   5:test/Threads_C_API_test.cpp **** #include "printing.hpp"
+   6:test/Threads_C_API_test.cpp **** 
+   7:test/Threads_C_API_test.cpp **** static volatile bool finishedA = false;
+   8:test/Threads_C_API_test.cpp **** static volatile bool finishedB = false;
+   9:test/Threads_C_API_test.cpp **** static volatile bool finishedC = false;
+  10:test/Threads_C_API_test.cpp **** static volatile bool finishedD = false;
+  11:test/Threads_C_API_test.cpp **** 
+  12:test/Threads_C_API_test.cpp **** static uint64 fibonacci(uint64 n) {
+  14              		.loc 1 12 35
+  15              		.cfi_startproc
+  16              	.LVL0:
+  17 0000 130101FE 		addi	sp,sp,-32
+  18              		.cfi_def_cfa_offset 32
+  19 0004 233C1100 		sd	ra,24(sp)
+  20 0008 23388100 		sd	s0,16(sp)
+  21 000c 23349100 		sd	s1,8(sp)
+  22 0010 23302101 		sd	s2,0(sp)
+  23              		.cfi_offset 1, -8
+  24              		.cfi_offset 8, -16
+  25              		.cfi_offset 9, -24
+  26              		.cfi_offset 18, -32
+  27 0014 13040102 		addi	s0,sp,32
+  28              		.cfi_def_cfa 8, 0
+  29 0018 93040500 		mv	s1,a0
+  13:test/Threads_C_API_test.cpp ****     if (n == 0 || n == 1) { return n; }
+  30              		.loc 1 13 5
+  31 001c 93071000 		li	a5,1
+  32 0020 63F8A702 		bleu	a0,a5,.L1
+  14:test/Threads_C_API_test.cpp ****     if (n % 10 == 0) { thread_dispatch(); }
+  33              		.loc 1 14 5
+  34              		.loc 1 14 11 is_stmt 0
+  35 0024 9307A000 		li	a5,10
+  36 0028 B377F502 		remu	a5,a0,a5
+  37              		.loc 1 14 5
+  38 002c 638E0702 		beq	a5,zero,.L6
+  39              	.LVL1:
+  40              	.L3:
+  15:test/Threads_C_API_test.cpp ****     return fibonacci(n - 1) + fibonacci(n - 2);
+  41              		.loc 1 15 5 is_stmt 1
+  42              		.loc 1 15 21 is_stmt 0
+  43 0030 1385F4FF 		addi	a0,s1,-1
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 2
+
+
+  44 0034 97000000 		call	_ZL9fibonaccim
+  44      E7800000 
+  45              	.LVL2:
+  46 003c 13090500 		mv	s2,a0
+  47              		.loc 1 15 40
+  48 0040 1385E4FF 		addi	a0,s1,-2
+  49 0044 97000000 		call	_ZL9fibonaccim
+  49      E7800000 
+  50              	.LVL3:
+  51              		.loc 1 15 46
+  52 004c 3305A900 		add	a0,s2,a0
+  53              	.L1:
+  16:test/Threads_C_API_test.cpp **** }
+  54              		.loc 1 16 1
+  55 0050 83308101 		ld	ra,24(sp)
+  56              		.cfi_remember_state
+  57              		.cfi_restore 1
+  58 0054 03340101 		ld	s0,16(sp)
+  59              		.cfi_restore 8
+  60              		.cfi_def_cfa 2, 32
+  61 0058 83348100 		ld	s1,8(sp)
+  62              		.cfi_restore 9
+  63              	.LVL4:
+  64 005c 03390100 		ld	s2,0(sp)
+  65              		.cfi_restore 18
+  66 0060 13010102 		addi	sp,sp,32
+  67              		.cfi_def_cfa_offset 0
+  68 0064 67800000 		jr	ra
+  69              	.LVL5:
+  70              	.L6:
+  71              		.cfi_restore_state
+  14:test/Threads_C_API_test.cpp ****     if (n % 10 == 0) { thread_dispatch(); }
+  72              		.loc 1 14 24 is_stmt 1 discriminator 1
+  14:test/Threads_C_API_test.cpp ****     if (n % 10 == 0) { thread_dispatch(); }
+  73              		.loc 1 14 39 is_stmt 0 discriminator 1
+  74 0068 97000000 		call	_Z15thread_dispatchv
+  74      E7800000 
+  75              	.LVL6:
+  76 0070 6FF01FFC 		j	.L3
+  77              		.cfi_endproc
+  78              	.LFE0:
+  80              		.section	.rodata.str1.8,"aMS",@progbits,1
+  81              		.align	3
+  82              	.LC0:
+  83 0000 443A2069 		.string	"D: i="
+  83      3D00
+  84 0006 0000     		.align	3
+  85              	.LC1:
+  86 0008 0A00     		.string	"\n"
+  87 000a 00000000 		.align	3
+  87      0000
+  88              	.LC2:
+  89 0010 443A2064 		.string	"D: dispatch\n"
+  89      69737061 
+  89      7463680A 
+  89      00
+  90 001d 000000   		.align	3
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 3
+
+
+  91              	.LC3:
+  92 0020 443A2066 		.string	"D: fibonaci="
+  92      69626F6E 
+  92      6163693D 
+  92      00
+  93 002d 000000   		.align	3
+  94              	.LC4:
+  95 0030 44206669 		.string	"D finished!\n"
+  95      6E697368 
+  95      6564210A 
+  95      00
+  96              		.text
+  97              		.align	2
+  99              	_ZL11workerBodyDPv:
+ 100              	.LFB4:
+  17:test/Threads_C_API_test.cpp **** 
+  18:test/Threads_C_API_test.cpp **** static void workerBodyA(void* arg) {
+  19:test/Threads_C_API_test.cpp ****     for (uint64 i = 0; i < 10; i++) {
+  20:test/Threads_C_API_test.cpp ****         printString("A: i="); printInt(i); printString("\n");
+  21:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+  22:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+  23:test/Threads_C_API_test.cpp ****             thread_dispatch();
+  24:test/Threads_C_API_test.cpp ****         }
+  25:test/Threads_C_API_test.cpp ****     }
+  26:test/Threads_C_API_test.cpp ****     printString("A finished!\n");
+  27:test/Threads_C_API_test.cpp ****     finishedA = true;
+  28:test/Threads_C_API_test.cpp **** }
+  29:test/Threads_C_API_test.cpp **** 
+  30:test/Threads_C_API_test.cpp **** static void workerBodyB(void* arg) {
+  31:test/Threads_C_API_test.cpp ****     for (uint64 i = 0; i < 16; i++) {
+  32:test/Threads_C_API_test.cpp ****         printString("B: i="); printInt(i); printString("\n");
+  33:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+  34:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+  35:test/Threads_C_API_test.cpp ****             thread_dispatch();
+  36:test/Threads_C_API_test.cpp ****         }
+  37:test/Threads_C_API_test.cpp ****     }
+  38:test/Threads_C_API_test.cpp ****     printString("B finished!\n");
+  39:test/Threads_C_API_test.cpp ****     finishedB = true;
+  40:test/Threads_C_API_test.cpp ****     thread_dispatch();
+  41:test/Threads_C_API_test.cpp **** }
+  42:test/Threads_C_API_test.cpp **** 
+  43:test/Threads_C_API_test.cpp **** static void workerBodyC(void* arg) {
+  44:test/Threads_C_API_test.cpp ****     uint8 i = 0;
+  45:test/Threads_C_API_test.cpp ****     for (; i < 3; i++) {
+  46:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+  47:test/Threads_C_API_test.cpp ****     }
+  48:test/Threads_C_API_test.cpp **** 
+  49:test/Threads_C_API_test.cpp ****     printString("C: dispatch\n");
+  50:test/Threads_C_API_test.cpp ****     __asm__ ("li t1, 7");
+  51:test/Threads_C_API_test.cpp ****     thread_dispatch();
+  52:test/Threads_C_API_test.cpp **** 
+  53:test/Threads_C_API_test.cpp ****     uint64 t1 = 0;
+  54:test/Threads_C_API_test.cpp ****     __asm__ ("mv %[t1], t1" : [t1] "=r"(t1));
+  55:test/Threads_C_API_test.cpp **** 
+  56:test/Threads_C_API_test.cpp ****     printString("C: t1="); printInt(t1); printString("\n");
+  57:test/Threads_C_API_test.cpp **** 
+  58:test/Threads_C_API_test.cpp ****     uint64 result = fibonacci(12);
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 4
+
+
+  59:test/Threads_C_API_test.cpp ****     printString("C: fibonaci="); printInt(result); printString("\n");
+  60:test/Threads_C_API_test.cpp **** 
+  61:test/Threads_C_API_test.cpp ****     for (; i < 6; i++) {
+  62:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+  63:test/Threads_C_API_test.cpp ****     }
+  64:test/Threads_C_API_test.cpp **** 
+  65:test/Threads_C_API_test.cpp ****     printString("A finished!\n");
+  66:test/Threads_C_API_test.cpp ****     finishedC = true;
+  67:test/Threads_C_API_test.cpp ****     thread_dispatch();
+  68:test/Threads_C_API_test.cpp **** }
+  69:test/Threads_C_API_test.cpp **** 
+  70:test/Threads_C_API_test.cpp **** static void workerBodyD(void* arg) {
+ 101              		.loc 1 70 36 is_stmt 1
+ 102              		.cfi_startproc
+ 103              	.LVL7:
+ 104 0074 130101FE 		addi	sp,sp,-32
+ 105              		.cfi_def_cfa_offset 32
+ 106 0078 233C1100 		sd	ra,24(sp)
+ 107 007c 23388100 		sd	s0,16(sp)
+ 108 0080 23349100 		sd	s1,8(sp)
+ 109 0084 23302101 		sd	s2,0(sp)
+ 110              		.cfi_offset 1, -8
+ 111              		.cfi_offset 8, -16
+ 112              		.cfi_offset 9, -24
+ 113              		.cfi_offset 18, -32
+ 114 0088 13040102 		addi	s0,sp,32
+ 115              		.cfi_def_cfa 8, 0
+  71:test/Threads_C_API_test.cpp ****     uint8 i = 10;
+ 116              		.loc 1 71 5
+ 117              	.LVL8:
+ 118              		.loc 1 71 11 is_stmt 0
+ 119 008c 9304A000 		li	s1,10
+ 120 0090 6F000004 		j	.L9
+ 121              	.LVL9:
+ 122              	.L13:
+  72:test/Threads_C_API_test.cpp ****     for (; i < 13; i++) {
+  73:test/Threads_C_API_test.cpp ****         printString("D: i="); printInt(i); printString("\n");
+ 123              		.loc 1 73 9 is_stmt 1 discriminator 1
+ 124              		.loc 1 73 20 is_stmt 0 discriminator 1
+ 125 0094 17050000 		lla	a0,.LC0
+ 125      13050500 
+ 126 009c 97000000 		call	_Z11printStringPKc
+ 126      E7800000 
+ 127              	.LVL10:
+ 128              		.loc 1 73 31 is_stmt 1 discriminator 1
+ 129              		.loc 1 73 39 is_stmt 0 discriminator 1
+ 130 00a4 13060000 		li	a2,0
+ 131 00a8 9305A000 		li	a1,10
+ 132 00ac 13850400 		mv	a0,s1
+ 133 00b0 97000000 		call	_Z8printIntiii
+ 133      E7800000 
+ 134              	.LVL11:
+ 135              		.loc 1 73 44 is_stmt 1 discriminator 1
+ 136              		.loc 1 73 55 is_stmt 0 discriminator 1
+ 137 00b8 17050000 		lla	a0,.LC1
+ 137      13050500 
+ 138 00c0 97000000 		call	_Z11printStringPKc
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 5
+
+
+ 138      E7800000 
+ 139              	.LVL12:
+  72:test/Threads_C_API_test.cpp ****     for (; i < 13; i++) {
+ 140              		.loc 1 72 5 is_stmt 1 discriminator 1
+ 141 00c8 9B841400 		addiw	s1,s1,1
+ 142              	.LVL13:
+ 143 00cc 93F4F40F 		andi	s1,s1,0xff
+ 144              	.LVL14:
+ 145              	.L9:
+  72:test/Threads_C_API_test.cpp ****     for (; i < 13; i++) {
+ 146              		.loc 1 72 5 discriminator 2
+  72:test/Threads_C_API_test.cpp ****     for (; i < 13; i++) {
+ 147              		.loc 1 72 14 discriminator 2
+ 148 00d0 9307C000 		li	a5,12
+ 149 00d4 E3F097FC 		bleu	s1,a5,.L13
+  74:test/Threads_C_API_test.cpp ****     }
+  75:test/Threads_C_API_test.cpp **** 
+  76:test/Threads_C_API_test.cpp ****     printString("D: dispatch\n");
+ 150              		.loc 1 76 5
+ 151              		.loc 1 76 16 is_stmt 0
+ 152 00d8 17050000 		lla	a0,.LC2
+ 152      13050500 
+ 153 00e0 97000000 		call	_Z11printStringPKc
+ 153      E7800000 
+ 154              	.LVL15:
+  77:test/Threads_C_API_test.cpp ****     __asm__ ("li t1, 5");
+ 155              		.loc 1 77 5 is_stmt 1
+ 156              	 #APP
+ 157              	# 77 "test/Threads_C_API_test.cpp" 1
+  78              	    thread_dispatch();
+ 158              		li t1, 5
+ 159              	# 0 "" 2
+ 160              		.loc 1 78 5
+ 161              		.loc 1 78 20 is_stmt 0
+ 162              	 #NO_APP
+ 163 00ec 97000000 		call	_Z15thread_dispatchv
+ 163      E7800000 
+ 164              	.LVL16:
+  79:test/Threads_C_API_test.cpp **** 
+  80:test/Threads_C_API_test.cpp ****     uint64 result = fibonacci(16);
+ 165              		.loc 1 80 5 is_stmt 1
+ 166              		.loc 1 80 30 is_stmt 0
+ 167 00f4 13050001 		li	a0,16
+ 168 00f8 97000000 		call	_ZL9fibonaccim
+ 168      E7800000 
+ 169              	.LVL17:
+ 170 0100 13090500 		mv	s2,a0
+ 171              	.LVL18:
+  81:test/Threads_C_API_test.cpp ****     printString("D: fibonaci="); printInt(result); printString("\n");
+ 172              		.loc 1 81 5 is_stmt 1
+ 173              		.loc 1 81 16 is_stmt 0
+ 174 0104 17050000 		lla	a0,.LC3
+ 174      13050500 
+ 175              	.LVL19:
+ 176 010c 97000000 		call	_Z11printStringPKc
+ 176      E7800000 
+ 177              	.LVL20:
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 6
+
+
+ 178              		.loc 1 81 34 is_stmt 1
+ 179              		.loc 1 81 42 is_stmt 0
+ 180 0114 13060000 		li	a2,0
+ 181 0118 9305A000 		li	a1,10
+ 182 011c 1B050900 		sext.w	a0,s2
+ 183 0120 97000000 		call	_Z8printIntiii
+ 183      E7800000 
+ 184              	.LVL21:
+ 185              		.loc 1 81 52 is_stmt 1
+ 186              		.loc 1 81 63 is_stmt 0
+ 187 0128 17050000 		lla	a0,.LC1
+ 187      13050500 
+ 188 0130 97000000 		call	_Z11printStringPKc
+ 188      E7800000 
+ 189              	.LVL22:
+ 190 0138 6F000004 		j	.L11
+ 191              	.L14:
+  82:test/Threads_C_API_test.cpp **** 
+  83:test/Threads_C_API_test.cpp ****     for (; i < 16; i++) {
+  84:test/Threads_C_API_test.cpp ****         printString("D: i="); printInt(i); printString("\n");
+ 192              		.loc 1 84 9 is_stmt 1 discriminator 1
+ 193              		.loc 1 84 20 is_stmt 0 discriminator 1
+ 194 013c 17050000 		lla	a0,.LC0
+ 194      13050500 
+ 195 0144 97000000 		call	_Z11printStringPKc
+ 195      E7800000 
+ 196              	.LVL23:
+ 197              		.loc 1 84 31 is_stmt 1 discriminator 1
+ 198              		.loc 1 84 39 is_stmt 0 discriminator 1
+ 199 014c 13060000 		li	a2,0
+ 200 0150 9305A000 		li	a1,10
+ 201 0154 13850400 		mv	a0,s1
+ 202 0158 97000000 		call	_Z8printIntiii
+ 202      E7800000 
+ 203              	.LVL24:
+ 204              		.loc 1 84 44 is_stmt 1 discriminator 1
+ 205              		.loc 1 84 55 is_stmt 0 discriminator 1
+ 206 0160 17050000 		lla	a0,.LC1
+ 206      13050500 
+ 207 0168 97000000 		call	_Z11printStringPKc
+ 207      E7800000 
+ 208              	.LVL25:
+  83:test/Threads_C_API_test.cpp ****         printString("D: i="); printInt(i); printString("\n");
+ 209              		.loc 1 83 5 is_stmt 1 discriminator 1
+ 210 0170 9B841400 		addiw	s1,s1,1
+ 211              	.LVL26:
+ 212 0174 93F4F40F 		andi	s1,s1,0xff
+ 213              	.LVL27:
+ 214              	.L11:
+  83:test/Threads_C_API_test.cpp ****         printString("D: i="); printInt(i); printString("\n");
+ 215              		.loc 1 83 5 discriminator 2
+  83:test/Threads_C_API_test.cpp ****         printString("D: i="); printInt(i); printString("\n");
+ 216              		.loc 1 83 14 discriminator 2
+ 217 0178 9307F000 		li	a5,15
+ 218 017c E3F097FC 		bleu	s1,a5,.L14
+  85:test/Threads_C_API_test.cpp ****     }
+  86:test/Threads_C_API_test.cpp **** 
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 7
+
+
+  87:test/Threads_C_API_test.cpp ****     printString("D finished!\n");
+ 219              		.loc 1 87 5
+ 220              		.loc 1 87 16 is_stmt 0
+ 221 0180 17050000 		lla	a0,.LC4
+ 221      13050500 
+ 222 0188 97000000 		call	_Z11printStringPKc
+ 222      E7800000 
+ 223              	.LVL28:
+  88:test/Threads_C_API_test.cpp ****     finishedD = true;
+ 224              		.loc 1 88 5 is_stmt 1
+ 225              		.loc 1 88 15 is_stmt 0
+ 226 0190 93071000 		li	a5,1
+ 227 0194 17070000 		sb	a5,_ZL9finishedD,a4
+ 227      2300F700 
+  89:test/Threads_C_API_test.cpp ****     thread_dispatch();
+ 228              		.loc 1 89 5 is_stmt 1
+ 229              		.loc 1 89 20 is_stmt 0
+ 230 019c 97000000 		call	_Z15thread_dispatchv
+ 230      E7800000 
+ 231              	.LVL29:
+  90:test/Threads_C_API_test.cpp **** }
+ 232              		.loc 1 90 1
+ 233 01a4 83308101 		ld	ra,24(sp)
+ 234              		.cfi_restore 1
+ 235 01a8 03340101 		ld	s0,16(sp)
+ 236              		.cfi_restore 8
+ 237              		.cfi_def_cfa 2, 32
+ 238 01ac 83348100 		ld	s1,8(sp)
+ 239              		.cfi_restore 9
+ 240              	.LVL30:
+ 241 01b0 03390100 		ld	s2,0(sp)
+ 242              		.cfi_restore 18
+ 243              	.LVL31:
+ 244 01b4 13010102 		addi	sp,sp,32
+ 245              		.cfi_def_cfa_offset 0
+ 246 01b8 67800000 		jr	ra
+ 247              		.cfi_endproc
+ 248              	.LFE4:
+ 250              		.section	.rodata.str1.8
+ 251 003d 000000   		.align	3
+ 252              	.LC5:
+ 253 0040 433A2069 		.string	"C: i="
+ 253      3D00
+ 254 0046 0000     		.align	3
+ 255              	.LC6:
+ 256 0048 433A2064 		.string	"C: dispatch\n"
+ 256      69737061 
+ 256      7463680A 
+ 256      00
+ 257 0055 000000   		.align	3
+ 258              	.LC7:
+ 259 0058 433A2074 		.string	"C: t1="
+ 259      313D00
+ 260 005f 00       		.align	3
+ 261              	.LC8:
+ 262 0060 433A2066 		.string	"C: fibonaci="
+ 262      69626F6E 
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 8
+
+
+ 262      6163693D 
+ 262      00
+ 263 006d 000000   		.align	3
+ 264              	.LC9:
+ 265 0070 41206669 		.string	"A finished!\n"
+ 265      6E697368 
+ 265      6564210A 
+ 265      00
+ 266              		.text
+ 267              		.align	2
+ 269              	_ZL11workerBodyCPv:
+ 270              	.LFB3:
+  43:test/Threads_C_API_test.cpp ****     uint8 i = 0;
+ 271              		.loc 1 43 36 is_stmt 1
+ 272              		.cfi_startproc
+ 273              	.LVL32:
+ 274 01bc 130101FE 		addi	sp,sp,-32
+ 275              		.cfi_def_cfa_offset 32
+ 276 01c0 233C1100 		sd	ra,24(sp)
+ 277 01c4 23388100 		sd	s0,16(sp)
+ 278 01c8 23349100 		sd	s1,8(sp)
+ 279 01cc 23302101 		sd	s2,0(sp)
+ 280              		.cfi_offset 1, -8
+ 281              		.cfi_offset 8, -16
+ 282              		.cfi_offset 9, -24
+ 283              		.cfi_offset 18, -32
+ 284 01d0 13040102 		addi	s0,sp,32
+ 285              		.cfi_def_cfa 8, 0
+  44:test/Threads_C_API_test.cpp ****     for (; i < 3; i++) {
+ 286              		.loc 1 44 5
+ 287              	.LVL33:
+  44:test/Threads_C_API_test.cpp ****     for (; i < 3; i++) {
+ 288              		.loc 1 44 11 is_stmt 0
+ 289 01d4 93040000 		li	s1,0
+ 290 01d8 6F000004 		j	.L17
+ 291              	.LVL34:
+ 292              	.L21:
+  46:test/Threads_C_API_test.cpp ****     }
+ 293              		.loc 1 46 9 is_stmt 1 discriminator 1
+  46:test/Threads_C_API_test.cpp ****     }
+ 294              		.loc 1 46 20 is_stmt 0 discriminator 1
+ 295 01dc 17050000 		lla	a0,.LC5
+ 295      13050500 
+ 296 01e4 97000000 		call	_Z11printStringPKc
+ 296      E7800000 
+ 297              	.LVL35:
+  46:test/Threads_C_API_test.cpp ****     }
+ 298              		.loc 1 46 31 is_stmt 1 discriminator 1
+  46:test/Threads_C_API_test.cpp ****     }
+ 299              		.loc 1 46 39 is_stmt 0 discriminator 1
+ 300 01ec 13060000 		li	a2,0
+ 301 01f0 9305A000 		li	a1,10
+ 302 01f4 13850400 		mv	a0,s1
+ 303 01f8 97000000 		call	_Z8printIntiii
+ 303      E7800000 
+ 304              	.LVL36:
+  46:test/Threads_C_API_test.cpp ****     }
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 9
+
+
+ 305              		.loc 1 46 44 is_stmt 1 discriminator 1
+  46:test/Threads_C_API_test.cpp ****     }
+ 306              		.loc 1 46 55 is_stmt 0 discriminator 1
+ 307 0200 17050000 		lla	a0,.LC1
+ 307      13050500 
+ 308 0208 97000000 		call	_Z11printStringPKc
+ 308      E7800000 
+ 309              	.LVL37:
+  45:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+ 310              		.loc 1 45 5 is_stmt 1 discriminator 1
+ 311 0210 9B841400 		addiw	s1,s1,1
+ 312              	.LVL38:
+ 313 0214 93F4F40F 		andi	s1,s1,0xff
+ 314              	.LVL39:
+ 315              	.L17:
+  45:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+ 316              		.loc 1 45 5 discriminator 2
+  45:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+ 317              		.loc 1 45 14 discriminator 2
+ 318 0218 93072000 		li	a5,2
+ 319 021c E3F097FC 		bleu	s1,a5,.L21
+  49:test/Threads_C_API_test.cpp ****     __asm__ ("li t1, 7");
+ 320              		.loc 1 49 5
+  49:test/Threads_C_API_test.cpp ****     __asm__ ("li t1, 7");
+ 321              		.loc 1 49 16 is_stmt 0
+ 322 0220 17050000 		lla	a0,.LC6
+ 322      13050500 
+ 323 0228 97000000 		call	_Z11printStringPKc
+ 323      E7800000 
+ 324              	.LVL40:
+  50:test/Threads_C_API_test.cpp ****     thread_dispatch();
+ 325              		.loc 1 50 5 is_stmt 1
+ 326              	 #APP
+ 327              	# 50 "test/Threads_C_API_test.cpp" 1
+  51:test/Threads_C_API_test.cpp **** 
+ 328              		li t1, 7
+ 329              	# 0 "" 2
+ 330              		.loc 1 51 5
+  51:test/Threads_C_API_test.cpp **** 
+ 331              		.loc 1 51 20 is_stmt 0
+ 332              	 #NO_APP
+ 333 0234 97000000 		call	_Z15thread_dispatchv
+ 333      E7800000 
+ 334              	.LVL41:
+  53:test/Threads_C_API_test.cpp ****     __asm__ ("mv %[t1], t1" : [t1] "=r"(t1));
+ 335              		.loc 1 53 5 is_stmt 1
+  54:test/Threads_C_API_test.cpp **** 
+ 336              		.loc 1 54 5
+ 337              	 #APP
+ 338              	# 54 "test/Threads_C_API_test.cpp" 1
+ 339              		mv s2, t1
+ 340              	# 0 "" 2
+ 341              	.LVL42:
+  56:test/Threads_C_API_test.cpp **** 
+ 342              		.loc 1 56 5
+  56:test/Threads_C_API_test.cpp **** 
+ 343              		.loc 1 56 16 is_stmt 0
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 10
+
+
+ 344              	 #NO_APP
+ 345 0240 17050000 		lla	a0,.LC7
+ 345      13050500 
+ 346 0248 97000000 		call	_Z11printStringPKc
+ 346      E7800000 
+ 347              	.LVL43:
+  56:test/Threads_C_API_test.cpp **** 
+ 348              		.loc 1 56 28 is_stmt 1
+  56:test/Threads_C_API_test.cpp **** 
+ 349              		.loc 1 56 36 is_stmt 0
+ 350 0250 13060000 		li	a2,0
+ 351 0254 9305A000 		li	a1,10
+ 352 0258 1B050900 		sext.w	a0,s2
+ 353 025c 97000000 		call	_Z8printIntiii
+ 353      E7800000 
+ 354              	.LVL44:
+  56:test/Threads_C_API_test.cpp **** 
+ 355              		.loc 1 56 42 is_stmt 1
+  56:test/Threads_C_API_test.cpp **** 
+ 356              		.loc 1 56 53 is_stmt 0
+ 357 0264 17050000 		lla	a0,.LC1
+ 357      13050500 
+ 358 026c 97000000 		call	_Z11printStringPKc
+ 358      E7800000 
+ 359              	.LVL45:
+  58:test/Threads_C_API_test.cpp ****     printString("C: fibonaci="); printInt(result); printString("\n");
+ 360              		.loc 1 58 5 is_stmt 1
+  58:test/Threads_C_API_test.cpp ****     printString("C: fibonaci="); printInt(result); printString("\n");
+ 361              		.loc 1 58 30 is_stmt 0
+ 362 0274 1305C000 		li	a0,12
+ 363 0278 97000000 		call	_ZL9fibonaccim
+ 363      E7800000 
+ 364              	.LVL46:
+ 365 0280 13090500 		mv	s2,a0
+ 366              	.LVL47:
+  59:test/Threads_C_API_test.cpp **** 
+ 367              		.loc 1 59 5 is_stmt 1
+  59:test/Threads_C_API_test.cpp **** 
+ 368              		.loc 1 59 16 is_stmt 0
+ 369 0284 17050000 		lla	a0,.LC8
+ 369      13050500 
+ 370              	.LVL48:
+ 371 028c 97000000 		call	_Z11printStringPKc
+ 371      E7800000 
+ 372              	.LVL49:
+  59:test/Threads_C_API_test.cpp **** 
+ 373              		.loc 1 59 34 is_stmt 1
+  59:test/Threads_C_API_test.cpp **** 
+ 374              		.loc 1 59 42 is_stmt 0
+ 375 0294 13060000 		li	a2,0
+ 376 0298 9305A000 		li	a1,10
+ 377 029c 1B050900 		sext.w	a0,s2
+ 378 02a0 97000000 		call	_Z8printIntiii
+ 378      E7800000 
+ 379              	.LVL50:
+  59:test/Threads_C_API_test.cpp **** 
+ 380              		.loc 1 59 52 is_stmt 1
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 11
+
+
+  59:test/Threads_C_API_test.cpp **** 
+ 381              		.loc 1 59 63 is_stmt 0
+ 382 02a8 17050000 		lla	a0,.LC1
+ 382      13050500 
+ 383 02b0 97000000 		call	_Z11printStringPKc
+ 383      E7800000 
+ 384              	.LVL51:
+ 385 02b8 6F000004 		j	.L19
+ 386              	.L22:
+  62:test/Threads_C_API_test.cpp ****     }
+ 387              		.loc 1 62 9 is_stmt 1 discriminator 1
+  62:test/Threads_C_API_test.cpp ****     }
+ 388              		.loc 1 62 20 is_stmt 0 discriminator 1
+ 389 02bc 17050000 		lla	a0,.LC5
+ 389      13050500 
+ 390 02c4 97000000 		call	_Z11printStringPKc
+ 390      E7800000 
+ 391              	.LVL52:
+  62:test/Threads_C_API_test.cpp ****     }
+ 392              		.loc 1 62 31 is_stmt 1 discriminator 1
+  62:test/Threads_C_API_test.cpp ****     }
+ 393              		.loc 1 62 39 is_stmt 0 discriminator 1
+ 394 02cc 13060000 		li	a2,0
+ 395 02d0 9305A000 		li	a1,10
+ 396 02d4 13850400 		mv	a0,s1
+ 397 02d8 97000000 		call	_Z8printIntiii
+ 397      E7800000 
+ 398              	.LVL53:
+  62:test/Threads_C_API_test.cpp ****     }
+ 399              		.loc 1 62 44 is_stmt 1 discriminator 1
+  62:test/Threads_C_API_test.cpp ****     }
+ 400              		.loc 1 62 55 is_stmt 0 discriminator 1
+ 401 02e0 17050000 		lla	a0,.LC1
+ 401      13050500 
+ 402 02e8 97000000 		call	_Z11printStringPKc
+ 402      E7800000 
+ 403              	.LVL54:
+  61:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+ 404              		.loc 1 61 5 is_stmt 1 discriminator 1
+ 405 02f0 9B841400 		addiw	s1,s1,1
+ 406              	.LVL55:
+ 407 02f4 93F4F40F 		andi	s1,s1,0xff
+ 408              	.LVL56:
+ 409              	.L19:
+  61:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+ 410              		.loc 1 61 5 discriminator 2
+  61:test/Threads_C_API_test.cpp ****         printString("C: i="); printInt(i); printString("\n");
+ 411              		.loc 1 61 14 discriminator 2
+ 412 02f8 93075000 		li	a5,5
+ 413 02fc E3F097FC 		bleu	s1,a5,.L22
+  65:test/Threads_C_API_test.cpp ****     finishedC = true;
+ 414              		.loc 1 65 5
+  65:test/Threads_C_API_test.cpp ****     finishedC = true;
+ 415              		.loc 1 65 16 is_stmt 0
+ 416 0300 17050000 		lla	a0,.LC9
+ 416      13050500 
+ 417 0308 97000000 		call	_Z11printStringPKc
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 12
+
+
+ 417      E7800000 
+ 418              	.LVL57:
+  66:test/Threads_C_API_test.cpp ****     thread_dispatch();
+ 419              		.loc 1 66 5 is_stmt 1
+  66:test/Threads_C_API_test.cpp ****     thread_dispatch();
+ 420              		.loc 1 66 15 is_stmt 0
+ 421 0310 93071000 		li	a5,1
+ 422 0314 17070000 		sb	a5,_ZL9finishedC,a4
+ 422      2300F700 
+  67:test/Threads_C_API_test.cpp **** }
+ 423              		.loc 1 67 5 is_stmt 1
+  67:test/Threads_C_API_test.cpp **** }
+ 424              		.loc 1 67 20 is_stmt 0
+ 425 031c 97000000 		call	_Z15thread_dispatchv
+ 425      E7800000 
+ 426              	.LVL58:
+  68:test/Threads_C_API_test.cpp **** 
+ 427              		.loc 1 68 1
+ 428 0324 83308101 		ld	ra,24(sp)
+ 429              		.cfi_restore 1
+ 430 0328 03340101 		ld	s0,16(sp)
+ 431              		.cfi_restore 8
+ 432              		.cfi_def_cfa 2, 32
+ 433 032c 83348100 		ld	s1,8(sp)
+ 434              		.cfi_restore 9
+ 435              	.LVL59:
+ 436 0330 03390100 		ld	s2,0(sp)
+ 437              		.cfi_restore 18
+ 438              	.LVL60:
+ 439 0334 13010102 		addi	sp,sp,32
+ 440              		.cfi_def_cfa_offset 0
+ 441 0338 67800000 		jr	ra
+ 442              		.cfi_endproc
+ 443              	.LFE3:
+ 445              		.section	.rodata.str1.8
+ 446 007d 000000   		.align	3
+ 447              	.LC10:
+ 448 0080 423A2069 		.string	"B: i="
+ 448      3D00
+ 449 0086 0000     		.align	3
+ 450              	.LC11:
+ 451 0088 42206669 		.string	"B finished!\n"
+ 451      6E697368 
+ 451      6564210A 
+ 451      00
+ 452              		.text
+ 453              		.align	2
+ 455              	_ZL11workerBodyBPv:
+ 456              	.LFB2:
+  30:test/Threads_C_API_test.cpp ****     for (uint64 i = 0; i < 16; i++) {
+ 457              		.loc 1 30 36 is_stmt 1
+ 458              		.cfi_startproc
+ 459              	.LVL61:
+ 460 033c 130101FE 		addi	sp,sp,-32
+ 461              		.cfi_def_cfa_offset 32
+ 462 0340 233C1100 		sd	ra,24(sp)
+ 463 0344 23388100 		sd	s0,16(sp)
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 13
+
+
+ 464 0348 23349100 		sd	s1,8(sp)
+ 465 034c 23302101 		sd	s2,0(sp)
+ 466              		.cfi_offset 1, -8
+ 467              		.cfi_offset 8, -16
+ 468              		.cfi_offset 9, -24
+ 469              		.cfi_offset 18, -32
+ 470 0350 13040102 		addi	s0,sp,32
+ 471              		.cfi_def_cfa 8, 0
+  31:test/Threads_C_API_test.cpp ****         printString("B: i="); printInt(i); printString("\n");
+ 472              		.loc 1 31 5
+ 473              	.LVL62:
+ 474              	.LBB2:
+  31:test/Threads_C_API_test.cpp ****         printString("B: i="); printInt(i); printString("\n");
+ 475              		.loc 1 31 17 is_stmt 0
+ 476 0354 13090000 		li	s2,0
+ 477 0358 6F008003 		j	.L29
+ 478              	.LVL63:
+ 479              	.L31:
+ 480              	.LBB3:
+ 481              	.LBB4:
+ 482              	.LBB5:
+ 483              	.LBB6:
+  34:test/Threads_C_API_test.cpp ****             thread_dispatch();
+ 484              		.loc 1 34 13 is_stmt 1 discriminator 2
+ 485 035c 13071700 		addi	a4,a4,1
+ 486              	.LVL64:
+ 487              	.L27:
+  34:test/Threads_C_API_test.cpp ****             thread_dispatch();
+ 488              		.loc 1 34 34 discriminator 3
+ 489 0360 B7770000 		li	a5,28672
+ 490 0364 9387F752 		addi	a5,a5,1327
+ 491 0368 E3FAE7FE 		bleu	a4,a5,.L31
+ 492              	.LBE6:
+  35:test/Threads_C_API_test.cpp ****         }
+ 493              		.loc 1 35 13 discriminator 2
+  35:test/Threads_C_API_test.cpp ****         }
+ 494              		.loc 1 35 28 is_stmt 0 discriminator 2
+ 495 036c 97000000 		call	_Z15thread_dispatchv
+ 495      E7800000 
+ 496              	.LVL65:
+ 497              	.LBE5:
+  33:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 498              		.loc 1 33 9 is_stmt 1 discriminator 2
+ 499 0374 93841400 		addi	s1,s1,1
+ 500              	.LVL66:
+ 501              	.L28:
+  33:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 502              		.loc 1 33 30 discriminator 1
+ 503 0378 B7270000 		li	a5,8192
+ 504 037c 9387F770 		addi	a5,a5,1807
+ 505 0380 63E69700 		bgtu	s1,a5,.L25
+ 506              	.LBB8:
+ 507              	.LBB7:
+  34:test/Threads_C_API_test.cpp ****             thread_dispatch();
+ 508              		.loc 1 34 25 is_stmt 0
+ 509 0384 13070000 		li	a4,0
+ 510 0388 6FF09FFD 		j	.L27
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 14
+
+
+ 511              	.L25:
+ 512              	.LBE7:
+ 513              	.LBE8:
+ 514              	.LBE4:
+ 515              	.LBE3:
+  31:test/Threads_C_API_test.cpp ****         printString("B: i="); printInt(i); printString("\n");
+ 516              		.loc 1 31 5 is_stmt 1 discriminator 2
+ 517 038c 13091900 		addi	s2,s2,1
+ 518              	.LVL67:
+ 519              	.L29:
+  31:test/Threads_C_API_test.cpp ****         printString("B: i="); printInt(i); printString("\n");
+ 520              		.loc 1 31 26 discriminator 1
+ 521 0390 9307F000 		li	a5,15
+ 522 0394 63E02705 		bgtu	s2,a5,.L24
+ 523              	.LBB10:
+  32:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 524              		.loc 1 32 9
+  32:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 525              		.loc 1 32 20 is_stmt 0
+ 526 0398 17050000 		lla	a0,.LC10
+ 526      13050500 
+ 527 03a0 97000000 		call	_Z11printStringPKc
+ 527      E7800000 
+ 528              	.LVL68:
+  32:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 529              		.loc 1 32 31 is_stmt 1
+  32:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 530              		.loc 1 32 39 is_stmt 0
+ 531 03a8 13060000 		li	a2,0
+ 532 03ac 9305A000 		li	a1,10
+ 533 03b0 1B050900 		sext.w	a0,s2
+ 534 03b4 97000000 		call	_Z8printIntiii
+ 534      E7800000 
+ 535              	.LVL69:
+  32:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 536              		.loc 1 32 44 is_stmt 1
+  32:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 537              		.loc 1 32 55 is_stmt 0
+ 538 03bc 17050000 		lla	a0,.LC1
+ 538      13050500 
+ 539 03c4 97000000 		call	_Z11printStringPKc
+ 539      E7800000 
+ 540              	.LVL70:
+  33:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 541              		.loc 1 33 9 is_stmt 1
+ 542              	.LBB9:
+  33:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 543              		.loc 1 33 21 is_stmt 0
+ 544 03cc 93040000 		li	s1,0
+ 545 03d0 6FF09FFA 		j	.L28
+ 546              	.LVL71:
+ 547              	.L24:
+ 548              	.LBE9:
+ 549              	.LBE10:
+ 550              	.LBE2:
+  38:test/Threads_C_API_test.cpp ****     finishedB = true;
+ 551              		.loc 1 38 5 is_stmt 1
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 15
+
+
+  38:test/Threads_C_API_test.cpp ****     finishedB = true;
+ 552              		.loc 1 38 16 is_stmt 0
+ 553 03d4 17050000 		lla	a0,.LC11
+ 553      13050500 
+ 554 03dc 97000000 		call	_Z11printStringPKc
+ 554      E7800000 
+ 555              	.LVL72:
+  39:test/Threads_C_API_test.cpp ****     thread_dispatch();
+ 556              		.loc 1 39 5 is_stmt 1
+  39:test/Threads_C_API_test.cpp ****     thread_dispatch();
+ 557              		.loc 1 39 15 is_stmt 0
+ 558 03e4 93071000 		li	a5,1
+ 559 03e8 17070000 		sb	a5,_ZL9finishedB,a4
+ 559      2300F700 
+  40:test/Threads_C_API_test.cpp **** }
+ 560              		.loc 1 40 5 is_stmt 1
+  40:test/Threads_C_API_test.cpp **** }
+ 561              		.loc 1 40 20 is_stmt 0
+ 562 03f0 97000000 		call	_Z15thread_dispatchv
+ 562      E7800000 
+ 563              	.LVL73:
+  41:test/Threads_C_API_test.cpp **** 
+ 564              		.loc 1 41 1
+ 565 03f8 83308101 		ld	ra,24(sp)
+ 566              		.cfi_restore 1
+ 567 03fc 03340101 		ld	s0,16(sp)
+ 568              		.cfi_restore 8
+ 569              		.cfi_def_cfa 2, 32
+ 570 0400 83348100 		ld	s1,8(sp)
+ 571              		.cfi_restore 9
+ 572 0404 03390100 		ld	s2,0(sp)
+ 573              		.cfi_restore 18
+ 574              	.LVL74:
+ 575 0408 13010102 		addi	sp,sp,32
+ 576              		.cfi_def_cfa_offset 0
+ 577 040c 67800000 		jr	ra
+ 578              		.cfi_endproc
+ 579              	.LFE2:
+ 581              		.section	.rodata.str1.8
+ 582 0095 000000   		.align	3
+ 583              	.LC12:
+ 584 0098 413A2069 		.string	"A: i="
+ 584      3D00
+ 585              		.text
+ 586              		.align	2
+ 588              	_ZL11workerBodyAPv:
+ 589              	.LFB1:
+  18:test/Threads_C_API_test.cpp ****     for (uint64 i = 0; i < 10; i++) {
+ 590              		.loc 1 18 36 is_stmt 1
+ 591              		.cfi_startproc
+ 592              	.LVL75:
+ 593 0410 130101FE 		addi	sp,sp,-32
+ 594              		.cfi_def_cfa_offset 32
+ 595 0414 233C1100 		sd	ra,24(sp)
+ 596 0418 23388100 		sd	s0,16(sp)
+ 597 041c 23349100 		sd	s1,8(sp)
+ 598 0420 23302101 		sd	s2,0(sp)
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 16
+
+
+ 599              		.cfi_offset 1, -8
+ 600              		.cfi_offset 8, -16
+ 601              		.cfi_offset 9, -24
+ 602              		.cfi_offset 18, -32
+ 603 0424 13040102 		addi	s0,sp,32
+ 604              		.cfi_def_cfa 8, 0
+  19:test/Threads_C_API_test.cpp ****         printString("A: i="); printInt(i); printString("\n");
+ 605              		.loc 1 19 5
+ 606              	.LVL76:
+ 607              	.LBB11:
+  19:test/Threads_C_API_test.cpp ****         printString("A: i="); printInt(i); printString("\n");
+ 608              		.loc 1 19 17 is_stmt 0
+ 609 0428 13090000 		li	s2,0
+ 610 042c 6F008003 		j	.L38
+ 611              	.LVL77:
+ 612              	.L40:
+ 613              	.LBB12:
+ 614              	.LBB13:
+ 615              	.LBB14:
+ 616              	.LBB15:
+  22:test/Threads_C_API_test.cpp ****             thread_dispatch();
+ 617              		.loc 1 22 13 is_stmt 1 discriminator 2
+ 618 0430 13071700 		addi	a4,a4,1
+ 619              	.LVL78:
+ 620              	.L36:
+  22:test/Threads_C_API_test.cpp ****             thread_dispatch();
+ 621              		.loc 1 22 34 discriminator 3
+ 622 0434 B7770000 		li	a5,28672
+ 623 0438 9387F752 		addi	a5,a5,1327
+ 624 043c E3FAE7FE 		bleu	a4,a5,.L40
+ 625              	.LBE15:
+  23:test/Threads_C_API_test.cpp ****         }
+ 626              		.loc 1 23 13 discriminator 2
+  23:test/Threads_C_API_test.cpp ****         }
+ 627              		.loc 1 23 28 is_stmt 0 discriminator 2
+ 628 0440 97000000 		call	_Z15thread_dispatchv
+ 628      E7800000 
+ 629              	.LVL79:
+ 630              	.LBE14:
+  21:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 631              		.loc 1 21 9 is_stmt 1 discriminator 2
+ 632 0448 93841400 		addi	s1,s1,1
+ 633              	.LVL80:
+ 634              	.L37:
+  21:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 635              		.loc 1 21 30 discriminator 1
+ 636 044c B7270000 		li	a5,8192
+ 637 0450 9387F770 		addi	a5,a5,1807
+ 638 0454 63E69700 		bgtu	s1,a5,.L34
+ 639              	.LBB17:
+ 640              	.LBB16:
+  22:test/Threads_C_API_test.cpp ****             thread_dispatch();
+ 641              		.loc 1 22 25 is_stmt 0
+ 642 0458 13070000 		li	a4,0
+ 643 045c 6FF09FFD 		j	.L36
+ 644              	.L34:
+ 645              	.LBE16:
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 17
+
+
+ 646              	.LBE17:
+ 647              	.LBE13:
+ 648              	.LBE12:
+  19:test/Threads_C_API_test.cpp ****         printString("A: i="); printInt(i); printString("\n");
+ 649              		.loc 1 19 5 is_stmt 1 discriminator 2
+ 650 0460 13091900 		addi	s2,s2,1
+ 651              	.LVL81:
+ 652              	.L38:
+  19:test/Threads_C_API_test.cpp ****         printString("A: i="); printInt(i); printString("\n");
+ 653              		.loc 1 19 26 discriminator 1
+ 654 0464 93079000 		li	a5,9
+ 655 0468 63E02705 		bgtu	s2,a5,.L33
+ 656              	.LBB19:
+  20:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 657              		.loc 1 20 9
+  20:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 658              		.loc 1 20 20 is_stmt 0
+ 659 046c 17050000 		lla	a0,.LC12
+ 659      13050500 
+ 660 0474 97000000 		call	_Z11printStringPKc
+ 660      E7800000 
+ 661              	.LVL82:
+  20:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 662              		.loc 1 20 31 is_stmt 1
+  20:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 663              		.loc 1 20 39 is_stmt 0
+ 664 047c 13060000 		li	a2,0
+ 665 0480 9305A000 		li	a1,10
+ 666 0484 1B050900 		sext.w	a0,s2
+ 667 0488 97000000 		call	_Z8printIntiii
+ 667      E7800000 
+ 668              	.LVL83:
+  20:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 669              		.loc 1 20 44 is_stmt 1
+  20:test/Threads_C_API_test.cpp ****         for (uint64 j = 0; j < 10000; j++) {
+ 670              		.loc 1 20 55 is_stmt 0
+ 671 0490 17050000 		lla	a0,.LC1
+ 671      13050500 
+ 672 0498 97000000 		call	_Z11printStringPKc
+ 672      E7800000 
+ 673              	.LVL84:
+  21:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 674              		.loc 1 21 9 is_stmt 1
+ 675              	.LBB18:
+  21:test/Threads_C_API_test.cpp ****             for (uint64 k = 0; k < 30000; k++) { /* busy wait */ }
+ 676              		.loc 1 21 21 is_stmt 0
+ 677 04a0 93040000 		li	s1,0
+ 678 04a4 6FF09FFA 		j	.L37
+ 679              	.LVL85:
+ 680              	.L33:
+ 681              	.LBE18:
+ 682              	.LBE19:
+ 683              	.LBE11:
+  26:test/Threads_C_API_test.cpp ****     finishedA = true;
+ 684              		.loc 1 26 5 is_stmt 1
+  26:test/Threads_C_API_test.cpp ****     finishedA = true;
+ 685              		.loc 1 26 16 is_stmt 0
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 18
+
+
+ 686 04a8 17050000 		lla	a0,.LC9
+ 686      13050500 
+ 687 04b0 97000000 		call	_Z11printStringPKc
+ 687      E7800000 
+ 688              	.LVL86:
+  27:test/Threads_C_API_test.cpp **** }
+ 689              		.loc 1 27 5 is_stmt 1
+  27:test/Threads_C_API_test.cpp **** }
+ 690              		.loc 1 27 15 is_stmt 0
+ 691 04b8 93071000 		li	a5,1
+ 692 04bc 17070000 		sb	a5,_ZL9finishedA,a4
+ 692      2300F700 
+  28:test/Threads_C_API_test.cpp **** 
+ 693              		.loc 1 28 1
+ 694 04c4 83308101 		ld	ra,24(sp)
+ 695              		.cfi_restore 1
+ 696 04c8 03340101 		ld	s0,16(sp)
+ 697              		.cfi_restore 8
+ 698              		.cfi_def_cfa 2, 32
+ 699 04cc 83348100 		ld	s1,8(sp)
+ 700              		.cfi_restore 9
+ 701 04d0 03390100 		ld	s2,0(sp)
+ 702              		.cfi_restore 18
+ 703              	.LVL87:
+ 704 04d4 13010102 		addi	sp,sp,32
+ 705              		.cfi_def_cfa_offset 0
+ 706 04d8 67800000 		jr	ra
+ 707              		.cfi_endproc
+ 708              	.LFE1:
+ 710              		.section	.rodata.str1.8
+ 711 009e 0000     		.align	3
+ 712              	.LC13:
+ 713 00a0 54687265 		.string	"ThreadA created\n"
+ 713      61644120 
+ 713      63726561 
+ 713      7465640A 
+ 713      00
+ 714 00b1 00000000 		.align	3
+ 714      000000
+ 715              	.LC14:
+ 716 00b8 54687265 		.string	"ThreadB created\n"
+ 716      61644220 
+ 716      63726561 
+ 716      7465640A 
+ 716      00
+ 717 00c9 00000000 		.align	3
+ 717      000000
+ 718              	.LC15:
+ 719 00d0 54687265 		.string	"ThreadC created\n"
+ 719      61644320 
+ 719      63726561 
+ 719      7465640A 
+ 719      00
+ 720 00e1 00000000 		.align	3
+ 720      000000
+ 721              	.LC16:
+ 722 00e8 54687265 		.string	"ThreadD created\n"
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 19
+
+
+ 722      61644420 
+ 722      63726561 
+ 722      7465640A 
+ 722      00
+ 723              		.text
+ 724              		.align	2
+ 725              		.globl	_Z18Threads_C_API_testv
+ 727              	_Z18Threads_C_API_testv:
+ 728              	.LFB5:
+  91:test/Threads_C_API_test.cpp **** 
+  92:test/Threads_C_API_test.cpp **** 
+  93:test/Threads_C_API_test.cpp **** void Threads_C_API_test() {
+ 729              		.loc 1 93 27 is_stmt 1
+ 730              		.cfi_startproc
+ 731 04dc 130101FD 		addi	sp,sp,-48
+ 732              		.cfi_def_cfa_offset 48
+ 733 04e0 23341102 		sd	ra,40(sp)
+ 734 04e4 23308102 		sd	s0,32(sp)
+ 735              		.cfi_offset 1, -8
+ 736              		.cfi_offset 8, -16
+ 737 04e8 13040103 		addi	s0,sp,48
+ 738              		.cfi_def_cfa 8, 0
+  94:test/Threads_C_API_test.cpp ****     thread_t threads[4];
+ 739              		.loc 1 94 5
+  95:test/Threads_C_API_test.cpp ****     thread_create(&threads[0], workerBodyA, nullptr);
+ 740              		.loc 1 95 5
+ 741              		.loc 1 95 18 is_stmt 0
+ 742 04ec 13060000 		li	a2,0
+ 743 04f0 97050000 		lla	a1,_ZL11workerBodyAPv
+ 743      93850500 
+ 744 04f8 130504FD 		addi	a0,s0,-48
+ 745 04fc 97000000 		call	_Z13thread_createPP7_threadPFvPvES2_
+ 745      E7800000 
+ 746              	.LVL88:
+  96:test/Threads_C_API_test.cpp ****     printString("ThreadA created\n");
+ 747              		.loc 1 96 5 is_stmt 1
+ 748              		.loc 1 96 16 is_stmt 0
+ 749 0504 17050000 		lla	a0,.LC13
+ 749      13050500 
+ 750 050c 97000000 		call	_Z11printStringPKc
+ 750      E7800000 
+ 751              	.LVL89:
+  97:test/Threads_C_API_test.cpp **** 
+  98:test/Threads_C_API_test.cpp ****     thread_create(&threads[1], workerBodyB, nullptr);
+ 752              		.loc 1 98 5 is_stmt 1
+ 753              		.loc 1 98 18 is_stmt 0
+ 754 0514 13060000 		li	a2,0
+ 755 0518 97050000 		lla	a1,_ZL11workerBodyBPv
+ 755      93850500 
+ 756 0520 130584FD 		addi	a0,s0,-40
+ 757 0524 97000000 		call	_Z13thread_createPP7_threadPFvPvES2_
+ 757      E7800000 
+ 758              	.LVL90:
+  99:test/Threads_C_API_test.cpp ****     printString("ThreadB created\n");
+ 759              		.loc 1 99 5 is_stmt 1
+ 760              		.loc 1 99 16 is_stmt 0
+ 761 052c 17050000 		lla	a0,.LC14
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 20
+
+
+ 761      13050500 
+ 762 0534 97000000 		call	_Z11printStringPKc
+ 762      E7800000 
+ 763              	.LVL91:
+ 100:test/Threads_C_API_test.cpp **** 
+ 101:test/Threads_C_API_test.cpp ****     thread_create(&threads[2], workerBodyC, nullptr);
+ 764              		.loc 1 101 5 is_stmt 1
+ 765              		.loc 1 101 18 is_stmt 0
+ 766 053c 13060000 		li	a2,0
+ 767 0540 97050000 		lla	a1,_ZL11workerBodyCPv
+ 767      93850500 
+ 768 0548 130504FE 		addi	a0,s0,-32
+ 769 054c 97000000 		call	_Z13thread_createPP7_threadPFvPvES2_
+ 769      E7800000 
+ 770              	.LVL92:
+ 102:test/Threads_C_API_test.cpp ****     printString("ThreadC created\n");
+ 771              		.loc 1 102 5 is_stmt 1
+ 772              		.loc 1 102 16 is_stmt 0
+ 773 0554 17050000 		lla	a0,.LC15
+ 773      13050500 
+ 774 055c 97000000 		call	_Z11printStringPKc
+ 774      E7800000 
+ 775              	.LVL93:
+ 103:test/Threads_C_API_test.cpp **** 
+ 104:test/Threads_C_API_test.cpp ****     thread_create(&threads[3], workerBodyD, nullptr);
+ 776              		.loc 1 104 5 is_stmt 1
+ 777              		.loc 1 104 18 is_stmt 0
+ 778 0564 13060000 		li	a2,0
+ 779 0568 97050000 		lla	a1,_ZL11workerBodyDPv
+ 779      93850500 
+ 780 0570 130584FE 		addi	a0,s0,-24
+ 781 0574 97000000 		call	_Z13thread_createPP7_threadPFvPvES2_
+ 781      E7800000 
+ 782              	.LVL94:
+ 105:test/Threads_C_API_test.cpp ****     printString("ThreadD created\n");
+ 783              		.loc 1 105 5 is_stmt 1
+ 784              		.loc 1 105 16 is_stmt 0
+ 785 057c 17050000 		lla	a0,.LC16
+ 785      13050500 
+ 786 0584 97000000 		call	_Z11printStringPKc
+ 786      E7800000 
+ 787              	.LVL95:
+ 788 058c 6F00C000 		j	.L43
+ 789              	.L42:
+ 106:test/Threads_C_API_test.cpp **** 
+ 107:test/Threads_C_API_test.cpp ****     while (!(finishedA && finishedB && finishedC && finishedD)) {
+ 108:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 790              		.loc 1 108 9 is_stmt 1
+ 791              		.loc 1 108 24 is_stmt 0
+ 792 0590 97000000 		call	_Z15thread_dispatchv
+ 792      E7800000 
+ 793              	.LVL96:
+ 794              	.L43:
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 795              		.loc 1 107 5 is_stmt 1
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 796              		.loc 1 107 12
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 21
+
+
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 797              		.loc 1 107 14 is_stmt 0
+ 798 0598 97070000 		lbu	a5,_ZL9finishedA
+ 798      83C70700 
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 799              		.loc 1 107 12
+ 800 05a0 E38807FE 		beq	a5,zero,.L42
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 801              		.loc 1 107 27 discriminator 2
+ 802 05a4 97070000 		lbu	a5,_ZL9finishedB
+ 802      83C70700 
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 803              		.loc 1 107 24 discriminator 2
+ 804 05ac E38207FE 		beq	a5,zero,.L42
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 805              		.loc 1 107 40 discriminator 4
+ 806 05b0 97070000 		lbu	a5,_ZL9finishedC
+ 806      83C70700 
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 807              		.loc 1 107 37 discriminator 4
+ 808 05b8 E38C07FC 		beq	a5,zero,.L42
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 809              		.loc 1 107 53 discriminator 6
+ 810 05bc 97070000 		lbu	a5,_ZL9finishedD
+ 810      83C70700 
+ 107:test/Threads_C_API_test.cpp ****         thread_dispatch();
+ 811              		.loc 1 107 12 discriminator 6
+ 812 05c4 E38607FC 		beq	a5,zero,.L42
+ 109:test/Threads_C_API_test.cpp ****     }
+ 110:test/Threads_C_API_test.cpp **** 
+ 111:test/Threads_C_API_test.cpp **** }
+ 813              		.loc 1 111 1
+ 814 05c8 83308102 		ld	ra,40(sp)
+ 815              		.cfi_restore 1
+ 816 05cc 03340102 		ld	s0,32(sp)
+ 817              		.cfi_restore 8
+ 818              		.cfi_def_cfa 2, 48
+ 819 05d0 13010103 		addi	sp,sp,48
+ 820              		.cfi_def_cfa_offset 0
+ 821 05d4 67800000 		jr	ra
+ 822              		.cfi_endproc
+ 823              	.LFE5:
+ 825              		.section	.sbss,"aw",@nobits
+ 828              	_ZL9finishedD:
+ 829 0000 00       		.zero	1
+ 832              	_ZL9finishedC:
+ 833 0001 00       		.zero	1
+ 836              	_ZL9finishedB:
+ 837 0002 00       		.zero	1
+ 840              	_ZL9finishedA:
+ 841 0003 00       		.zero	1
+ 842              		.text
+ 843              	.Letext0:
+ 844              		.file 2 "test/../h/../lib/hw.h"
+ 845              		.file 3 "test/../h/syscall_c.h"
+ 846              		.file 4 "test/printing.hpp"
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Threads_C_API_test.cpp
+C:\msys64\tmp\ccml88MK.s:11     .text:0000000000000000 _ZL9fibonaccim
+C:\msys64\tmp\ccml88MK.s:15     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccml88MK.s:17     .text:0000000000000000 .L0 
+C:\msys64\tmp\ccml88MK.s:18     .text:0000000000000004 .L0 
+C:\msys64\tmp\ccml88MK.s:23     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccml88MK.s:24     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccml88MK.s:25     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccml88MK.s:26     .text:0000000000000014 .L0 
+C:\msys64\tmp\ccml88MK.s:28     .text:0000000000000018 .L0 
+C:\msys64\tmp\ccml88MK.s:31     .text:000000000000001c .L0 
+C:\msys64\tmp\ccml88MK.s:34     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccml88MK.s:35     .text:0000000000000024 .L0 
+C:\msys64\tmp\ccml88MK.s:38     .text:000000000000002c .L0 
+C:\msys64\tmp\ccml88MK.s:42     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccml88MK.s:43     .text:0000000000000030 .L0 
+C:\msys64\tmp\ccml88MK.s:48     .text:0000000000000040 .L0 
+C:\msys64\tmp\ccml88MK.s:52     .text:000000000000004c .L0 
+C:\msys64\tmp\ccml88MK.s:55     .text:0000000000000050 .L0 
+C:\msys64\tmp\ccml88MK.s:56     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccml88MK.s:57     .text:0000000000000054 .L0 
+C:\msys64\tmp\ccml88MK.s:59     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccml88MK.s:60     .text:0000000000000058 .L0 
+C:\msys64\tmp\ccml88MK.s:62     .text:000000000000005c .L0 
+C:\msys64\tmp\ccml88MK.s:65     .text:0000000000000060 .L0 
+C:\msys64\tmp\ccml88MK.s:67     .text:0000000000000064 .L0 
+C:\msys64\tmp\ccml88MK.s:71     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccml88MK.s:73     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccml88MK.s:74     .text:0000000000000068 .L0 
+C:\msys64\tmp\ccml88MK.s:77     .text:0000000000000074 .L0 
+C:\msys64\tmp\ccml88MK.s:99     .text:0000000000000074 _ZL11workerBodyDPv
+C:\msys64\tmp\ccml88MK.s:102    .text:0000000000000074 .L0 
+C:\msys64\tmp\ccml88MK.s:104    .text:0000000000000074 .L0 
+C:\msys64\tmp\ccml88MK.s:105    .text:0000000000000078 .L0 
+C:\msys64\tmp\ccml88MK.s:110    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccml88MK.s:111    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccml88MK.s:112    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccml88MK.s:113    .text:0000000000000088 .L0 
+C:\msys64\tmp\ccml88MK.s:115    .text:000000000000008c .L0 
+C:\msys64\tmp\ccml88MK.s:118    .text:000000000000008c .L0 
+C:\msys64\tmp\ccml88MK.s:119    .text:000000000000008c .L0 
+C:\msys64\tmp\ccml88MK.s:124    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccml88MK.s:125    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccml88MK.s:129    .text:00000000000000a4 .L0 
+C:\msys64\tmp\ccml88MK.s:130    .text:00000000000000a4 .L0 
+C:\msys64\tmp\ccml88MK.s:136    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccml88MK.s:137    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccml88MK.s:141    .text:00000000000000c8 .L0 
+C:\msys64\tmp\ccml88MK.s:147    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccml88MK.s:148    .text:00000000000000d0 .L0 
+C:\msys64\tmp\ccml88MK.s:151    .text:00000000000000d8 .L0 
+C:\msys64\tmp\ccml88MK.s:152    .text:00000000000000d8 .L0 
+test/Threads_C_API_test.cpp:77     .text:00000000000000e8 .L0 
+C:\msys64\tmp\ccml88MK.s:161    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccml88MK.s:163    .text:00000000000000ec .L0 
+C:\msys64\tmp\ccml88MK.s:166    .text:00000000000000f4 .L0 
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 23
+
+
+C:\msys64\tmp\ccml88MK.s:167    .text:00000000000000f4 .L0 
+C:\msys64\tmp\ccml88MK.s:173    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccml88MK.s:174    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccml88MK.s:179    .text:0000000000000114 .L0 
+C:\msys64\tmp\ccml88MK.s:180    .text:0000000000000114 .L0 
+C:\msys64\tmp\ccml88MK.s:186    .text:0000000000000128 .L0 
+C:\msys64\tmp\ccml88MK.s:187    .text:0000000000000128 .L0 
+C:\msys64\tmp\ccml88MK.s:193    .text:000000000000013c .L0 
+C:\msys64\tmp\ccml88MK.s:194    .text:000000000000013c .L0 
+C:\msys64\tmp\ccml88MK.s:198    .text:000000000000014c .L0 
+C:\msys64\tmp\ccml88MK.s:199    .text:000000000000014c .L0 
+C:\msys64\tmp\ccml88MK.s:205    .text:0000000000000160 .L0 
+C:\msys64\tmp\ccml88MK.s:206    .text:0000000000000160 .L0 
+C:\msys64\tmp\ccml88MK.s:210    .text:0000000000000170 .L0 
+C:\msys64\tmp\ccml88MK.s:216    .text:0000000000000178 .L0 
+C:\msys64\tmp\ccml88MK.s:217    .text:0000000000000178 .L0 
+C:\msys64\tmp\ccml88MK.s:220    .text:0000000000000180 .L0 
+C:\msys64\tmp\ccml88MK.s:221    .text:0000000000000180 .L0 
+C:\msys64\tmp\ccml88MK.s:225    .text:0000000000000190 .L0 
+C:\msys64\tmp\ccml88MK.s:226    .text:0000000000000190 .L0 
+C:\msys64\tmp\ccml88MK.s:828    .sbss:0000000000000000 _ZL9finishedD
+C:\msys64\tmp\ccml88MK.s:229    .text:000000000000019c .L0 
+C:\msys64\tmp\ccml88MK.s:230    .text:000000000000019c .L0 
+C:\msys64\tmp\ccml88MK.s:233    .text:00000000000001a4 .L0 
+C:\msys64\tmp\ccml88MK.s:234    .text:00000000000001a8 .L0 
+C:\msys64\tmp\ccml88MK.s:236    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccml88MK.s:237    .text:00000000000001ac .L0 
+C:\msys64\tmp\ccml88MK.s:239    .text:00000000000001b0 .L0 
+C:\msys64\tmp\ccml88MK.s:242    .text:00000000000001b4 .L0 
+C:\msys64\tmp\ccml88MK.s:245    .text:00000000000001b8 .L0 
+C:\msys64\tmp\ccml88MK.s:247    .text:00000000000001bc .L0 
+C:\msys64\tmp\ccml88MK.s:269    .text:00000000000001bc _ZL11workerBodyCPv
+C:\msys64\tmp\ccml88MK.s:272    .text:00000000000001bc .L0 
+C:\msys64\tmp\ccml88MK.s:274    .text:00000000000001bc .L0 
+C:\msys64\tmp\ccml88MK.s:275    .text:00000000000001c0 .L0 
+C:\msys64\tmp\ccml88MK.s:280    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccml88MK.s:281    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccml88MK.s:282    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccml88MK.s:283    .text:00000000000001d0 .L0 
+C:\msys64\tmp\ccml88MK.s:285    .text:00000000000001d4 .L0 
+C:\msys64\tmp\ccml88MK.s:288    .text:00000000000001d4 .L0 
+C:\msys64\tmp\ccml88MK.s:289    .text:00000000000001d4 .L0 
+C:\msys64\tmp\ccml88MK.s:294    .text:00000000000001dc .L0 
+C:\msys64\tmp\ccml88MK.s:295    .text:00000000000001dc .L0 
+C:\msys64\tmp\ccml88MK.s:299    .text:00000000000001ec .L0 
+C:\msys64\tmp\ccml88MK.s:300    .text:00000000000001ec .L0 
+C:\msys64\tmp\ccml88MK.s:306    .text:0000000000000200 .L0 
+C:\msys64\tmp\ccml88MK.s:307    .text:0000000000000200 .L0 
+C:\msys64\tmp\ccml88MK.s:311    .text:0000000000000210 .L0 
+C:\msys64\tmp\ccml88MK.s:317    .text:0000000000000218 .L0 
+C:\msys64\tmp\ccml88MK.s:318    .text:0000000000000218 .L0 
+C:\msys64\tmp\ccml88MK.s:321    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccml88MK.s:322    .text:0000000000000220 .L0 
+test/Threads_C_API_test.cpp:50     .text:0000000000000230 .L0 
+C:\msys64\tmp\ccml88MK.s:331    .text:0000000000000234 .L0 
+C:\msys64\tmp\ccml88MK.s:333    .text:0000000000000234 .L0 
+C:\msys64\tmp\ccml88MK.s:336    .text:000000000000023c .L0 
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 24
+
+
+test/Threads_C_API_test.cpp:54     .text:000000000000023c .L0 
+C:\msys64\tmp\ccml88MK.s:343    .text:0000000000000240 .L0 
+C:\msys64\tmp\ccml88MK.s:345    .text:0000000000000240 .L0 
+C:\msys64\tmp\ccml88MK.s:349    .text:0000000000000250 .L0 
+C:\msys64\tmp\ccml88MK.s:350    .text:0000000000000250 .L0 
+C:\msys64\tmp\ccml88MK.s:356    .text:0000000000000264 .L0 
+C:\msys64\tmp\ccml88MK.s:357    .text:0000000000000264 .L0 
+C:\msys64\tmp\ccml88MK.s:361    .text:0000000000000274 .L0 
+C:\msys64\tmp\ccml88MK.s:362    .text:0000000000000274 .L0 
+C:\msys64\tmp\ccml88MK.s:368    .text:0000000000000284 .L0 
+C:\msys64\tmp\ccml88MK.s:369    .text:0000000000000284 .L0 
+C:\msys64\tmp\ccml88MK.s:374    .text:0000000000000294 .L0 
+C:\msys64\tmp\ccml88MK.s:375    .text:0000000000000294 .L0 
+C:\msys64\tmp\ccml88MK.s:381    .text:00000000000002a8 .L0 
+C:\msys64\tmp\ccml88MK.s:382    .text:00000000000002a8 .L0 
+C:\msys64\tmp\ccml88MK.s:388    .text:00000000000002bc .L0 
+C:\msys64\tmp\ccml88MK.s:389    .text:00000000000002bc .L0 
+C:\msys64\tmp\ccml88MK.s:393    .text:00000000000002cc .L0 
+C:\msys64\tmp\ccml88MK.s:394    .text:00000000000002cc .L0 
+C:\msys64\tmp\ccml88MK.s:400    .text:00000000000002e0 .L0 
+C:\msys64\tmp\ccml88MK.s:401    .text:00000000000002e0 .L0 
+C:\msys64\tmp\ccml88MK.s:405    .text:00000000000002f0 .L0 
+C:\msys64\tmp\ccml88MK.s:411    .text:00000000000002f8 .L0 
+C:\msys64\tmp\ccml88MK.s:412    .text:00000000000002f8 .L0 
+C:\msys64\tmp\ccml88MK.s:415    .text:0000000000000300 .L0 
+C:\msys64\tmp\ccml88MK.s:416    .text:0000000000000300 .L0 
+C:\msys64\tmp\ccml88MK.s:420    .text:0000000000000310 .L0 
+C:\msys64\tmp\ccml88MK.s:421    .text:0000000000000310 .L0 
+C:\msys64\tmp\ccml88MK.s:832    .sbss:0000000000000001 _ZL9finishedC
+C:\msys64\tmp\ccml88MK.s:424    .text:000000000000031c .L0 
+C:\msys64\tmp\ccml88MK.s:425    .text:000000000000031c .L0 
+C:\msys64\tmp\ccml88MK.s:428    .text:0000000000000324 .L0 
+C:\msys64\tmp\ccml88MK.s:429    .text:0000000000000328 .L0 
+C:\msys64\tmp\ccml88MK.s:431    .text:000000000000032c .L0 
+C:\msys64\tmp\ccml88MK.s:432    .text:000000000000032c .L0 
+C:\msys64\tmp\ccml88MK.s:434    .text:0000000000000330 .L0 
+C:\msys64\tmp\ccml88MK.s:437    .text:0000000000000334 .L0 
+C:\msys64\tmp\ccml88MK.s:440    .text:0000000000000338 .L0 
+C:\msys64\tmp\ccml88MK.s:442    .text:000000000000033c .L0 
+C:\msys64\tmp\ccml88MK.s:455    .text:000000000000033c _ZL11workerBodyBPv
+C:\msys64\tmp\ccml88MK.s:458    .text:000000000000033c .L0 
+C:\msys64\tmp\ccml88MK.s:460    .text:000000000000033c .L0 
+C:\msys64\tmp\ccml88MK.s:461    .text:0000000000000340 .L0 
+C:\msys64\tmp\ccml88MK.s:466    .text:0000000000000350 .L0 
+C:\msys64\tmp\ccml88MK.s:467    .text:0000000000000350 .L0 
+C:\msys64\tmp\ccml88MK.s:468    .text:0000000000000350 .L0 
+C:\msys64\tmp\ccml88MK.s:469    .text:0000000000000350 .L0 
+C:\msys64\tmp\ccml88MK.s:471    .text:0000000000000354 .L0 
+C:\msys64\tmp\ccml88MK.s:475    .text:0000000000000354 .L0 
+C:\msys64\tmp\ccml88MK.s:476    .text:0000000000000354 .L0 
+C:\msys64\tmp\ccml88MK.s:485    .text:000000000000035c .L0 
+C:\msys64\tmp\ccml88MK.s:489    .text:0000000000000360 .L0 
+C:\msys64\tmp\ccml88MK.s:494    .text:000000000000036c .L0 
+C:\msys64\tmp\ccml88MK.s:495    .text:000000000000036c .L0 
+C:\msys64\tmp\ccml88MK.s:499    .text:0000000000000374 .L0 
+C:\msys64\tmp\ccml88MK.s:503    .text:0000000000000378 .L0 
+C:\msys64\tmp\ccml88MK.s:509    .text:0000000000000384 .L0 
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 25
+
+
+C:\msys64\tmp\ccml88MK.s:517    .text:000000000000038c .L0 
+C:\msys64\tmp\ccml88MK.s:521    .text:0000000000000390 .L0 
+C:\msys64\tmp\ccml88MK.s:525    .text:0000000000000398 .L0 
+C:\msys64\tmp\ccml88MK.s:526    .text:0000000000000398 .L0 
+C:\msys64\tmp\ccml88MK.s:530    .text:00000000000003a8 .L0 
+C:\msys64\tmp\ccml88MK.s:531    .text:00000000000003a8 .L0 
+C:\msys64\tmp\ccml88MK.s:537    .text:00000000000003bc .L0 
+C:\msys64\tmp\ccml88MK.s:538    .text:00000000000003bc .L0 
+C:\msys64\tmp\ccml88MK.s:543    .text:00000000000003cc .L0 
+C:\msys64\tmp\ccml88MK.s:544    .text:00000000000003cc .L0 
+C:\msys64\tmp\ccml88MK.s:552    .text:00000000000003d4 .L0 
+C:\msys64\tmp\ccml88MK.s:553    .text:00000000000003d4 .L0 
+C:\msys64\tmp\ccml88MK.s:557    .text:00000000000003e4 .L0 
+C:\msys64\tmp\ccml88MK.s:558    .text:00000000000003e4 .L0 
+C:\msys64\tmp\ccml88MK.s:836    .sbss:0000000000000002 _ZL9finishedB
+C:\msys64\tmp\ccml88MK.s:561    .text:00000000000003f0 .L0 
+C:\msys64\tmp\ccml88MK.s:562    .text:00000000000003f0 .L0 
+C:\msys64\tmp\ccml88MK.s:565    .text:00000000000003f8 .L0 
+C:\msys64\tmp\ccml88MK.s:566    .text:00000000000003fc .L0 
+C:\msys64\tmp\ccml88MK.s:568    .text:0000000000000400 .L0 
+C:\msys64\tmp\ccml88MK.s:569    .text:0000000000000400 .L0 
+C:\msys64\tmp\ccml88MK.s:571    .text:0000000000000404 .L0 
+C:\msys64\tmp\ccml88MK.s:573    .text:0000000000000408 .L0 
+C:\msys64\tmp\ccml88MK.s:576    .text:000000000000040c .L0 
+C:\msys64\tmp\ccml88MK.s:578    .text:0000000000000410 .L0 
+C:\msys64\tmp\ccml88MK.s:588    .text:0000000000000410 _ZL11workerBodyAPv
+C:\msys64\tmp\ccml88MK.s:591    .text:0000000000000410 .L0 
+C:\msys64\tmp\ccml88MK.s:593    .text:0000000000000410 .L0 
+C:\msys64\tmp\ccml88MK.s:594    .text:0000000000000414 .L0 
+C:\msys64\tmp\ccml88MK.s:599    .text:0000000000000424 .L0 
+C:\msys64\tmp\ccml88MK.s:600    .text:0000000000000424 .L0 
+C:\msys64\tmp\ccml88MK.s:601    .text:0000000000000424 .L0 
+C:\msys64\tmp\ccml88MK.s:602    .text:0000000000000424 .L0 
+C:\msys64\tmp\ccml88MK.s:604    .text:0000000000000428 .L0 
+C:\msys64\tmp\ccml88MK.s:608    .text:0000000000000428 .L0 
+C:\msys64\tmp\ccml88MK.s:609    .text:0000000000000428 .L0 
+C:\msys64\tmp\ccml88MK.s:618    .text:0000000000000430 .L0 
+C:\msys64\tmp\ccml88MK.s:622    .text:0000000000000434 .L0 
+C:\msys64\tmp\ccml88MK.s:627    .text:0000000000000440 .L0 
+C:\msys64\tmp\ccml88MK.s:628    .text:0000000000000440 .L0 
+C:\msys64\tmp\ccml88MK.s:632    .text:0000000000000448 .L0 
+C:\msys64\tmp\ccml88MK.s:636    .text:000000000000044c .L0 
+C:\msys64\tmp\ccml88MK.s:642    .text:0000000000000458 .L0 
+C:\msys64\tmp\ccml88MK.s:650    .text:0000000000000460 .L0 
+C:\msys64\tmp\ccml88MK.s:654    .text:0000000000000464 .L0 
+C:\msys64\tmp\ccml88MK.s:658    .text:000000000000046c .L0 
+C:\msys64\tmp\ccml88MK.s:659    .text:000000000000046c .L0 
+C:\msys64\tmp\ccml88MK.s:663    .text:000000000000047c .L0 
+C:\msys64\tmp\ccml88MK.s:664    .text:000000000000047c .L0 
+C:\msys64\tmp\ccml88MK.s:670    .text:0000000000000490 .L0 
+C:\msys64\tmp\ccml88MK.s:671    .text:0000000000000490 .L0 
+C:\msys64\tmp\ccml88MK.s:676    .text:00000000000004a0 .L0 
+C:\msys64\tmp\ccml88MK.s:677    .text:00000000000004a0 .L0 
+C:\msys64\tmp\ccml88MK.s:685    .text:00000000000004a8 .L0 
+C:\msys64\tmp\ccml88MK.s:686    .text:00000000000004a8 .L0 
+C:\msys64\tmp\ccml88MK.s:690    .text:00000000000004b8 .L0 
+C:\msys64\tmp\ccml88MK.s:691    .text:00000000000004b8 .L0 
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 26
+
+
+C:\msys64\tmp\ccml88MK.s:840    .sbss:0000000000000003 _ZL9finishedA
+C:\msys64\tmp\ccml88MK.s:694    .text:00000000000004c4 .L0 
+C:\msys64\tmp\ccml88MK.s:695    .text:00000000000004c8 .L0 
+C:\msys64\tmp\ccml88MK.s:697    .text:00000000000004cc .L0 
+C:\msys64\tmp\ccml88MK.s:698    .text:00000000000004cc .L0 
+C:\msys64\tmp\ccml88MK.s:700    .text:00000000000004d0 .L0 
+C:\msys64\tmp\ccml88MK.s:702    .text:00000000000004d4 .L0 
+C:\msys64\tmp\ccml88MK.s:705    .text:00000000000004d8 .L0 
+C:\msys64\tmp\ccml88MK.s:707    .text:00000000000004dc .L0 
+C:\msys64\tmp\ccml88MK.s:727    .text:00000000000004dc _Z18Threads_C_API_testv
+C:\msys64\tmp\ccml88MK.s:730    .text:00000000000004dc .L0 
+C:\msys64\tmp\ccml88MK.s:731    .text:00000000000004dc .L0 
+C:\msys64\tmp\ccml88MK.s:732    .text:00000000000004e0 .L0 
+C:\msys64\tmp\ccml88MK.s:735    .text:00000000000004e8 .L0 
+C:\msys64\tmp\ccml88MK.s:736    .text:00000000000004e8 .L0 
+C:\msys64\tmp\ccml88MK.s:738    .text:00000000000004ec .L0 
+C:\msys64\tmp\ccml88MK.s:740    .text:00000000000004ec .L0 
+C:\msys64\tmp\ccml88MK.s:741    .text:00000000000004ec .L0 
+C:\msys64\tmp\ccml88MK.s:742    .text:00000000000004ec .L0 
+C:\msys64\tmp\ccml88MK.s:748    .text:0000000000000504 .L0 
+C:\msys64\tmp\ccml88MK.s:749    .text:0000000000000504 .L0 
+C:\msys64\tmp\ccml88MK.s:753    .text:0000000000000514 .L0 
+C:\msys64\tmp\ccml88MK.s:754    .text:0000000000000514 .L0 
+C:\msys64\tmp\ccml88MK.s:760    .text:000000000000052c .L0 
+C:\msys64\tmp\ccml88MK.s:761    .text:000000000000052c .L0 
+C:\msys64\tmp\ccml88MK.s:765    .text:000000000000053c .L0 
+C:\msys64\tmp\ccml88MK.s:766    .text:000000000000053c .L0 
+C:\msys64\tmp\ccml88MK.s:772    .text:0000000000000554 .L0 
+C:\msys64\tmp\ccml88MK.s:773    .text:0000000000000554 .L0 
+C:\msys64\tmp\ccml88MK.s:777    .text:0000000000000564 .L0 
+C:\msys64\tmp\ccml88MK.s:778    .text:0000000000000564 .L0 
+C:\msys64\tmp\ccml88MK.s:784    .text:000000000000057c .L0 
+C:\msys64\tmp\ccml88MK.s:785    .text:000000000000057c .L0 
+C:\msys64\tmp\ccml88MK.s:791    .text:0000000000000590 .L0 
+C:\msys64\tmp\ccml88MK.s:792    .text:0000000000000590 .L0 
+C:\msys64\tmp\ccml88MK.s:796    .text:0000000000000598 .L0 
+C:\msys64\tmp\ccml88MK.s:797    .text:0000000000000598 .L0 
+C:\msys64\tmp\ccml88MK.s:798    .text:0000000000000598 .L0 
+C:\msys64\tmp\ccml88MK.s:800    .text:00000000000005a0 .L0 
+C:\msys64\tmp\ccml88MK.s:802    .text:00000000000005a4 .L0 
+C:\msys64\tmp\ccml88MK.s:804    .text:00000000000005ac .L0 
+C:\msys64\tmp\ccml88MK.s:806    .text:00000000000005b0 .L0 
+C:\msys64\tmp\ccml88MK.s:808    .text:00000000000005b8 .L0 
+C:\msys64\tmp\ccml88MK.s:810    .text:00000000000005bc .L0 
+C:\msys64\tmp\ccml88MK.s:812    .text:00000000000005c4 .L0 
+C:\msys64\tmp\ccml88MK.s:814    .text:00000000000005c8 .L0 
+C:\msys64\tmp\ccml88MK.s:815    .text:00000000000005cc .L0 
+C:\msys64\tmp\ccml88MK.s:817    .text:00000000000005d0 .L0 
+C:\msys64\tmp\ccml88MK.s:818    .text:00000000000005d0 .L0 
+C:\msys64\tmp\ccml88MK.s:820    .text:00000000000005d4 .L0 
+C:\msys64\tmp\ccml88MK.s:822    .text:00000000000005d8 .L0 
+C:\msys64\tmp\ccml88MK.s:847    .text:00000000000005d8 .L0 
+C:\msys64\tmp\ccml88MK.s:82     .rodata.str1.8:0000000000000000 .LC0
+C:\msys64\tmp\ccml88MK.s:125    .text:0000000000000094 .L0 
+C:\msys64\tmp\ccml88MK.s:85     .rodata.str1.8:0000000000000008 .LC1
+C:\msys64\tmp\ccml88MK.s:137    .text:00000000000000b8 .L0 
+C:\msys64\tmp\ccml88MK.s:88     .rodata.str1.8:0000000000000010 .LC2
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 27
+
+
+C:\msys64\tmp\ccml88MK.s:152    .text:00000000000000d8 .L0 
+C:\msys64\tmp\ccml88MK.s:91     .rodata.str1.8:0000000000000020 .LC3
+C:\msys64\tmp\ccml88MK.s:174    .text:0000000000000104 .L0 
+C:\msys64\tmp\ccml88MK.s:187    .text:0000000000000128 .L0 
+C:\msys64\tmp\ccml88MK.s:194    .text:000000000000013c .L0 
+C:\msys64\tmp\ccml88MK.s:206    .text:0000000000000160 .L0 
+C:\msys64\tmp\ccml88MK.s:94     .rodata.str1.8:0000000000000030 .LC4
+C:\msys64\tmp\ccml88MK.s:221    .text:0000000000000180 .L0 
+C:\msys64\tmp\ccml88MK.s:227    .text:0000000000000194 .L0 
+C:\msys64\tmp\ccml88MK.s:252    .rodata.str1.8:0000000000000040 .LC5
+C:\msys64\tmp\ccml88MK.s:295    .text:00000000000001dc .L0 
+C:\msys64\tmp\ccml88MK.s:307    .text:0000000000000200 .L0 
+C:\msys64\tmp\ccml88MK.s:255    .rodata.str1.8:0000000000000048 .LC6
+C:\msys64\tmp\ccml88MK.s:322    .text:0000000000000220 .L0 
+C:\msys64\tmp\ccml88MK.s:258    .rodata.str1.8:0000000000000058 .LC7
+C:\msys64\tmp\ccml88MK.s:345    .text:0000000000000240 .L0 
+C:\msys64\tmp\ccml88MK.s:357    .text:0000000000000264 .L0 
+C:\msys64\tmp\ccml88MK.s:261    .rodata.str1.8:0000000000000060 .LC8
+C:\msys64\tmp\ccml88MK.s:369    .text:0000000000000284 .L0 
+C:\msys64\tmp\ccml88MK.s:382    .text:00000000000002a8 .L0 
+C:\msys64\tmp\ccml88MK.s:389    .text:00000000000002bc .L0 
+C:\msys64\tmp\ccml88MK.s:401    .text:00000000000002e0 .L0 
+C:\msys64\tmp\ccml88MK.s:264    .rodata.str1.8:0000000000000070 .LC9
+C:\msys64\tmp\ccml88MK.s:416    .text:0000000000000300 .L0 
+C:\msys64\tmp\ccml88MK.s:422    .text:0000000000000314 .L0 
+C:\msys64\tmp\ccml88MK.s:447    .rodata.str1.8:0000000000000080 .LC10
+C:\msys64\tmp\ccml88MK.s:526    .text:0000000000000398 .L0 
+C:\msys64\tmp\ccml88MK.s:538    .text:00000000000003bc .L0 
+C:\msys64\tmp\ccml88MK.s:450    .rodata.str1.8:0000000000000088 .LC11
+C:\msys64\tmp\ccml88MK.s:553    .text:00000000000003d4 .L0 
+C:\msys64\tmp\ccml88MK.s:559    .text:00000000000003e8 .L0 
+C:\msys64\tmp\ccml88MK.s:583    .rodata.str1.8:0000000000000098 .LC12
+C:\msys64\tmp\ccml88MK.s:659    .text:000000000000046c .L0 
+C:\msys64\tmp\ccml88MK.s:671    .text:0000000000000490 .L0 
+C:\msys64\tmp\ccml88MK.s:686    .text:00000000000004a8 .L0 
+C:\msys64\tmp\ccml88MK.s:692    .text:00000000000004bc .L0 
+C:\msys64\tmp\ccml88MK.s:743    .text:00000000000004f0 .L0 
+C:\msys64\tmp\ccml88MK.s:712    .rodata.str1.8:00000000000000a0 .LC13
+C:\msys64\tmp\ccml88MK.s:749    .text:0000000000000504 .L0 
+C:\msys64\tmp\ccml88MK.s:755    .text:0000000000000518 .L0 
+C:\msys64\tmp\ccml88MK.s:715    .rodata.str1.8:00000000000000b8 .LC14
+C:\msys64\tmp\ccml88MK.s:761    .text:000000000000052c .L0 
+C:\msys64\tmp\ccml88MK.s:767    .text:0000000000000540 .L0 
+C:\msys64\tmp\ccml88MK.s:718    .rodata.str1.8:00000000000000d0 .LC15
+C:\msys64\tmp\ccml88MK.s:773    .text:0000000000000554 .L0 
+C:\msys64\tmp\ccml88MK.s:779    .text:0000000000000568 .L0 
+C:\msys64\tmp\ccml88MK.s:721    .rodata.str1.8:00000000000000e8 .LC16
+C:\msys64\tmp\ccml88MK.s:785    .text:000000000000057c .L0 
+C:\msys64\tmp\ccml88MK.s:798    .text:0000000000000598 .L0 
+C:\msys64\tmp\ccml88MK.s:802    .text:00000000000005a4 .L0 
+C:\msys64\tmp\ccml88MK.s:806    .text:00000000000005b0 .L0 
+C:\msys64\tmp\ccml88MK.s:810    .text:00000000000005bc .L0 
+C:\msys64\tmp\ccml88MK.s:53     .text:0000000000000050 .L1
+C:\msys64\tmp\ccml88MK.s:70     .text:0000000000000068 .L6
+C:\msys64\tmp\ccml88MK.s:40     .text:0000000000000030 .L3
+C:\msys64\tmp\ccml88MK.s:145    .text:00000000000000d0 .L9
+C:\msys64\tmp\ccml88MK.s:122    .text:0000000000000094 .L13
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 28
+
+
+C:\msys64\tmp\ccml88MK.s:214    .text:0000000000000178 .L11
+C:\msys64\tmp\ccml88MK.s:191    .text:000000000000013c .L14
+C:\msys64\tmp\ccml88MK.s:315    .text:0000000000000218 .L17
+C:\msys64\tmp\ccml88MK.s:292    .text:00000000000001dc .L21
+C:\msys64\tmp\ccml88MK.s:409    .text:00000000000002f8 .L19
+C:\msys64\tmp\ccml88MK.s:386    .text:00000000000002bc .L22
+C:\msys64\tmp\ccml88MK.s:519    .text:0000000000000390 .L29
+C:\msys64\tmp\ccml88MK.s:479    .text:000000000000035c .L31
+C:\msys64\tmp\ccml88MK.s:511    .text:000000000000038c .L25
+C:\msys64\tmp\ccml88MK.s:487    .text:0000000000000360 .L27
+C:\msys64\tmp\ccml88MK.s:547    .text:00000000000003d4 .L24
+C:\msys64\tmp\ccml88MK.s:501    .text:0000000000000378 .L28
+C:\msys64\tmp\ccml88MK.s:652    .text:0000000000000464 .L38
+C:\msys64\tmp\ccml88MK.s:612    .text:0000000000000430 .L40
+C:\msys64\tmp\ccml88MK.s:644    .text:0000000000000460 .L34
+C:\msys64\tmp\ccml88MK.s:620    .text:0000000000000434 .L36
+C:\msys64\tmp\ccml88MK.s:680    .text:00000000000004a8 .L33
+C:\msys64\tmp\ccml88MK.s:634    .text:000000000000044c .L37
+C:\msys64\tmp\ccml88MK.s:794    .text:0000000000000598 .L43
+C:\msys64\tmp\ccml88MK.s:789    .text:0000000000000590 .L42
+C:\msys64\tmp\ccml88MK.s:1908   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\msys64\tmp\ccml88MK.s:2589   .debug_str:0000000000000184 .LASF33
+C:\msys64\tmp\ccml88MK.s:2555   .debug_str:0000000000000043 .LASF34
+C:\msys64\tmp\ccml88MK.s:2585   .debug_str:0000000000000148 .LASF35
+C:\msys64\tmp\ccml88MK.s:8      .text:0000000000000000 .Ltext0
+C:\msys64\tmp\ccml88MK.s:843    .text:00000000000005d8 .Letext0
+C:\msys64\tmp\ccml88MK.s:2545   .debug_line:0000000000000000 .Ldebug_line0
+C:\msys64\tmp\ccml88MK.s:2587   .debug_str:0000000000000177 .LASF0
+C:\msys64\tmp\ccml88MK.s:2577   .debug_str:000000000000010c .LASF1
+C:\msys64\tmp\ccml88MK.s:2573   .debug_str:00000000000000ec .LASF2
+C:\msys64\tmp\ccml88MK.s:2619   .debug_str:00000000000002f5 .LASF3
+C:\msys64\tmp\ccml88MK.s:2557   .debug_str:000000000000005f .LASF4
+C:\msys64\tmp\ccml88MK.s:2575   .debug_str:00000000000000fa .LASF5
+C:\msys64\tmp\ccml88MK.s:2549   .debug_str:0000000000000013 .LASF6
+C:\msys64\tmp\ccml88MK.s:2547   .debug_str:0000000000000000 .LASF7
+C:\msys64\tmp\ccml88MK.s:2569   .debug_str:00000000000000c6 .LASF8
+C:\msys64\tmp\ccml88MK.s:2625   .debug_str:0000000000000311 .LASF9
+C:\msys64\tmp\ccml88MK.s:2581   .debug_str:000000000000012d .LASF10
+C:\msys64\tmp\ccml88MK.s:2553   .debug_str:000000000000002d .LASF11
+C:\msys64\tmp\ccml88MK.s:2597   .debug_str:0000000000000276 .LASF12
+C:\msys64\tmp\ccml88MK.s:2599   .debug_str:000000000000028c .LASF13
+C:\msys64\tmp\ccml88MK.s:2617   .debug_str:00000000000002ed .LASF36
+C:\msys64\tmp\ccml88MK.s:2605   .debug_str:00000000000002b1 .LASF14
+C:\msys64\tmp\ccml88MK.s:2559   .debug_str:0000000000000066 .LASF15
+C:\msys64\tmp\ccml88MK.s:2607   .debug_str:00000000000002bb .LASF16
+C:\msys64\tmp\ccml88MK.s:2609   .debug_str:00000000000002c5 .LASF17
+C:\msys64\tmp\ccml88MK.s:2611   .debug_str:00000000000002cf .LASF18
+C:\msys64\tmp\ccml88MK.s:2551   .debug_str:000000000000001a .LASF37
+C:\msys64\tmp\ccml88MK.s:2561   .debug_str:000000000000006b .LASF38
+C:\msys64\tmp\ccml88MK.s:728    .text:00000000000004dc .LFB5
+C:\msys64\tmp\ccml88MK.s:823    .text:00000000000005d8 .LFE5
+C:\msys64\tmp\ccml88MK.s:2613   .debug_str:00000000000002d9 .LASF19
+C:\msys64\tmp\ccml88MK.s:746    .text:0000000000000504 .LVL88
+C:\msys64\tmp\ccml88MK.s:751    .text:0000000000000514 .LVL89
+C:\msys64\tmp\ccml88MK.s:758    .text:000000000000052c .LVL90
+C:\msys64\tmp\ccml88MK.s:763    .text:000000000000053c .LVL91
+C:\msys64\tmp\ccml88MK.s:770    .text:0000000000000554 .LVL92
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 29
+
+
+C:\msys64\tmp\ccml88MK.s:775    .text:0000000000000564 .LVL93
+C:\msys64\tmp\ccml88MK.s:782    .text:000000000000057c .LVL94
+C:\msys64\tmp\ccml88MK.s:787    .text:000000000000058c .LVL95
+C:\msys64\tmp\ccml88MK.s:793    .text:0000000000000598 .LVL96
+C:\msys64\tmp\ccml88MK.s:2595   .debug_str:000000000000026a .LASF21
+C:\msys64\tmp\ccml88MK.s:100    .text:0000000000000074 .LFB4
+C:\msys64\tmp\ccml88MK.s:248    .text:00000000000001bc .LFE4
+C:\msys64\tmp\ccml88MK.s:2296   .debug_loc:0000000000000000 .LLST1
+C:\msys64\tmp\ccml88MK.s:2310   .debug_loc:0000000000000039 .LLST2
+C:\msys64\tmp\ccml88MK.s:2591   .debug_str:0000000000000257 .LASF20
+C:\msys64\tmp\ccml88MK.s:2330   .debug_loc:0000000000000096 .LLST3
+C:\msys64\tmp\ccml88MK.s:127    .text:00000000000000a4 .LVL10
+C:\msys64\tmp\ccml88MK.s:134    .text:00000000000000b8 .LVL11
+C:\msys64\tmp\ccml88MK.s:139    .text:00000000000000c8 .LVL12
+C:\msys64\tmp\ccml88MK.s:154    .text:00000000000000e8 .LVL15
+C:\msys64\tmp\ccml88MK.s:164    .text:00000000000000f4 .LVL16
+C:\msys64\tmp\ccml88MK.s:169    .text:0000000000000100 .LVL17
+C:\msys64\tmp\ccml88MK.s:177    .text:0000000000000114 .LVL20
+C:\msys64\tmp\ccml88MK.s:184    .text:0000000000000128 .LVL21
+C:\msys64\tmp\ccml88MK.s:189    .text:0000000000000138 .LVL22
+C:\msys64\tmp\ccml88MK.s:196    .text:000000000000014c .LVL23
+C:\msys64\tmp\ccml88MK.s:203    .text:0000000000000160 .LVL24
+C:\msys64\tmp\ccml88MK.s:208    .text:0000000000000170 .LVL25
+C:\msys64\tmp\ccml88MK.s:223    .text:0000000000000190 .LVL28
+C:\msys64\tmp\ccml88MK.s:231    .text:00000000000001a4 .LVL29
+C:\msys64\tmp\ccml88MK.s:2593   .debug_str:000000000000025e .LASF22
+C:\msys64\tmp\ccml88MK.s:270    .text:00000000000001bc .LFB3
+C:\msys64\tmp\ccml88MK.s:443    .text:000000000000033c .LFE3
+C:\msys64\tmp\ccml88MK.s:2341   .debug_loc:00000000000000cc .LLST4
+C:\msys64\tmp\ccml88MK.s:2355   .debug_loc:0000000000000105 .LLST5
+C:\msys64\tmp\ccml88MK.s:2375   .debug_loc:0000000000000162 .LLST6
+C:\msys64\tmp\ccml88MK.s:2383   .debug_loc:0000000000000186 .LLST7
+C:\msys64\tmp\ccml88MK.s:297    .text:00000000000001ec .LVL35
+C:\msys64\tmp\ccml88MK.s:304    .text:0000000000000200 .LVL36
+C:\msys64\tmp\ccml88MK.s:309    .text:0000000000000210 .LVL37
+C:\msys64\tmp\ccml88MK.s:324    .text:0000000000000230 .LVL40
+C:\msys64\tmp\ccml88MK.s:334    .text:000000000000023c .LVL41
+C:\msys64\tmp\ccml88MK.s:347    .text:0000000000000250 .LVL43
+C:\msys64\tmp\ccml88MK.s:354    .text:0000000000000264 .LVL44
+C:\msys64\tmp\ccml88MK.s:359    .text:0000000000000274 .LVL45
+C:\msys64\tmp\ccml88MK.s:364    .text:0000000000000280 .LVL46
+C:\msys64\tmp\ccml88MK.s:372    .text:0000000000000294 .LVL49
+C:\msys64\tmp\ccml88MK.s:379    .text:00000000000002a8 .LVL50
+C:\msys64\tmp\ccml88MK.s:384    .text:00000000000002b8 .LVL51
+C:\msys64\tmp\ccml88MK.s:391    .text:00000000000002cc .LVL52
+C:\msys64\tmp\ccml88MK.s:398    .text:00000000000002e0 .LVL53
+C:\msys64\tmp\ccml88MK.s:403    .text:00000000000002f0 .LVL54
+C:\msys64\tmp\ccml88MK.s:418    .text:0000000000000310 .LVL57
+C:\msys64\tmp\ccml88MK.s:426    .text:0000000000000324 .LVL58
+C:\msys64\tmp\ccml88MK.s:2615   .debug_str:00000000000002e1 .LASF23
+C:\msys64\tmp\ccml88MK.s:456    .text:000000000000033c .LFB2
+C:\msys64\tmp\ccml88MK.s:579    .text:0000000000000410 .LFE2
+C:\msys64\tmp\ccml88MK.s:2394   .debug_loc:00000000000001bc .LLST8
+C:\msys64\tmp\ccml88MK.s:474    .text:0000000000000354 .LBB2
+C:\msys64\tmp\ccml88MK.s:550    .text:00000000000003d4 .LBE2
+C:\msys64\tmp\ccml88MK.s:2408   .debug_loc:00000000000001f5 .LLST9
+C:\msys64\tmp\ccml88MK.s:2519   .debug_ranges:0000000000000000 .Ldebug_ranges0
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 30
+
+
+C:\msys64\tmp\ccml88MK.s:2420   .debug_loc:000000000000022c .LLST10
+C:\msys64\tmp\ccml88MK.s:2432   .debug_loc:0000000000000263 .LLST11
+C:\msys64\tmp\ccml88MK.s:496    .text:0000000000000374 .LVL65
+C:\msys64\tmp\ccml88MK.s:528    .text:00000000000003a8 .LVL68
+C:\msys64\tmp\ccml88MK.s:535    .text:00000000000003bc .LVL69
+C:\msys64\tmp\ccml88MK.s:540    .text:00000000000003cc .LVL70
+C:\msys64\tmp\ccml88MK.s:555    .text:00000000000003e4 .LVL72
+C:\msys64\tmp\ccml88MK.s:563    .text:00000000000003f8 .LVL73
+C:\msys64\tmp\ccml88MK.s:2601   .debug_str:0000000000000295 .LASF24
+C:\msys64\tmp\ccml88MK.s:589    .text:0000000000000410 .LFB1
+C:\msys64\tmp\ccml88MK.s:708    .text:00000000000004dc .LFE1
+C:\msys64\tmp\ccml88MK.s:2439   .debug_loc:0000000000000286 .LLST12
+C:\msys64\tmp\ccml88MK.s:607    .text:0000000000000428 .LBB11
+C:\msys64\tmp\ccml88MK.s:683    .text:00000000000004a8 .LBE11
+C:\msys64\tmp\ccml88MK.s:2453   .debug_loc:00000000000002bf .LLST13
+C:\msys64\tmp\ccml88MK.s:2465   .debug_loc:00000000000002f6 .LLST14
+C:\msys64\tmp\ccml88MK.s:2477   .debug_loc:000000000000032d .LLST15
+C:\msys64\tmp\ccml88MK.s:629    .text:0000000000000448 .LVL79
+C:\msys64\tmp\ccml88MK.s:661    .text:000000000000047c .LVL82
+C:\msys64\tmp\ccml88MK.s:668    .text:0000000000000490 .LVL83
+C:\msys64\tmp\ccml88MK.s:673    .text:00000000000004a0 .LVL84
+C:\msys64\tmp\ccml88MK.s:688    .text:00000000000004b8 .LVL86
+C:\msys64\tmp\ccml88MK.s:2621   .debug_str:00000000000002fb .LASF39
+C:\msys64\tmp\ccml88MK.s:12     .text:0000000000000000 .LFB0
+C:\msys64\tmp\ccml88MK.s:78     .text:0000000000000074 .LFE0
+C:\msys64\tmp\ccml88MK.s:2484   .debug_loc:0000000000000350 .LLST0
+C:\msys64\tmp\ccml88MK.s:45     .text:000000000000003c .LVL2
+C:\msys64\tmp\ccml88MK.s:50     .text:000000000000004c .LVL3
+C:\msys64\tmp\ccml88MK.s:75     .text:0000000000000070 .LVL6
+C:\msys64\tmp\ccml88MK.s:2565   .debug_str:000000000000008c .LASF25
+C:\msys64\tmp\ccml88MK.s:2579   .debug_str:000000000000011f .LASF27
+C:\msys64\tmp\ccml88MK.s:2571   .debug_str:00000000000000d9 .LASF26
+C:\msys64\tmp\ccml88MK.s:2623   .debug_str:0000000000000305 .LASF28
+C:\msys64\tmp\ccml88MK.s:2567   .debug_str:00000000000000b1 .LASF29
+C:\msys64\tmp\ccml88MK.s:2603   .debug_str:00000000000002a1 .LASF30
+C:\msys64\tmp\ccml88MK.s:2583   .debug_str:0000000000000139 .LASF31
+C:\msys64\tmp\ccml88MK.s:2563   .debug_str:0000000000000083 .LASF32
+C:\msys64\tmp\ccml88MK.s:103    .text:0000000000000074 .LVL7
+C:\msys64\tmp\ccml88MK.s:121    .text:0000000000000094 .LVL9
+C:\msys64\tmp\ccml88MK.s:117    .text:000000000000008c .LVL8
+C:\msys64\tmp\ccml88MK.s:142    .text:00000000000000cc .LVL13
+C:\msys64\tmp\ccml88MK.s:144    .text:00000000000000d0 .LVL14
+C:\msys64\tmp\ccml88MK.s:211    .text:0000000000000174 .LVL26
+C:\msys64\tmp\ccml88MK.s:213    .text:0000000000000178 .LVL27
+C:\msys64\tmp\ccml88MK.s:240    .text:00000000000001b0 .LVL30
+C:\msys64\tmp\ccml88MK.s:171    .text:0000000000000104 .LVL18
+C:\msys64\tmp\ccml88MK.s:175    .text:000000000000010c .LVL19
+C:\msys64\tmp\ccml88MK.s:243    .text:00000000000001b4 .LVL31
+C:\msys64\tmp\ccml88MK.s:273    .text:00000000000001bc .LVL32
+C:\msys64\tmp\ccml88MK.s:291    .text:00000000000001dc .LVL34
+C:\msys64\tmp\ccml88MK.s:287    .text:00000000000001d4 .LVL33
+C:\msys64\tmp\ccml88MK.s:312    .text:0000000000000214 .LVL38
+C:\msys64\tmp\ccml88MK.s:314    .text:0000000000000218 .LVL39
+C:\msys64\tmp\ccml88MK.s:406    .text:00000000000002f4 .LVL55
+C:\msys64\tmp\ccml88MK.s:408    .text:00000000000002f8 .LVL56
+C:\msys64\tmp\ccml88MK.s:435    .text:0000000000000330 .LVL59
+C:\msys64\tmp\ccml88MK.s:341    .text:0000000000000240 .LVL42
+GAS LISTING C:\msys64\tmp\ccml88MK.s 			page 31
+
+
+C:\msys64\tmp\ccml88MK.s:366    .text:0000000000000284 .LVL47
+C:\msys64\tmp\ccml88MK.s:370    .text:000000000000028c .LVL48
+C:\msys64\tmp\ccml88MK.s:438    .text:0000000000000334 .LVL60
+C:\msys64\tmp\ccml88MK.s:459    .text:000000000000033c .LVL61
+C:\msys64\tmp\ccml88MK.s:478    .text:000000000000035c .LVL63
+C:\msys64\tmp\ccml88MK.s:473    .text:0000000000000354 .LVL62
+C:\msys64\tmp\ccml88MK.s:574    .text:0000000000000408 .LVL74
+C:\msys64\tmp\ccml88MK.s:518    .text:0000000000000390 .LVL67
+C:\msys64\tmp\ccml88MK.s:546    .text:00000000000003d4 .LVL71
+C:\msys64\tmp\ccml88MK.s:592    .text:0000000000000410 .LVL75
+C:\msys64\tmp\ccml88MK.s:611    .text:0000000000000430 .LVL77
+C:\msys64\tmp\ccml88MK.s:606    .text:0000000000000428 .LVL76
+C:\msys64\tmp\ccml88MK.s:703    .text:00000000000004d4 .LVL87
+C:\msys64\tmp\ccml88MK.s:651    .text:0000000000000464 .LVL81
+C:\msys64\tmp\ccml88MK.s:679    .text:00000000000004a8 .LVL85
+C:\msys64\tmp\ccml88MK.s:16     .text:0000000000000000 .LVL0
+C:\msys64\tmp\ccml88MK.s:39     .text:0000000000000030 .LVL1
+C:\msys64\tmp\ccml88MK.s:63     .text:000000000000005c .LVL4
+C:\msys64\tmp\ccml88MK.s:69     .text:0000000000000068 .LVL5
+C:\msys64\tmp\ccml88MK.s:848    .debug_info:0000000000000000 .Ldebug_info0
+C:\msys64\tmp\ccml88MK.s:481    .text:000000000000035c .LBB4
+C:\msys64\tmp\ccml88MK.s:514    .text:000000000000038c .LBE4
+C:\msys64\tmp\ccml88MK.s:542    .text:00000000000003cc .LBB9
+C:\msys64\tmp\ccml88MK.s:548    .text:00000000000003d4 .LBE9
+C:\msys64\tmp\ccml88MK.s:483    .text:000000000000035c .LBB6
+C:\msys64\tmp\ccml88MK.s:492    .text:000000000000036c .LBE6
+C:\msys64\tmp\ccml88MK.s:507    .text:0000000000000384 .LBB7
+C:\msys64\tmp\ccml88MK.s:512    .text:000000000000038c .LBE7
+C:\msys64\tmp\ccml88MK.s:614    .text:0000000000000430 .LBB13
+C:\msys64\tmp\ccml88MK.s:647    .text:0000000000000460 .LBE13
+C:\msys64\tmp\ccml88MK.s:675    .text:00000000000004a0 .LBB18
+C:\msys64\tmp\ccml88MK.s:681    .text:00000000000004a8 .LBE18
+C:\msys64\tmp\ccml88MK.s:616    .text:0000000000000430 .LBB15
+C:\msys64\tmp\ccml88MK.s:625    .text:0000000000000440 .LBE15
+C:\msys64\tmp\ccml88MK.s:640    .text:0000000000000458 .LBB16
+C:\msys64\tmp\ccml88MK.s:645    .text:0000000000000460 .LBE16
+
+UNDEFINED SYMBOLS
+_Z15thread_dispatchv
+_Z11printStringPKc
+_Z8printIntiii
+_Z13thread_createPP7_threadPFvPvES2_
