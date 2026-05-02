@@ -4,6 +4,7 @@
 #include "../h/Thread.h"
 #include "../h/Semaphore.h"
 #include "../h/Console.h"
+#include "../h/print.hpp"
 void Riscv::popSppSpie()
 {
 	__asm__ volatile("csrw sepc, ra");
@@ -251,23 +252,12 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		mc_sip(SIP_SSIP);
 	}else{
-		uint64 sepc = r_sepc();
-        // unexpected trap cause
-        for (const char* p = "Unexpected trap cause: "; *p; p++)
-            _console::putc(*p);
-        for (int i = 15; i >= 0; i--)
-        {
-            char c = "0123456789abcdef"[(scause >> i*4) & 0xf];
-            _console::putc(c);
-        }
-        _console::putc(' ');
-        for (int i = 15; i >= 0; i--)
-        {
-            char c = "0123456789abcdef"[(sepc >> i*4) & 0xf];
-            _console::putc(c);
-        }
-        
-        // halt the machine
-        while (1);
+		_printString("Unhandled exception: SEPC = ");
+        _printInteger(r_sepc(), 16);
+        _printString(", SCAUSE = ");
+        _printInteger(r_scause());
+        _printString("\n");
+
+        while(1);
 	}
 }

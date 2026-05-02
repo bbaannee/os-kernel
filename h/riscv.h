@@ -159,15 +159,15 @@ inline void Riscv::w_sstatus(uint64 sstatus)
     __asm__ volatile("csrw sstatus, %[sstatus]" : : [sstatus] "r"(sstatus));
 }
 
-inline uint64 Riscv::readARegister(int reg_number)
+inline uint64 Riscv::readARegister(int reg)
 {
-    uint64 value;
-    __asm__ volatile("mv %[val], a%[reg]" : [val] "=r"(value) : [reg] "i"(reg_number));
+    uint64 volatile value;
+  __asm__ volatile ("ld %[ret], %[reg]*8(fp)" : [ret] "=r"(ret) : [reg] "i"(reg));"i"(reg_number));
     return value;
 }
 
-inline void Riscv::writeARegister(int reg_number, uint64 value)
+inline void Riscv::writeARegister(int reg, uint64 val)
 {
-    __asm__ volatile("mv a%[reg], %[val]" ::[reg] "i"(reg_number), [val] "r"(value));
+     __asm__ volatile ("sd %[val], %[reg]*8(fp)" : : [val] "r"(val), [reg] "i"(reg));
 }
 #endif // PROJECT_BASE_RISCB_H
