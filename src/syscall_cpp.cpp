@@ -12,18 +12,17 @@ void operator delete(void* ptr) {
 
 Thread::Thread(void (*body)(void *), void *arg)
 {
-    this->myHandle = 0;
     this->body = body;
     this->arg = arg;
+    thread_create_inactive(&myHandle, body, arg);
 }
 
 Thread::~Thread() = default;
 
 int Thread::start()
 {
-    return thread_create(&myHandle, body, arg);
+    return thread_activate(myHandle);
 }
-
 void Thread::dispatch()
 {
     thread_dispatch();
@@ -45,6 +44,7 @@ Thread::Thread()
     myHandle = 0;
     body = wrapper;
     arg = this;
+    thread_create_inactive(&myHandle, body, arg);
 }
 
 Semaphore::Semaphore(unsigned init)

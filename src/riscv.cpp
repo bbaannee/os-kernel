@@ -76,6 +76,38 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 			_thread::dispatch();
 			break;
 		}
+		case 0x18:
+		{
+			_thread **handle = (_thread **)a1;
+			_thread::Body body = (_thread::Body)a2;
+			void *volatile arg = (void *)a3;
+			void *volatile stack_space = (void *)a4;
+
+			*handle = _thread::createThread(body, arg, stack_space);
+
+			if (*handle)
+			{
+				writeARegister(0, 0);
+			}
+			else
+				writeARegister(0, -1);
+			break;
+		}
+		case 0x19:
+		{
+			_thread *t = (_thread *)a1;
+			if (t == nullptr || t->body == nullptr) // main thread ima body nullprt
+			{
+				writeARegister(0, -1);
+			}
+			else
+			{
+				t->isReady = true;
+				Scheduler::instance().put(t);
+				writeARegister(0, 0);
+			}
+			break;
+		}
 		case 0x21:
 		{
 			_sem **handle = (_sem **)a1;
@@ -132,7 +164,8 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 			}
 			break;
 		}
-		case 0x25:{
+		case 0x25:
+		{
 			_sem *s = (_sem *)a1;
 			unsigned n = (unsigned)a2;
 			if (s == nullptr)
@@ -145,7 +178,8 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 			}
 			break;
 		}
-		case 0x26:{
+		case 0x26:
+		{
 			_sem *s = (_sem *)a1;
 			unsigned n = (unsigned)a2;
 			if (s == nullptr)
@@ -251,13 +285,16 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 			w_sepc(sepc);
 		}
 		mc_sip(SIP_SSIP);
-	}else{
+	}
+	else
+	{
 		_printString("Unhandled exception: SEPC = ");
-        _printInteger(r_sepc(), 16);
-        _printString(", SCAUSE = ");
-        _printInteger(r_scause());
-        _printString("\n");
+		_printInteger(r_sepc(), 16);
+		_printString(", SCAUSE = ");
+		_printInteger(r_scause());
+		_printString("\n");
 
-        while(1);
+		while (1)
+			;
 	}
 }

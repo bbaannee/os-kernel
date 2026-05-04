@@ -2,6 +2,7 @@
 #include  "../h/riscv.h"
 #include "../h/Console.h"
 
+
 void *mem_alloc(size_t size) {
     size_t blocks = (size + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
 
@@ -63,7 +64,36 @@ int thread_exit() {
 
 }
 
-int sem_open(sem_t*handle, unsigned init) {
+int thread_create_inactive(thread_t *handle, void (*start)(void *), void *arg)
+{
+    void* volatile stack = nullptr;
+    if (start) {
+        stack = mem_alloc(DEFAULT_STACK_SIZE);
+    }
+
+    Riscv::writeARegister(4, (uint64)stack);
+    Riscv::writeARegister(3, (uint64)arg);
+    Riscv::writeARegister(2, (uint64)start);
+    Riscv::writeARegister(1, (uint64)handle);
+    Riscv::writeARegister(0, 0x18);
+
+    __asm__ volatile("ecall");
+
+    volatile long a0 = Riscv::readARegister(0);
+    return (int) a0;
+}
+int thread_activate(thread_t handle)
+{
+     Riscv::writeARegister(1, (uint64)handle);
+    Riscv::writeARegister(0, 0x19);
+
+    __asm__ volatile("ecall");
+
+    volatile long a0 = Riscv::readARegister(0);
+    return (int) a0;
+}
+int sem_open(sem_t *handle, unsigned init)
+{
     Riscv::writeARegister(2, (uint64)init);
     Riscv::writeARegister(1, (uint64)handle);
 
@@ -73,7 +103,6 @@ int sem_open(sem_t*handle, unsigned init) {
 
     volatile long a0 = Riscv::readARegister(0);
     return (int) a0;
-
 }
 
 int sem_close(sem_t handle) {
