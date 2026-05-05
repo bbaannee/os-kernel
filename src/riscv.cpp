@@ -11,14 +11,14 @@ void Riscv::popSppSpie()
 	Riscv::mc_sstatus(Riscv::SSTATUS_SPP);
 	__asm__ volatile("sret");
 }
-void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint64 a5, uint64 a6, uint64 a7)
+void Riscv::handleSupervisorTrap()
 {
 
 	uint64 scause = r_scause();
 
 	if (scause == 0x0000000000000008UL || scause == 0x0000000000000009UL)
 	{
-		uint64 call = a0;
+		uint64 call = readARegister(0);
 		uint64 volatile sepc = r_sepc() + 4;
 		uint64 volatile sstatus = r_sstatus();
 
@@ -26,21 +26,21 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		{
 		case 0x01:
 		{
-			size_t bytes = a1 * MEM_BLOCK_SIZE;
+			size_t bytes = readARegister(1) * MEM_BLOCK_SIZE;
 			writeARegister(0, (uint64)MemoryAllocator::kmalloc(bytes));
 			break;
 		}
 		case 0x02:
 		{
-			writeARegister(0, (uint64)MemoryAllocator::kfree((void *)a1));
+			writeARegister(0, (uint64)MemoryAllocator::kfree((void *)readARegister(1)));
 			break;
 		}
 		case 0x11:
 		{
-			_thread **handle = (_thread **)a1;
-			_thread::Body body = (_thread::Body)a2;
-			void *volatile arg = (void *)a3;
-			void *volatile stack_space = (void *)a4;
+			_thread **handle = (_thread **)readARegister(1);
+			_thread::Body body = (_thread::Body)readARegister(2);
+			void *volatile arg = (void *)readARegister(3);
+			void *volatile stack_space = (void *)readARegister(4);
 
 			*handle = _thread::createThread(body, arg, stack_space);
 
@@ -78,10 +78,10 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x18:
 		{
-			_thread **handle = (_thread **)a1;
-			_thread::Body body = (_thread::Body)a2;
-			void *volatile arg = (void *)a3;
-			void *volatile stack_space = (void *)a4;
+			_thread **handle = (_thread **)readARegister(1);
+			_thread::Body body = (_thread::Body)readARegister(2);
+			void *volatile arg = (void *)readARegister(3);
+			void *volatile stack_space = (void *)readARegister(4);
 
 			*handle = _thread::createThread(body, arg, stack_space);
 
@@ -95,7 +95,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x19:
 		{
-			_thread *t = (_thread *)a1;
+			_thread *t = (_thread *)readARegister(1);
 			if (t == nullptr || t->body == nullptr) // main thread ima body nullprt
 			{
 				writeARegister(0, -1);
@@ -110,9 +110,9 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x21:
 		{
-			_sem **handle = (_sem **)a1;
+			_sem **handle = (_sem **)readARegister(1);
 
-			*handle = new _sem(a2);
+			*handle = new _sem(readARegister(2));
 
 			if (*handle)
 			{
@@ -124,7 +124,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x22:
 		{
-			_sem *s = (_sem *)a1;
+			_sem *s = (_sem *)readARegister(1);
 			if (s == nullptr)
 			{
 				writeARegister(0, -1);
@@ -139,7 +139,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x23:
 		{
-			_sem *s = (_sem *)a1;
+			_sem *s = (_sem *)readARegister(1);
 			if (s == nullptr)
 			{
 				writeARegister(0, -1);
@@ -153,7 +153,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x24:
 		{
-			_sem *s = (_sem *)a1;
+			_sem *s = (_sem *)readARegister(1);
 			if (s == nullptr)
 			{
 				writeARegister(0, -1);
@@ -166,8 +166,8 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x25:
 		{
-			_sem *s = (_sem *)a1;
-			unsigned n = (unsigned)a2;
+			_sem *s = (_sem *)readARegister(1);
+			unsigned n = (unsigned)readARegister(2);
 			if (s == nullptr)
 			{
 				writeARegister(0, -1);
@@ -180,8 +180,8 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 		}
 		case 0x26:
 		{
-			_sem *s = (_sem *)a1;
-			unsigned n = (unsigned)a2;
+			_sem *s = (_sem *)readARegister(1);
+			unsigned n = (unsigned)readARegister(2);
 			if (s == nullptr)
 			{
 				writeARegister(0, -1);
@@ -200,7 +200,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 			}
 			else
 			{
-				_thread::running->time_sleep(a1);
+				_thread::running->time_sleep(readARegister(1));
 				writeARegister(0, 0);
 			}
 
@@ -215,7 +215,7 @@ void Riscv::handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uin
 
 		case 0x42:
 		{					   // putc
-			char c = (char)a1; // Karakter koji je korisnik prosledio
+			char c = (char)readARegister(1); // Karakter koji je korisnik prosledio
 			_console::putc(c);
 			break;
 		}

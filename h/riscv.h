@@ -59,12 +59,17 @@ public:
 
     static uint64 readARegister(int reg_number);
 
+
+
     static void writeARegister(int reg_number, uint64 value);
+
+    static void w_a(int index, uint64 val);  //in user mode before ecall
+    static uint64 r_a(int index);
 
     static void supervisorTrap();
 
 private:
-    static void handleSupervisorTrap(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uint64 a4, uint64 a5, uint64 a6, uint64 a7);
+    static void handleSupervisorTrap();
 };
 
 inline uint64 Riscv::r_scause()
@@ -159,14 +164,25 @@ inline void Riscv::w_sstatus(uint64 sstatus)
     __asm__ volatile("csrw sstatus, %[sstatus]" : : [sstatus] "r"(sstatus));
 }
 
-inline uint64 Riscv::readARegister(int reg_number) {
-    uint64 value;
-    __asm__ volatile("mv %[val], a%[reg]" : [val] "=r" (value) : [reg] "i" (reg_number));
-    return value;
+inline uint64 Riscv::readARegister(int index) {
+    uint64 *base;
+    __asm__ volatile("csrr %[p], sscratch" : [p] "=r"(base));
+    return base[10 + index];
 }
 
 
-inline void Riscv::writeARegister( int reg_number, uint64 value) {
-    __asm__ volatile("mv a%[reg], %[val]" :: [reg] "i" (reg_number), [val] "r" (value));
+inline void Riscv::writeARegister( int index, uint64 val) {
+    uint64 *base;
+    __asm__ volatile("csrr %[p], sscratch" : [p] "=r"(base));
+    base[10 + index] = val;
+}
+
+inline void Riscv::w_a(int index, uint64 val) {
+    __asm__ volatile("mv a%[reg], %[val]" :: [reg] "i"(index), [val] "r"(val));
+}
+inline uint64 Riscv::r_a(int index) {
+    uint64 volatile val;
+    __asm__ volatile("mv %[val], a%[reg]" : [val] "=r"(val) : [reg] "i"(index));
+    return val;
 }
 #endif // PROJECT_BASE_RISCB_H
